@@ -2,383 +2,469 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Everstar</title>
+<title>Everstar v0.2</title>
 
 <style>
 body{
     margin:0;
     overflow:hidden;
-    background:#030818;
-    font-family:Trebuchet MS,sans-serif;
+    background:#000;
+    font-family:Arial,sans-serif;
 }
 
 canvas{
     display:block;
 }
 
-#panel{
+#ui{
     position:absolute;
-    left:10px;
     top:10px;
-    width:280px;
-
-    background:rgba(0,0,0,.65);
+    left:10px;
+    width:320px;
     color:white;
-
+    background:rgba(0,0,0,.75);
     padding:12px;
     border-radius:12px;
-    border:1px solid #5af;
 }
 
 h2{
-    margin-top:0;
-}
-
-.quest{
-    color:#ccc;
-}
-
-.complete{
-    color:#7CFC00;
+    margin:0 0 10px 0;
 }
 </style>
 </head>
 <body>
 
-<div id="panel">
-    <h2>🌟 EVERSTAR</h2>
-
-    <div id="location">
-        Explore the island...
-    </div>
-
-    <hr>
-
-    <b>Quests</b>
-
-    <div id="quests"></div>
+<div id="ui">
+<h2>🌟 Everstar</h2>
+<div id="location">World Map</div>
+<div id="starsCount">Stars: 0</div>
+<div id="quests"></div>
+<div id="hint"></div>
 </div>
 
 <canvas id="game"></canvas>
 
 <script>
 
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resize(){
+ canvas.width=window.innerWidth;
+ canvas.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
 
-window.addEventListener("resize",()=>{
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
-});
-
-const centerX = canvas.width/2;
-const centerY = canvas.height/2;
-
-const player={
-    x:centerX,
-    y:centerY,
-    r:12,
-    speed:4
-};
+let state="world";
+let starsCollected=0;
 
 const keys={};
 
 document.addEventListener("keydown",e=>{
-    keys[e.key]=true;
+ keys[e.key.toLowerCase()]=true;
 });
 
 document.addEventListener("keyup",e=>{
-    keys[e.key]=false;
+ keys[e.key.toLowerCase()]=false;
 });
 
-const quests={
-    earth:false,
-    water:false,
-    fire:false,
-    air:false,
-    forest:false
+const player={
+ x:500,
+ y:350,
+ speed:5
 };
 
-const places=[
+const quests={
+ earth:false,
+ water:false,
+ fire:false,
+ air:false,
+ forest:false
+};
 
-{
-    name:"🌟 Everstar Plaza",
-    x:centerX,
-    y:centerY,
-    color:"#FFD700",
-    size:40
-},
+const realmStars=[];
 
-{
-    name:"🌎 Earth Realm",
-    x:centerX,
-    y:centerY-230,
-    color:"#4CAF50",
-    size:50
-},
+function createStars(){
+ realmStars.length=0;
 
-{
-    name:"🌊 Water Realm",
-    x:centerX-230,
-    y:centerY,
-    color:"#2196F3",
-    size:50
-},
-
-{
-    name:"🔥 Fire Realm",
-    x:centerX+230,
-    y:centerY,
-    color:"#FF5722",
-    size:50
-},
-
-{
-    name:"🌪️ Air Realm",
-    x:centerX,
-    y:centerY+230,
-    color:"#87CEEB",
-    size:50
-},
-
-{
-    name:"🌲 Deep Dark Forest of Doom",
-    x:centerX+140,
-    y:centerY+120,
-    color:"#145A32",
-    size:65
+ for(let i=0;i<10;i++){
+  realmStars.push({
+   x:100+Math.random()*(canvas.width-200),
+   y:100+Math.random()*(canvas.height-200),
+   taken:false
+  });
+ }
 }
 
-];
+createStars();
 
-const animals=[
+function movePlayer(){
 
-{
-    name:"🦄 Unicorn",
-    x:centerX-270,
-    y:centerY-60
-},
+ if(keys["w"]||keys["arrowup"])
+  player.y-=player.speed;
 
-{
-    name:"🐢 Earth Tortoise",
-    x:centerX,
-    y:centerY-300
-},
+ if(keys["s"]||keys["arrowdown"])
+  player.y+=player.speed;
 
-{
-    name:"🐎 Water Horse",
-    x:centerX-290,
-    y:centerY+70
-},
+ if(keys["a"]||keys["arrowleft"])
+  player.x-=player.speed;
 
-{
-    name:"🐉 Fire Dragon",
-    x:centerX+290,
-    y:centerY-70
-},
+ if(keys["d"]||keys["arrowright"])
+  player.x+=player.speed;
 
-{
-    name:"🐺 Lava Wolf",
-    x:centerX+170,
-    y:centerY+140
-},
+ player.x=Math.max(20,
+ Math.min(canvas.width-20,player.x));
 
-{
-    name:"🦅 Wind Eagle",
-    x:centerX+40,
-    y:centerY+310
+ player.y=Math.max(20,
+ Math.min(canvas.height-20,player.y));
 }
 
-];
+function drawHorse(){
 
-const stars=[];
+ ctx.font="42px Arial";
+ ctx.fillText("🐴",player.x,player.y);
 
-for(let i=0;i<200;i++){
+}
 
-    stars.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        r:Math.random()*2
-    });
+function drawWorld(){
 
+ ctx.fillStyle="#072443";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ for(let i=0;i<200;i++){
+
+  ctx.fillStyle="white";
+
+  ctx.fillRect(
+   (i*101)%canvas.width,
+   (i*71)%canvas.height,
+   2,
+   2
+  );
+ }
+
+ const cx=canvas.width/2;
+ const cy=canvas.height/2;
+
+ ctx.strokeStyle="gold";
+ ctx.lineWidth=10;
+
+ ctx.beginPath();
+
+ ctx.moveTo(cx,cy-220);
+ ctx.lineTo(cx,cy);
+
+ ctx.moveTo(cx,cy);
+ ctx.lineTo(cx+220,cy);
+
+ ctx.moveTo(cx,cy);
+ ctx.lineTo(cx-220,cy);
+
+ ctx.moveTo(cx,cy);
+ ctx.lineTo(cx,cy+220);
+
+ ctx.stroke();
+
+ const realms=[
+  {name:"earth",x:cx,y:cy-220,color:"#2e8b57",emoji:"🌎"},
+  {name:"water",x:cx-220,y:cy,color:"#1e90ff",emoji:"🌊"},
+  {name:"fire",x:cx+220,y:cy,color:"#ff4500",emoji:"🔥"},
+  {name:"air",x:cx,y:cy+220,color:"#87cefa",emoji:"🌪️"}
+ ];
+
+ document.getElementById("hint").innerHTML="";
+
+ realms.forEach(r=>{
+
+  ctx.fillStyle=r.color;
+
+  ctx.beginPath();
+  ctx.arc(r.x,r.y,45,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.font="28px Arial";
+  ctx.fillStyle="white";
+  ctx.fillText(r.emoji,r.x-15,r.y+10);
+
+  const d=Math.hypot(
+   player.x-r.x,
+   player.y-r.y
+  );
+
+  if(d<70){
+
+   document.getElementById("hint").innerHTML=
+   "Press E to enter "+r.name+" realm";
+
+   if(keys["e"]){
+
+    state=r.name;
+
+    if(state==="earth") quests.earth=true;
+    if(state==="water") quests.water=true;
+    if(state==="fire") quests.fire=true;
+    if(state==="air") quests.air=true;
+
+    player.x=canvas.width/2;
+    player.y=canvas.height/2;
+
+    createStars();
+
+    keys["e"]=false;
+   }
+  }
+ });
+
+ ctx.font="72px Arial";
+ ctx.fillText("⭐",cx-32,cy+25);
+
+ drawHorse();
 }
 
 function drawStars(){
 
-    ctx.fillStyle="white";
+ realmStars.forEach(star=>{
 
-    for(let s of stars){
+  if(star.taken) return;
 
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fill();
-    }
+  ctx.font="28px Arial";
+  ctx.fillText("⭐",star.x,star.y);
+
+  const d=Math.hypot(
+   player.x-star.x,
+   player.y-star.y
+  );
+
+  if(d<35){
+
+   star.taken=true;
+   starsCollected++;
+  }
+
+ });
 }
 
-function update(){
+function drawNPC(text,x,y){
 
-    if(keys["w"]||keys["ArrowUp"])
-        player.y-=player.speed;
+ ctx.font="38px Arial";
+ ctx.fillText("🧙",x,y);
 
-    if(keys["s"]||keys["ArrowDown"])
-        player.y+=player.speed;
+ if(Math.hypot(player.x-x,player.y-y)<60){
 
-    if(keys["a"]||keys["ArrowLeft"])
-        player.x-=player.speed;
-
-    if(keys["d"]||keys["ArrowRight"])
-        player.x+=player.speed;
-
-    let location="Exploring Everstar";
-
-    for(let p of places){
-
-        const dx=player.x-p.x;
-        const dy=player.y-p.y;
-
-        if(Math.hypot(dx,dy)<60){
-
-            location=p.name;
-
-            if(p.name.includes("Earth"))
-                quests.earth=true;
-
-            if(p.name.includes("Water"))
-                quests.water=true;
-
-            if(p.name.includes("Fire"))
-                quests.fire=true;
-
-            if(p.name.includes("Air"))
-                quests.air=true;
-
-            if(p.name.includes("Forest"))
-                quests.forest=true;
-        }
-    }
-
-    document.getElementById("location").innerHTML=
-    "<b>"+location+"</b>";
-
-    document.getElementById("quests").innerHTML=
-    `
-    <div class="${quests.earth?'complete':'quest'}">
-    ${quests.earth?'✅':'⬜'} Visit Earth Realm
-    </div>
-
-    <div class="${quests.water?'complete':'quest'}">
-    ${quests.water?'✅':'⬜'} Visit Water Realm
-    </div>
-
-    <div class="${quests.fire?'complete':'quest'}">
-    ${quests.fire?'✅':'⬜'} Visit Fire Realm
-    </div>
-
-    <div class="${quests.air?'complete':'quest'}">
-    ${quests.air?'✅':'⬜'} Visit Air Realm
-    </div>
-
-    <div class="${quests.forest?'complete':'quest'}">
-    ${quests.forest?'✅':'⬜'} Enter Doom Forest
-    </div>
-    `;
+  document.getElementById("hint").innerHTML=
+  text;
+ }
 }
 
-function draw(){
+function drawEarth(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.fillStyle="#4b8f3c";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    drawStars();
+ for(let i=0;i<30;i++){
 
-    // star roads
+  ctx.fillStyle="darkgreen";
 
-    ctx.strokeStyle="#777";
-    ctx.lineWidth=6;
+  ctx.beginPath();
+  ctx.arc(
+   (i*150)%canvas.width,
+   (i*90)%canvas.height,
+   22,
+   0,
+   Math.PI*2
+  );
+  ctx.fill();
+ }
 
-    ctx.beginPath();
-    ctx.moveTo(centerX,centerY);
-    ctx.lineTo(centerX,centerY-230);
+ drawNPC(
+ "Earth Guardian: Strength comes from patience.",
+ 350,
+ 250
+ );
 
-    ctx.moveTo(centerX,centerY);
-    ctx.lineTo(centerX-230,centerY);
-
-    ctx.moveTo(centerX,centerY);
-    ctx.lineTo(centerX+230,centerY);
-
-    ctx.moveTo(centerX,centerY);
-    ctx.lineTo(centerX,centerY+230);
-
-    ctx.stroke();
-
-    for(let p of places){
-
-        ctx.fillStyle=p.color;
-
-        ctx.beginPath();
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI*2
-        );
-        ctx.fill();
-
-        ctx.fillStyle="white";
-        ctx.fillText(
-            p.name,
-            p.x-55,
-            p.y-(p.size+15)
-        );
-    }
-
-    for(let a of animals){
-
-        ctx.fillStyle="white";
-
-        ctx.beginPath();
-        ctx.arc(a.x,a.y,10,0,Math.PI*2);
-        ctx.fill();
-
-        ctx.fillText(
-            a.name,
-            a.x-25,
-            a.y-15
-        );
-    }
-
-    // player
-
-    ctx.fillStyle="gold";
-
-    ctx.beginPath();
-    ctx.arc(
-        player.x,
-        player.y,
-        player.r,
-        0,
-        Math.PI*2
-    );
-    ctx.fill();
-
-    ctx.strokeStyle="white";
-    ctx.stroke();
+ drawStars();
+ drawHorse();
 }
 
-function loop(){
+function drawWater(){
 
-    update();
-    draw();
+ ctx.fillStyle="#1b64d1";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    requestAnimationFrame(loop);
+ ctx.font="60px Arial";
+ ctx.fillText("🦄",500,250);
+
+ if(Math.hypot(player.x-500,player.y-250)<80){
+
+  document.getElementById("hint").innerHTML=
+  "A magical Unicorn greets you!";
+ }
+
+ drawNPC(
+ "Water Guardian: Follow the rivers.",
+ 300,
+ 400
+ );
+
+ drawStars();
+ drawHorse();
 }
 
-loop();
+function drawFire(){
+
+ ctx.fillStyle="#8b2a00";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ ctx.font="60px Arial";
+ ctx.fillText("🐺",650,260);
+
+ if(Math.hypot(player.x-650,player.y-260)<80){
+
+  document.getElementById("hint").innerHTML=
+  "Lava Wolf discovered!";
+ }
+
+ ctx.fillStyle="#ff6600";
+ ctx.fillRect(780,180,140,140);
+
+ ctx.fillStyle="white";
+ ctx.font="20px Arial";
+ ctx.fillText("DOOM FOREST",790,240);
+
+ if(
+  player.x>780 &&
+  player.x<920 &&
+  player.y>180 &&
+  player.y<320
+ ){
+  document.getElementById("hint").innerHTML=
+  "Press E for Deep Dark Forest";
+
+  if(keys["e"]){
+
+   quests.forest=true;
+
+   state="doom";
+   player.x=200;
+   player.y=300;
+
+   keys["e"]=false;
+  }
+ }
+
+ drawNPC(
+ "Fire Guardian: Beware the lava wolves.",
+ 350,
+ 350
+ );
+
+ drawStars();
+ drawHorse();
+}
+
+function drawAir(){
+
+ ctx.fillStyle="#80cfff";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ for(let i=0;i<8;i++){
+
+  ctx.font="60px Arial";
+
+  ctx.fillText(
+   "☁️",
+   i*170,
+   120+(i%2)*130
+  );
+ }
+
+ drawNPC(
+ "Air Guardian: The winds know every path.",
+ 450,
+ 260
+ );
+
+ drawStars();
+ drawHorse();
+}
+
+function drawDoom(){
+
+ ctx.fillStyle="#103010";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ ctx.font="70px Arial";
+ ctx.fillText("🌲",200,150);
+ ctx.fillText("🌲",400,200);
+ ctx.fillText("🌲",650,180);
+ ctx.fillText("🌲",820,320);
+
+ ctx.font="60px Arial";
+ ctx.fillText("🐺",600,420);
+
+ document.getElementById("hint").innerHTML=
+ "Deep Dark Forest of Doom - Press B to escape";
+
+ drawHorse();
+}
+
+function drawRealm(){
+
+ document.getElementById("hint").innerHTML=
+ "Press B to return";
+
+ if(state==="earth") drawEarth();
+ if(state==="water") drawWater();
+ if(state==="fire") drawFire();
+ if(state==="air") drawAir();
+ if(state==="doom") drawDoom();
+
+ if(keys["b"]){
+
+  state="world";
+
+  player.x=canvas.width/2;
+  player.y=canvas.height/2;
+
+  keys["b"]=false;
+ }
+}
+
+function updateUI(){
+
+ document.getElementById("location").innerHTML=
+ "Location: "+state;
+
+ document.getElementById("starsCount").innerHTML=
+ "Stars: "+starsCollected;
+
+ document.getElementById("quests").innerHTML=
+ `
+ ✅ Earth Realm: ${quests.earth?"Done":"..." }<br>
+ ✅ Water Realm: ${quests.water?"Done":"..." }<br>
+ ✅ Fire Realm: ${quests.fire?"Done":"..." }<br>
+ ✅ Air Realm: ${quests.air?"Done":"..." }<br>
+ ✅ Doom Forest: ${quests.forest?"Done":"..." }
+ `;
+}
+
+function gameLoop(){
+
+ movePlayer();
+
+ updateUI();
+
+ if(state==="world")
+  drawWorld();
+ else
+  drawRealm();
+
+ requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
 
 </script>
-
 </body>
 </html>
