@@ -2,71 +2,92 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Everstar Character Creator</title>
+<title>Everstar</title>
 
 <style>
 
 body{
-    margin:0;
-    overflow:hidden;
-    font-family:Arial,sans-serif;
-    background:#87ceeb;
+margin:0;
+overflow:hidden;
+font-family:Arial,sans-serif;
+background:#4caf50;
 }
 
 canvas{
-    display:block;
+display:block;
 }
 
 #creator{
-    position:absolute;
-    inset:0;
-
-    background:#0d203f;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-
-    color:white;
-
-    gap:10px;
-
-    z-index:1000;
+position:absolute;
+inset:0;
+background:#0d2045;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:10px;
+color:white;
+z-index:1000;
 }
 
 #creator input,
 #creator select{
-    padding:8px;
-    width:200px;
+padding:10px;
+width:220px;
 }
 
 #creator button{
-    padding:10px 20px;
-    font-size:16px;
+padding:10px 20px;
 }
 
 #saveBtn{
-    position:absolute;
-    top:10px;
-    right:10px;
-    z-index:100;
+position:absolute;
+top:10px;
+right:10px;
+z-index:50;
+padding:10px;
+}
 
-    padding:10px;
+#joystick{
+position:absolute;
+left:20px;
+bottom:20px;
+
+width:140px;
+height:140px;
+
+background:rgba(255,255,255,.2);
+
+border:3px solid white;
+border-radius:50%;
+
+touch-action:none;
+
+z-index:100;
+}
+
+#stick{
+position:absolute;
+
+width:50px;
+height:50px;
+
+left:45px;
+top:45px;
+
+background:white;
+border-radius:50%;
 }
 
 #ui{
-    position:absolute;
-    top:10px;
-    left:10px;
-
-    background:rgba(0,0,0,.6);
-
-    color:white;
-
-    padding:10px;
-
-    border-radius:10px;
+position:absolute;
+top:10px;
+left:10px;
+background:rgba(0,0,0,.6);
+color:white;
+padding:10px;
+border-radius:10px;
+z-index:50;
 }
 
 </style>
@@ -79,7 +100,7 @@ canvas{
 
 <input
 id="playerName"
-placeholder="Enter Name">
+placeholder="Name">
 
 <select id="hairColor">
 <option value="#3b2414">Brown Hair</option>
@@ -122,12 +143,16 @@ Begin Adventure
 </div>
 
 <div id="ui">
-WASD to move
+🌟 Everstar Alpha
 </div>
 
 <button id="saveBtn">
-💾 Save Progress
+💾 Save
 </button>
+
+<div id="joystick">
+<div id="stick"></div>
+</div>
 
 <canvas id="game"></canvas>
 
@@ -141,11 +166,11 @@ canvas.getContext("2d");
 
 function resize(){
 
-    canvas.width =
-    window.innerWidth;
+canvas.width=
+window.innerWidth;
 
-    canvas.height =
-    window.innerHeight;
+canvas.height=
+window.innerHeight;
 
 }
 
@@ -156,38 +181,13 @@ window.addEventListener(
 resize
 );
 
-const keys = {};
-
-document.addEventListener(
-"keydown",
-e=>{
-
-keys[
-e.key.toLowerCase()
-] = true;
-
-});
-
-document.addEventListener(
-"keyup",
-e=>{
-
-keys[
-e.key.toLowerCase()
-] = false;
-
-});
-
-let player = {
-
-x:window.innerWidth/2,
-y:window.innerHeight/2,
-
+let player={
+x:300,
+y:300,
 speed:4
-
 };
 
-let playerData = {
+let playerData={
 
 name:"Guardian",
 
@@ -203,77 +203,29 @@ face:"smile"
 
 };
 
-const saveData =
+const save=
 localStorage.getItem(
-"everstarSave"
+"everstarCharacter"
 );
 
-if(saveData){
+if(save){
 
-try{
-
-playerData =
-JSON.parse(saveData);
-
-}catch(err){}
-
-}
-
-function startGame(){
-
-playerData.name =
-document.getElementById(
-"playerName"
-).value || "Guardian";
-
-playerData.hair =
-document.getElementById(
-"hairColor"
-).value;
-
-playerData.skin =
-document.getElementById(
-"skinColor"
-).value;
-
-playerData.eyes =
-document.getElementById(
-"eyeColor"
-).value;
-
-playerData.shirt =
-document.getElementById(
-"shirtColor"
-).value;
-
-playerData.face =
-document.getElementById(
-"faceStyle"
-).value;
-
-saveProgress();
-
-document.getElementById(
-"creator"
-).style.display =
-"none";
+playerData=
+JSON.parse(save);
 
 }
 
 function saveProgress(){
 
 localStorage.setItem(
-
-"everstarSave",
-
+"everstarCharacter",
 JSON.stringify(
 playerData
 )
-
 );
 
 alert(
-"🌟 Character Saved!"
+"🌟 Saved!"
 );
 
 }
@@ -287,34 +239,214 @@ document
 saveProgress
 );
 
+function startGame(){
+
+playerData.name=
+document.getElementById(
+"playerName"
+).value
+|| "Guardian";
+
+playerData.hair=
+document.getElementById(
+"hairColor"
+).value;
+
+playerData.skin=
+document.getElementById(
+"skinColor"
+).value;
+
+playerData.eyes=
+document.getElementById(
+"eyeColor"
+).value;
+
+playerData.shirt=
+document.getElementById(
+"shirtColor"
+).value;
+
+playerData.face=
+document.getElementById(
+"faceStyle"
+).value;
+
+saveProgress();
+
+document.getElementById(
+"creator"
+).style.display=
+"none";
+
+}
+
+let joyX=0;
+let joyY=0;
+
+let joystickActive=false;
+
+const joystick=
+document.getElementById(
+"joystick"
+);
+
+const stick=
+document.getElementById(
+"stick"
+);
+
+joystick.addEventListener(
+"touchstart",
+()=>{
+joystickActive=true;
+}
+);
+
+joystick.addEventListener(
+"touchmove",
+e=>{
+
+if(!joystickActive)
+return;
+
+const rect=
+joystick.getBoundingClientRect();
+
+const touch=
+e.touches[0];
+
+let dx=
+touch.clientX-
+rect.left-
+70;
+
+let dy=
+touch.clientY-
+rect.top-
+70;
+
+const distance=
+Math.sqrt(
+dx*dx+dy*dy
+);
+
+const max=45;
+
+if(distance>max){
+
+dx=
+(dx/distance)
+*max;
+
+dy=
+(dy/distance)
+*max;
+
+}
+
+joyX=
+dx/max;
+
+joyY=
+dy/max;
+
+stick.style.left=
+(45+dx)+"px";
+
+stick.style.top=
+(45+dy)+"px";
+
+e.preventDefault();
+
+});
+
+function resetJoystick(){
+
+joystickActive=false;
+
+joyX=0;
+joyY=0;
+
+stick.style.left=
+"45px";
+
+stick.style.top=
+"45px";
+
+}
+
+joystick.addEventListener(
+"touchend",
+resetJoystick
+);
+
+joystick.addEventListener(
+"touchcancel",
+resetJoystick
+);
+
 function movePlayer(){
 
-if(keys["w"] ||
-keys["arrowup"])
-player.y -= player.speed;
+player.x +=
+joyX*
+player.speed;
 
-if(keys["s"] ||
-keys["arrowdown"])
-player.y += player.speed;
+player.y +=
+joyY*
+player.speed;
 
-if(keys["a"] ||
-keys["arrowleft"])
-player.x -= player.speed;
+}
 
-if(keys["d"] ||
-keys["arrowright"])
-player.x += player.speed;
+function drawTrees(){
+
+for(let i=0;i<25;i++){
+
+const x=
+(i*170)%canvas.width;
+
+const y=
+(i*110)%canvas.height;
+
+ctx.fillStyle=
+"#6d4c41";
+
+ctx.fillRect(
+x-5,
+y,
+10,
+25
+);
+
+ctx.fillStyle=
+"darkgreen";
+
+ctx.beginPath();
+
+ctx.arc(
+x,
+y,
+20,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
 
 }
 
 function drawAvatar(){
 
-const x = player.x;
-const y = player.y;
+const x=
+player.x;
 
-// legs
+const y=
+player.y;
 
-ctx.fillStyle="#222";
+ctx.fillStyle=
+"#222";
 
 ctx.fillRect(
 x-8,
@@ -330,8 +462,6 @@ y+10,
 12
 );
 
-// shirt
-
 ctx.fillStyle=
 playerData.shirt;
 
@@ -341,8 +471,6 @@ y-6,
 20,
 20
 );
-
-// arms
 
 ctx.fillRect(
 x-16,
@@ -357,8 +485,6 @@ y,
 6,
 4
 );
-
-// head
 
 ctx.fillStyle=
 playerData.skin;
@@ -375,8 +501,6 @@ Math.PI*2
 
 ctx.fill();
 
-// hair
-
 ctx.fillStyle=
 playerData.hair;
 
@@ -391,8 +515,6 @@ Math.PI,
 );
 
 ctx.fill();
-
-// eyes
 
 ctx.fillStyle=
 playerData.eyes;
@@ -411,9 +533,8 @@ y-20,
 2
 );
 
-// mouth
-
-ctx.strokeStyle="black";
+ctx.strokeStyle=
+"black";
 
 ctx.beginPath();
 
@@ -459,15 +580,15 @@ y-13
 
 ctx.stroke();
 
-// name
+ctx.fillStyle=
+"white";
 
-ctx.fillStyle="white";
-
-ctx.font="14px Arial";
+ctx.font=
+"14px Arial";
 
 ctx.fillText(
 playerData.name,
-x-20,
+x-25,
 y-35
 );
 
@@ -475,7 +596,8 @@ y-35
 
 function drawWorld(){
 
-ctx.fillStyle="#4caf50";
+ctx.fillStyle=
+"#4caf50";
 
 ctx.fillRect(
 0,
@@ -484,44 +606,26 @@ canvas.width,
 canvas.height
 );
 
-for(let i=0;i<25;i++){
-
-ctx.fillStyle=
-"darkgreen";
-
-ctx.beginPath();
-
-ctx.arc(
-(i*90)%canvas.width,
-(i*130)%canvas.height,
-20,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-}
+drawTrees();
 
 drawAvatar();
 
 }
 
-function loop(){
+function gameLoop(){
 
 movePlayer();
 
 drawWorld();
 
 requestAnimationFrame(
-loop
+gameLoop
 );
 
 }
 
-loop();
+gameLoop();
 
 </script>
-
 </body>
 </html>
