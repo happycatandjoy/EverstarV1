@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
 <title>Everstar Alpha</title>
 
 <style>
@@ -10,7 +12,7 @@
 body{
 margin:0;
 overflow:hidden;
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#4caf50;
 }
 
@@ -19,103 +21,199 @@ display:block;
 }
 
 #creator{
+
 position:absolute;
 inset:0;
-background:#102040;
+
 display:flex;
 flex-direction:column;
-justify-content:center;
+
 align-items:center;
-gap:10px;
+justify-content:center;
+
+background:#102040;
+
 color:white;
+
+gap:10px;
+
 z-index:1000;
 }
 
 #creator input,
 #creator select{
+
 padding:10px;
 width:220px;
+
+}
+
+#creator button{
+
+padding:10px 20px;
+
 }
 
 #ui{
+
 position:absolute;
 top:10px;
 left:10px;
-color:white;
+
 background:rgba(0,0,0,.6);
+
+color:white;
+
 padding:10px;
-border-radius:8px;
+
+border-radius:10px;
+
 z-index:100;
+
 }
 
 #saveBtn{
+
 position:absolute;
+
 top:10px;
 right:10px;
-z-index:100;
+
 padding:10px;
+
+z-index:100;
+
 }
 
 #joystick{
+
 position:absolute;
+
 left:20px;
 bottom:20px;
+
 width:140px;
 height:140px;
-background:rgba(255,255,255,.15);
-border:3px solid white;
+
 border-radius:50%;
-z-index:150;
+
+border:4px solid white;
+
+background:rgba(255,255,255,.15);
+
 touch-action:none;
+
+z-index:200;
+
 }
 
 #stick{
+
 position:absolute;
+
 left:45px;
 top:45px;
+
 width:50px;
 height:50px;
-background:white;
+
 border-radius:50%;
+
+background:white;
+
 }
 
 </style>
 </head>
+
 <body>
 
 <div id="creator">
 
-<h1>🌟 Everstar 🌟</h1>
+<h1>🌟 Everstar</h1>
 
-<input id="playerName"
+<input
+id="playerName"
 placeholder="Your Name">
 
 <select id="hairColor">
-<option value="#3b2414">Brown Hair</option>
-<option value="#111111">Black Hair</option>
-<option value="#f4d03f">Blonde Hair</option>
-<option value="#b03a2e">Red Hair</option>
+
+<option value="#3b2414">
+Brown Hair
+</option>
+
+<option value="#111111">
+Black Hair
+</option>
+
+<option value="#f4d03f">
+Blonde Hair
+</option>
+
+<option value="#b03a2e">
+Red Hair
+</option>
+
 </select>
 
 <select id="skinColor">
-<option value="#f5d7b2">Light Skin</option>
-<option value="#d8a47f">Tan Skin</option>
-<option value="#b97a56">Brown Skin</option>
-<option value="#8d5524">Dark Skin</option>
+
+<option value="#f5d7b2">
+Light Skin
+</option>
+
+<option value="#d8a47f">
+Tan Skin
+</option>
+
+<option value="#b97a56">
+Brown Skin
+</option>
+
+<option value="#8d5524">
+Dark Skin
+</option>
+
 </select>
 
 <select id="eyeColor">
-<option value="blue">Blue Eyes</option>
-<option value="green">Green Eyes</option>
-<option value="brown">Brown Eyes</option>
-<option value="purple">Purple Eyes</option>
+
+<option value="blue">
+Blue Eyes
+</option>
+
+<option value="green">
+Green Eyes
+</option>
+
+<option value="brown">
+Brown Eyes
+</option>
+
+<option value="purple">
+Purple Eyes
+</option>
+
 </select>
 
 <select id="shirtColor">
-<option value="#3498db">Blue Shirt</option>
-<option value="#e74c3c">Red Shirt</option>
-<option value="#2ecc71">Green Shirt</option>
-<option value="#9b59b6">Purple Shirt</option>
+
+<option value="#3498db">
+Blue Shirt
+</option>
+
+<option value="#e74c3c">
+Red Shirt
+</option>
+
+<option value="#2ecc71">
+Green Shirt
+</option>
+
+<option value="#9b59b6">
+Purple Shirt
+</option>
+
 </select>
 
 <button onclick="startGame()">
@@ -125,10 +223,13 @@ Begin Adventure
 </div>
 
 <div id="ui">
-🌟 Everstar
+
+<div>🌟 Everstar</div>
+
 <div id="realmText">
 Main World
 </div>
+
 </div>
 
 <button id="saveBtn">
@@ -150,13 +251,17 @@ const ctx =
 canvas.getContext("2d");
 
 function resize(){
+
 canvas.width=
 window.innerWidth;
+
 canvas.height=
 window.innerHeight;
+
 }
 
 resize();
+
 window.addEventListener(
 "resize",
 resize
@@ -167,21 +272,35 @@ let currentRealm =
 
 let player = {
 
-x:300,
-y:300,
-speed:4
+x:120,
+y:120,
+
+speed:5,
+
+radius:30
 
 };
+
+let joyX = 0;
+let joyY = 0;
 
 let playerData = {
 
 name:"Guardian",
+
 hair:"#3b2414",
+
 skin:"#f5d7b2",
+
 eyes:"blue",
+
 shirt:"#3498db"
 
 };
+// =====================
+// SAVE / LOAD
+// =====================
+
 const save =
 localStorage.getItem(
 "everstarCharacter"
@@ -189,21 +308,35 @@ localStorage.getItem(
 
 if(save){
 
+try{
+
 playerData =
 JSON.parse(save);
+
+}
+catch(err){
+
+console.log(err);
+
+}
 
 }
 
 function saveProgress(){
 
 localStorage.setItem(
+
 "everstarCharacter",
+
 JSON.stringify(
 playerData
 )
+
 );
 
-alert("Saved!");
+alert(
+"🌟 Saved!"
+);
 
 }
 
@@ -211,8 +344,12 @@ document
 .getElementById(
 "saveBtn"
 )
-.onclick=
+.onclick =
 saveProgress;
+
+// =====================
+// CHARACTER CREATION
+// =====================
 
 function startGame(){
 
@@ -247,12 +384,14 @@ saveProgress();
 document
 .getElementById(
 "creator"
-).style.display=
+).style.display =
 "none";
+
 }
 
-let joyX = 0;
-let joyY = 0;
+// =====================
+// JOYSTICK
+// =====================
 
 const joystick =
 document.getElementById(
@@ -264,60 +403,100 @@ document.getElementById(
 "stick"
 );
 
-joystick.addEventListener(
-"touchmove",
-e=>{
+function handleMove(
+clientX,
+clientY
+){
 
 const rect =
 joystick.getBoundingClientRect();
 
-const touch =
-e.touches[0];
-
 let dx =
-touch.clientX -
+clientX -
 rect.left -
 70;
 
 let dy =
-touch.clientY -
+clientY -
 rect.top -
 70;
 
-const dist =
+const distance =
 Math.sqrt(
-dx*dx+dy*dy
+dx*dx +
+dy*dy
 );
 
-const max=45;
+const max = 45;
 
-if(dist>max){
+if(distance > max){
 
-dx=(dx/dist)*max;
-dy=(dy/dist)*max;
+dx =
+(dx/distance)
+* max;
+
+dy =
+(dy/distance)
+* max;
 
 }
 
-joyX=dx/max;
-joyY=dy/max;
+joyX =
+dx / max;
 
-stick.style.left=
-(45+dx)+"px";
+joyY =
+dy / max;
 
-stick.style.top=
-(45+dy)+"px";
+stick.style.left =
+(45 + dx) + "px";
+
+stick.style.top =
+(45 + dy) + "px";
+
+}
+
+joystick.addEventListener(
+"touchstart",
+e=>{
+
+const touch =
+e.touches[0];
+
+handleMove(
+touch.clientX,
+touch.clientY
+);
+
+}
+);
+
+joystick.addEventListener(
+"touchmove",
+e=>{
+
+const touch =
+e.touches[0];
+
+handleMove(
+touch.clientX,
+touch.clientY
+);
 
 e.preventDefault();
 
-});
+}
+);
 
 function resetJoystick(){
 
-joyX=0;
-joyY=0;
+joyX = 0;
+joyY = 0;
 
-stick.style.left="45px";
-stick.style.top="45px";
+stick.style.left =
+"45px";
+
+stick.style.top =
+"45px";
 
 }
 
@@ -326,17 +505,55 @@ joystick.addEventListener(
 resetJoystick
 );
 
-const walls=[
+joystick.addEventListener(
+"touchcancel",
+resetJoystick
+);
 
-{x:250,y:150,w:300,h:25},
-{x:250,y:150,w:25,h:200},
-{x:525,y:150,w:25,h:200},
-{x:250,y:325,w:120,h:25},
-{x:430,y:325,w:120,h:25}
+// =====================
+// WORLD OBJECTS
+// =====================
+
+const walls = [
+
+{
+x:250,
+y:150,
+w:300,
+h:25
+},
+
+{
+x:250,
+y:150,
+w:25,
+h:200
+},
+
+{
+x:525,
+y:150,
+w:25,
+h:200
+},
+
+{
+x:250,
+y:325,
+w:120,
+h:25
+},
+
+{
+x:430,
+y:325,
+w:120,
+h:25
+}
 
 ];
 
-const portals=[
+const portals = [
 
 {
 realm:"earth",
@@ -367,34 +584,37 @@ color:"#87ceeb"
 }
 
 ];
+// =====================
+// MOVEMENT + COLLISION
+// =====================
+
 function movePlayer(){
 
 let nextX =
 player.x +
-joyX *
-player.speed;
+(joyX * player.speed);
 
 let nextY =
 player.y +
-joyY *
-player.speed;
+(joyY * player.speed);
 
-let blocked=false;
+let blocked = false;
 
-if(currentRealm==="world"){
+if(currentRealm === "world"){
 
 for(const wall of walls){
 
 if(
 
-nextX+10 > wall.x &&
-nextX-10 < wall.x+wall.w &&
-nextY+10 > wall.y &&
-nextY-10 < wall.y+wall.h
+nextX + player.radius > wall.x &&
+nextX - player.radius < wall.x + wall.w &&
+
+nextY + player.radius > wall.y &&
+nextY - player.radius < wall.y + wall.h
 
 ){
 
-blocked=true;
+blocked = true;
 
 }
 
@@ -404,128 +624,232 @@ blocked=true;
 
 if(!blocked){
 
-player.x=nextX;
-player.y=nextY;
+player.x = nextX;
+player.y = nextY;
 
 }
 
+// keep player on screen
+
+player.x = Math.max(
+player.radius,
+Math.min(
+canvas.width-player.radius,
+player.x
+)
+);
+
+player.y = Math.max(
+player.radius,
+Math.min(
+canvas.height-player.radius,
+player.y
+)
+);
+
 }
+
+// =====================
+// PLAYER
+// =====================
 
 function drawAvatar(){
 
-ctx.fillStyle=
-playerData.shirt;
+// player body
 
-ctx.fillRect(
-player.x-10,
-player.y-10,
-20,
-20
+ctx.fillStyle="#ff3333";
+
+ctx.beginPath();
+
+ctx.arc(
+player.x,
+player.y,
+player.radius,
+0,
+Math.PI*2
 );
 
-ctx.fillStyle=
-playerData.skin;
+ctx.fill();
+
+// outline
+
+ctx.strokeStyle="white";
+ctx.lineWidth=4;
+ctx.stroke();
+
+// eyes
+
+ctx.fillStyle="white";
 
 ctx.beginPath();
 ctx.arc(
-player.x,
-player.y-15,
-10,
+player.x-8,
+player.y-5,
+3,
 0,
 Math.PI*2
 );
 ctx.fill();
 
-ctx.fillStyle=
-playerData.hair;
-
-ctx.fillRect(
-player.x-10,
-player.y-25,
-20,
-8
+ctx.beginPath();
+ctx.arc(
+player.x+8,
+player.y-5,
+3,
+0,
+Math.PI*2
 );
+ctx.fill();
 
-ctx.fillStyle=
-playerData.eyes;
+// name
 
-ctx.fillRect(
-player.x-4,
-player.y-18,
-2,
-2
-);
+ctx.fillStyle="white";
 
-ctx.fillRect(
-player.x+3,
-player.y-18,
-2,
-2
-);
-
-ctx.fillStyle=
-"white";
+ctx.font="18px Arial";
 
 ctx.fillText(
 playerData.name,
-player.x-25,
-player.y-35
+player.x-35,
+player.y-45
 );
 
 }
 
-function drawRealm(color,name){
+// =====================
+// REALM DRAWER
+// =====================
+
+function drawRealm(
+color,
+realmName
+){
 
 ctx.fillStyle=color;
+
 ctx.fillRect(
-0,0,
+0,
+0,
 canvas.width,
 canvas.height
 );
 
-document
-.getElementById(
-"realmText"
-).innerHTML =
-name;
+// return portal
 
 ctx.fillStyle="gold";
+
 ctx.beginPath();
-ctx.arc(80,80,35,0,Math.PI*2);
+
+ctx.arc(
+80,
+80,
+40,
+0,
+Math.PI*2
+);
+
 ctx.fill();
+
+ctx.fillStyle="white";
+
+ctx.font="16px Arial";
+
+ctx.fillText(
+"RETURN",
+45,
+140
+);
 
 if(
 Math.hypot(
 player.x-80,
 player.y-80
-)<40
+)<50
 ){
 
-currentRealm="world";
+currentRealm =
+"world";
 
-player.x=400;
-player.y=250;
-
-}
-
-drawAvatar();
+player.x = 400;
+player.y = 250;
 
 }
-
-function drawWorld(){
-
-ctx.fillStyle="#4caf50";
-ctx.fillRect(
-0,0,
-canvas.width,
-canvas.height
-);
 
 document
 .getElementById(
 "realmText"
 ).innerHTML =
-"Main World";
+realmName;
+
+drawAvatar();
+
+}
+// =====================
+// MAIN WORLD
+// =====================
+
+function drawWorld(){
+
+ctx.fillStyle="#6db45e";
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+// realm labels
+
+document
+.getElementById(
+"realmText"
+).innerHTML =
+"⭐ Main World";
+
+// star paths
+
+ctx.strokeStyle="#d8c28a";
+ctx.lineWidth=20;
+
+ctx.beginPath();
+
+ctx.moveTo(400,250);
+ctx.lineTo(400,80);
+
+ctx.moveTo(400,250);
+ctx.lineTo(80,250);
+
+ctx.moveTo(400,250);
+ctx.lineTo(720,250);
+
+ctx.moveTo(400,250);
+ctx.lineTo(400,500);
+
+ctx.stroke();
+
+// guardian hall
+
+ctx.fillStyle="#d0b04f";
+
+ctx.fillRect(
+280,
+180,
+240,
+120
+);
+
+// hall title
+
+ctx.fillStyle="black";
+
+ctx.font="18px Arial";
+
+ctx.fillText(
+"GUARDIAN HALL",
+315,
+245
+);
+
+// walls
 
 ctx.fillStyle="#999";
 
@@ -540,18 +864,11 @@ wall.h
 
 }
 
-ctx.fillStyle="#d4af37";
-
-ctx.fillRect(
-280,
-180,
-240,
-120
-);
+// portals
 
 for(const p of portals){
 
-ctx.fillStyle=
+ctx.fillStyle =
 p.color;
 
 ctx.beginPath();
@@ -559,67 +876,243 @@ ctx.beginPath();
 ctx.arc(
 p.x,
 p.y,
-35,
+50,
 0,
 Math.PI*2
 );
 
 ctx.fill();
 
+ctx.strokeStyle="white";
+ctx.lineWidth=4;
+ctx.stroke();
+
+ctx.fillStyle="white";
+ctx.font="16px Arial";
+
+ctx.fillText(
+p.realm.toUpperCase(),
+p.x-35,
+p.y+80
+);
+
+// enter realm
+
 if(
 Math.hypot(
 player.x-p.x,
 player.y-p.y
-)<40
+)<60
 ){
 
-currentRealm=
+currentRealm =
 p.realm;
 
-player.x=
+player.x =
 canvas.width/2;
 
-player.y=
+player.y =
 canvas.height/2;
 
 }
 
 }
 
+// decorative trees
+
+for(let i=0;i<12;i++){
+
+const tx =
+100 +
+(i*60);
+
+const ty =
+600;
+
+ctx.fillStyle=
+"#654321";
+
+ctx.fillRect(
+tx,
+ty,
+10,
+20
+);
+
+ctx.fillStyle=
+"darkgreen";
+
+ctx.beginPath();
+
+ctx.arc(
+tx+5,
+ty,
+20,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
 drawAvatar();
 
 }
+// =====================
+// GAME LOOP
+// =====================
 
 function gameLoop(){
 
 movePlayer();
 
-if(currentRealm==="world")
+if(currentRealm==="world"){
+
 drawWorld();
 
-if(currentRealm==="earth")
+}
+else if(
+currentRealm==="earth"
+){
+
 drawRealm(
 "#2e8b57",
-"Earth Realm"
+"🌎 Earth Realm"
 );
 
-if(currentRealm==="water")
+// earth decorations
+
+ctx.fillStyle="darkgreen";
+
+for(let i=0;i<20;i++){
+
+ctx.beginPath();
+
+ctx.arc(
+50+(i*40),
+200+(i%4)*60,
+20,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+}
+else if(
+currentRealm==="water"
+){
+
 drawRealm(
 "#2196f3",
-"Water Realm"
+"🌊 Water Realm"
 );
 
-if(currentRealm==="fire")
+// lake
+
+ctx.fillStyle=
+"#64b5f6";
+
+ctx.beginPath();
+
+ctx.arc(
+canvas.width/2,
+canvas.height/2,
+100,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+else if(
+currentRealm==="fire"
+){
+
 drawRealm(
 "#8b2a00",
-"Fire Realm"
+"🔥 Fire Realm"
 );
 
-if(currentRealm==="air")
+// volcano
+
+ctx.fillStyle=
+"#5d4037";
+
+ctx.beginPath();
+
+ctx.moveTo(
+canvas.width/2-100,
+canvas.height/2+80
+);
+
+ctx.lineTo(
+canvas.width/2,
+canvas.height/2-100
+);
+
+ctx.lineTo(
+canvas.width/2+100,
+canvas.height/2+80
+);
+
+ctx.fill();
+
+// lava
+
+ctx.fillStyle=
+"orange";
+
+ctx.fillRect(
+canvas.width/2-20,
+canvas.height/2-50,
+40,
+120
+);
+
+}
+else if(
+currentRealm==="air"
+){
+
 drawRealm(
 "#87ceeb",
-"Air Realm"
+"🌪️ Air Realm"
 );
+
+// clouds
+
+ctx.font="60px Arial";
+
+ctx.fillText(
+"☁️",
+150,
+200
+);
+
+ctx.fillText(
+"☁️",
+350,
+300
+);
+
+ctx.fillText(
+"☁️",
+550,
+200
+);
+
+ctx.fillText(
+"☁️",
+250,
+450
+);
+
+}
 
 requestAnimationFrame(
 gameLoop
