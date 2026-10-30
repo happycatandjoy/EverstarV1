@@ -2,212 +2,382 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Everstar - Phase 1</title>
+<title>Everstar</title>
 
 <style>
-body {
-    margin: 0;
-    overflow: hidden;
-    background: #111;
-    font-family: Arial, sans-serif;
+body{
+    margin:0;
+    overflow:hidden;
+    background:#030818;
+    font-family:Trebuchet MS,sans-serif;
 }
 
-canvas {
-    display: block;
-    background: #222;
+canvas{
+    display:block;
 }
 
-#info {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(0,0,0,.7);
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 300px;
+#panel{
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:280px;
+
+    background:rgba(0,0,0,.65);
+    color:white;
+
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #5af;
+}
+
+h2{
+    margin-top:0;
+}
+
+.quest{
+    color:#ccc;
+}
+
+.complete{
+    color:#7CFC00;
 }
 </style>
 </head>
 <body>
 
-<div id="info">
-<h2>🌟 Everstar</h2>
-<p>Explore the island.</p>
-<p>Move with WASD or Arrow Keys.</p>
+<div id="panel">
+    <h2>🌟 EVERSTAR</h2>
+
+    <div id="location">
+        Explore the island...
+    </div>
+
+    <hr>
+
+    <b>Quests</b>
+
+    <div id="quests"></div>
 </div>
 
 <canvas id="game"></canvas>
 
 <script>
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const player = {
-    x: canvas.width/2,
-    y: canvas.height/2,
-    size: 15,
-    speed: 4
+window.addEventListener("resize",()=>{
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+});
+
+const centerX = canvas.width/2;
+const centerY = canvas.height/2;
+
+const player={
+    x:centerX,
+    y:centerY,
+    r:12,
+    speed:4
 };
 
-const keys = {};
+const keys={};
 
-document.addEventListener("keydown", e => keys[e.key] = true);
-document.addEventListener("keyup", e => keys[e.key] = false);
+document.addEventListener("keydown",e=>{
+    keys[e.key]=true;
+});
 
-const places = [
+document.addEventListener("keyup",e=>{
+    keys[e.key]=false;
+});
+
+const quests={
+    earth:false,
+    water:false,
+    fire:false,
+    air:false,
+    forest:false
+};
+
+const places=[
+
 {
-    name: "🌎 North Earth Realm",
-    x: 300,
-    y: 100,
-    color: "#4caf50"
+    name:"🌟 Everstar Plaza",
+    x:centerX,
+    y:centerY,
+    color:"#FFD700",
+    size:40
 },
+
 {
-    name: "🌪️ South Air Realm",
-    x: 300,
-    y: 700,
-    color: "#87ceeb"
+    name:"🌎 Earth Realm",
+    x:centerX,
+    y:centerY-230,
+    color:"#4CAF50",
+    size:50
 },
+
 {
-    name: "🌊 West Water Realm",
-    x: 50,
-    y: 350,
-    color: "#2196f3"
+    name:"🌊 Water Realm",
+    x:centerX-230,
+    y:centerY,
+    color:"#2196F3",
+    size:50
 },
+
 {
-    name: "🔥 East Fire Realm",
-    x: 850,
-    y: 350,
-    color: "#ff5722"
+    name:"🔥 Fire Realm",
+    x:centerX+230,
+    y:centerY,
+    color:"#FF5722",
+    size:50
 },
+
 {
-    name: "🏛 Town Square",
-    x: 450,
-    y: 350,
-    color: "#ffd54f"
+    name:"🌪️ Air Realm",
+    x:centerX,
+    y:centerY+230,
+    color:"#87CEEB",
+    size:50
 },
+
 {
-    name: "🌲 Deep Dark Forest of Doom",
-    x: 700,
-    y: 550,
-    color: "#1b5e20"
+    name:"🌲 Deep Dark Forest of Doom",
+    x:centerX+140,
+    y:centerY+120,
+    color:"#145A32",
+    size:65
 }
+
 ];
 
-const animals = [
+const animals=[
+
 {
-    name: "🦄 Unicorn",
-    x: 120,
-    y: 260
+    name:"🦄 Unicorn",
+    x:centerX-270,
+    y:centerY-60
 },
+
 {
-    name: "🐺 Lava Wolf",
-    x: 720,
-    y: 560
+    name:"🐢 Earth Tortoise",
+    x:centerX,
+    y:centerY-300
 },
+
 {
-    name: "🦅 Wind Eagle",
-    x: 280,
-    y: 650
+    name:"🐎 Water Horse",
+    x:centerX-290,
+    y:centerY+70
 },
+
 {
-    name: "🐉 Fire Dragon",
-    x: 840,
-    y: 200
+    name:"🐉 Fire Dragon",
+    x:centerX+290,
+    y:centerY-70
 },
+
 {
-    name: "🐢 Earth Tortoise",
-    x: 250,
-    y: 120
+    name:"🐺 Lava Wolf",
+    x:centerX+170,
+    y:centerY+140
 },
+
 {
-    name: "🐎 Water Horse",
-    x: 60,
-    y: 420
+    name:"🦅 Wind Eagle",
+    x:centerX+40,
+    y:centerY+310
 }
+
 ];
 
-function update() {
+const stars=[];
 
-    if(keys["w"] || keys["ArrowUp"])
-        player.y -= player.speed;
+for(let i=0;i<200;i++){
 
-    if(keys["s"] || keys["ArrowDown"])
-        player.y += player.speed;
-
-    if(keys["a"] || keys["ArrowLeft"])
-        player.x -= player.speed;
-
-    if(keys["d"] || keys["ArrowRight"])
-        player.x += player.speed;
-
-    let nearby = "Explore Everstar!";
-
-    places.forEach(place => {
-
-        const dx = player.x - place.x;
-        const dy = player.y - place.y;
-
-        if(Math.sqrt(dx*dx+dy*dy) < 50)
-            nearby = place.name;
+    stars.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2
     });
 
-    animals.forEach(animal => {
+}
 
-        const dx = player.x - animal.x;
-        const dy = player.y - animal.y;
+function drawStars(){
 
-        if(Math.sqrt(dx*dx+dy*dy) < 40)
-            nearby = animal.name;
-    });
+    ctx.fillStyle="white";
 
-    document.getElementById("info").innerHTML =
+    for(let s of stars){
+
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fill();
+    }
+}
+
+function update(){
+
+    if(keys["w"]||keys["ArrowUp"])
+        player.y-=player.speed;
+
+    if(keys["s"]||keys["ArrowDown"])
+        player.y+=player.speed;
+
+    if(keys["a"]||keys["ArrowLeft"])
+        player.x-=player.speed;
+
+    if(keys["d"]||keys["ArrowRight"])
+        player.x+=player.speed;
+
+    let location="Exploring Everstar";
+
+    for(let p of places){
+
+        const dx=player.x-p.x;
+        const dy=player.y-p.y;
+
+        if(Math.hypot(dx,dy)<60){
+
+            location=p.name;
+
+            if(p.name.includes("Earth"))
+                quests.earth=true;
+
+            if(p.name.includes("Water"))
+                quests.water=true;
+
+            if(p.name.includes("Fire"))
+                quests.fire=true;
+
+            if(p.name.includes("Air"))
+                quests.air=true;
+
+            if(p.name.includes("Forest"))
+                quests.forest=true;
+        }
+    }
+
+    document.getElementById("location").innerHTML=
+    "<b>"+location+"</b>";
+
+    document.getElementById("quests").innerHTML=
     `
-    <h2>🌟 Everstar</h2>
-    <p>${nearby}</p>
-    <p>Move: WASD / Arrow Keys</p>
+    <div class="${quests.earth?'complete':'quest'}">
+    ${quests.earth?'✅':'⬜'} Visit Earth Realm
+    </div>
+
+    <div class="${quests.water?'complete':'quest'}">
+    ${quests.water?'✅':'⬜'} Visit Water Realm
+    </div>
+
+    <div class="${quests.fire?'complete':'quest'}">
+    ${quests.fire?'✅':'⬜'} Visit Fire Realm
+    </div>
+
+    <div class="${quests.air?'complete':'quest'}">
+    ${quests.air?'✅':'⬜'} Visit Air Realm
+    </div>
+
+    <div class="${quests.forest?'complete':'quest'}">
+    ${quests.forest?'✅':'⬜'} Enter Doom Forest
+    </div>
     `;
 }
 
-function draw() {
+function draw(){
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    places.forEach(place => {
+    drawStars();
 
-        ctx.fillStyle = place.color;
-        ctx.fillRect(place.x-30, place.y-30, 60, 60);
+    // star roads
 
-        ctx.fillStyle = "white";
-        ctx.fillText(place.name, place.x-45, place.y-40);
-    });
+    ctx.strokeStyle="#777";
+    ctx.lineWidth=6;
 
-    animals.forEach(animal => {
+    ctx.beginPath();
+    ctx.moveTo(centerX,centerY);
+    ctx.lineTo(centerX,centerY-230);
 
-        ctx.fillStyle = "white";
+    ctx.moveTo(centerX,centerY);
+    ctx.lineTo(centerX-230,centerY);
+
+    ctx.moveTo(centerX,centerY);
+    ctx.lineTo(centerX+230,centerY);
+
+    ctx.moveTo(centerX,centerY);
+    ctx.lineTo(centerX,centerY+230);
+
+    ctx.stroke();
+
+    for(let p of places){
+
+        ctx.fillStyle=p.color;
+
         ctx.beginPath();
-        ctx.arc(animal.x, animal.y, 10, 0, Math.PI*2);
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI*2
+        );
         ctx.fill();
 
-        ctx.fillText(animal.name, animal.x-30, animal.y-20);
-    });
+        ctx.fillStyle="white";
+        ctx.fillText(
+            p.name,
+            p.x-55,
+            p.y-(p.size+15)
+        );
+    }
 
-    ctx.fillStyle = "gold";
+    for(let a of animals){
+
+        ctx.fillStyle="white";
+
+        ctx.beginPath();
+        ctx.arc(a.x,a.y,10,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillText(
+            a.name,
+            a.x-25,
+            a.y-15
+        );
+    }
+
+    // player
+
+    ctx.fillStyle="gold";
+
     ctx.beginPath();
-    ctx.arc(player.x, player.y, player.size, 0, Math.PI*2);
+    ctx.arc(
+        player.x,
+        player.y,
+        player.r,
+        0,
+        Math.PI*2
+    );
     ctx.fill();
+
+    ctx.strokeStyle="white";
+    ctx.stroke();
 }
 
-function gameLoop() {
+function loop(){
+
     update();
     draw();
-    requestAnimationFrame(gameLoop);
+
+    requestAnimationFrame(loop);
 }
 
-gameLoop();
+loop();
+
 </script>
 
 </body>
