@@ -2,10 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Everstar Beta</title>
+<title>Everstar</title>
 
 <style>
 
@@ -13,111 +12,106 @@ body{
     margin:0;
     overflow:hidden;
     font-family:Arial,sans-serif;
-    background:#111;
+    touch-action:none;
 }
 
-canvas{
-    display:block;
+#game{
+    width:100vw;
+    height:100vh;
+    position:relative;
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        to bottom,
+        #7bcfff,
+        #95e98f
+    );
 }
 
-#creator{
-
+#player{
+    width:40px;
+    height:40px;
+    border-radius:50%;
     position:absolute;
-    inset:0;
-
-    display:flex;
-    flex-direction:column;
-
-    justify-content:center;
-    align-items:center;
-
-    gap:10px;
-
-    background:#102040;
-
-    color:white;
-
-    z-index:1000;
-
+    background:gold;
+    border:3px solid white;
+    z-index:50;
 }
 
-#creator input,
-#creator select{
+.animal{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    position:absolute;
+}
 
-    width:220px;
+.unicorn{
+    background:white;
+    border:2px solid pink;
+}
 
-    padding:10px;
-
+.lavawolf{
+    background:orangered;
+    border:2px solid black;
 }
 
 #ui{
-
     position:absolute;
-
     top:10px;
     left:10px;
-
-    color:white;
-
-    background:rgba(0,0,0,.7);
-
-    padding:10px;
-
-    border-radius:10px;
-
+    background:white;
+    padding:12px;
+    border-radius:12px;
     z-index:100;
 
+    max-width:260px;
+}
+
+#message{
+    font-weight:bold;
+    color:purple;
+    margin-top:8px;
 }
 
 #joystick{
+    position:fixed;
+    bottom:30px;
+    left:30px;
 
-    position:absolute;
-
-    left:20px;
-    bottom:20px;
-
-    width:140px;
-    height:140px;
+    width:120px;
+    height:120px;
 
     border-radius:50%;
+    background:rgba(255,255,255,.2);
 
-    border:4px solid white;
+    border:3px solid white;
 
-    background:rgba(255,255,255,.15);
-
+    z-index:999;
     touch-action:none;
-
-    z-index:200;
-
 }
 
 #stick{
-
-    position:absolute;
-
-    left:45px;
-    top:45px;
-
-    width:50px;
-    height:50px;
+    width:60px;
+    height:60px;
 
     border-radius:50%;
 
     background:white;
 
-}
-
-#saveBtn{
-
     position:absolute;
 
-    right:10px;
-    top:10px;
+    left:30px;
+    top:30px;
 
-    padding:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.4);
+}
 
-    z-index:100;
-
+.region{
+    position:absolute;
+    font-weight:bold;
+    color:white;
+    text-shadow:2px 2px 2px black;
 }
 
 </style>
@@ -125,802 +119,267 @@ canvas{
 
 <body>
 
-<div id="creator">
-
-<h1>🌟 EVERSTAR BETA</h1>
-
-<input
-id="playerName"
-placeholder="Your Name">
-
-<select id="hairColor">
-
-<option value="#3b2414">
-Brown Hair
-</option>
-
-<option value="#111111">
-Black Hair
-</option>
-
-<option value="#f4d03f">
-Blonde Hair
-</option>
-
-<option value="#b03a2e">
-Red Hair
-</option>
-
-</select>
-
-<button onclick="startGame()">
-Begin Adventure
-</button>
-
-</div>
+<div id="game">
 
 <div id="ui">
 
-<div id="areaName">
-⭐ Everstar Meadow
+<h2>🌟 Everstar</h2>
+
+<div>
+Guardian Rank:
+<span id="rank">
+Apprentice
+</span>
+</div>
+
+<br>
+
+<div>
+Animals Found:
+<span id="animalsFound">
+0
+</span>
+</div>
+
+<div id="message">
+Explore Everstar!
 </div>
 
 </div>
 
-<button id="saveBtn">
-💾 Save
-</button>
+<div id="player"></div>
+
+<div class="animal unicorn"
+style="left:300px;top:220px;">
+</div>
+
+<div class="animal lavawolf"
+style="left:650px;top:350px;">
+</div>
+
+<div class="region"
+style="top:120px;left:240px;">
+🦄 Unicorn Falls
+</div>
+
+<div class="region"
+style="top:300px;left:550px;">
+🌋 Dark Forest of Doom
+</div>
+
+</div>
 
 <div id="joystick">
 <div id="stick"></div>
 </div>
 
-<canvas id="game"></canvas>
-
 <script>
 
-const canvas =
-document.getElementById("game");
+const player =
+document.getElementById("player");
 
-const ctx =
-canvas.getContext("2d");
+let x = 100;
+let y = 100;
 
-function resize(){
+player.style.left = x + "px";
+player.style.top = y + "px";
 
-    canvas.width =
-    window.innerWidth;
+let animalsFound = 0;
 
-    canvas.height =
-    window.innerHeight;
+const rank =
+document.getElementById("rank");
+
+const animalCounter =
+document.getElementById("animalsFound");
+
+const message =
+document.getElementById("message");
+
+function updatePlayer(){
+
+    player.style.left = x + "px";
+    player.style.top = y + "px";
+
+    checkAnimals();
+}
+
+document.addEventListener(
+"keydown",
+(event)=>{
+
+    const speed = 15;
+
+    if(event.key==="ArrowUp")
+        y-=speed;
+
+    if(event.key==="ArrowDown")
+        y+=speed;
+
+    if(event.key==="ArrowLeft")
+        x-=speed;
+
+    if(event.key==="ArrowRight")
+        x+=speed;
+
+    updatePlayer();
+});
+
+function checkAnimals(){
+
+    const animals =
+    document.querySelectorAll(".animal");
+
+    animals.forEach(animal=>{
+
+        const ax = animal.offsetLeft;
+        const ay = animal.offsetTop;
+
+        const distance =
+        Math.sqrt(
+        (x-ax)*(x-ax) +
+        (y-ay)*(y-ay));
+
+        if(distance < 50){
+
+            if(
+            animal.style.display !==
+            "none"
+            ){
+
+                animal.style.display =
+                "none";
+
+                animalsFound++;
+
+                animalCounter.innerText =
+                animalsFound;
+
+                if(
+                animal.classList.contains(
+                "unicorn"
+                )){
+                    message.innerText =
+                    "🦄 You befriended a Unicorn!";
+                }
+
+                if(
+                animal.classList.contains(
+                "lavawolf"
+                )){
+                    message.innerText =
+                    "🐺 Lava Wolf discovered!";
+                }
+
+                if(animalsFound >= 2){
+
+                    rank.innerText =
+                    "Junior Guardian";
+
+                    message.innerText =
+                    "👑 You became a Junior Guardian!";
+                }
+
+            }
+
+        }
+
+    });
 
 }
 
-resize();
+const joystick =
+document.getElementById("joystick");
 
-window.addEventListener(
-"resize",
-resize
-);
+const stick =
+document.getElementById("stick");
 
-// HUGE WORLD
-
-const world = {
-
-    width:3000,
-    height:3000
-
-};
-
-// PLAYER LIVES
-// INSIDE THE WORLD
-
-let player = {
-
-    x:1500,
-    y:1500,
-
-    speed:6,
-
-    radius:28
-
-};
-
-// CAMERA
-
-let camera = {
-
-    x:0,
-    y:0
-
-};
+let dragging = false;
 
 let joyX = 0;
 let joyY = 0;
 
-let playerData = {
-
-    name:"Guardian",
-    hair:"#3b2414"
-
-};
-// =====================
-// CHARACTER + SAVE
-// =====================
-
-const saveData =
-localStorage.getItem(
-"everstarBetaSave"
-);
-
-if(saveData){
-
-try{
-
-playerData =
-JSON.parse(saveData);
-
-}
-catch(error){
-
-console.log(error);
-
-}
-
-}
-
-function saveProgress(){
-
-localStorage.setItem(
-
-"everstarBetaSave",
-
-JSON.stringify(
-playerData
-)
-
-);
-
-}
-
-document
-.getElementById(
-"saveBtn"
-)
-.onclick =
-saveProgress;
-
-function startGame(){
-
-playerData.name =
-document.getElementById(
-"playerName"
-).value
-|| "Guardian";
-
-playerData.hair =
-document.getElementById(
-"hairColor"
-).value;
-
-saveProgress();
-
-document
-.getElementById(
-"creator"
-).style.display =
-"none";
-
-}
-
-// =====================
-// MOBILE JOYSTICK
-// =====================
-
-const joystick =
-document.getElementById(
-"joystick"
-);
-
-const stick =
-document.getElementById(
-"stick"
-);
-
-function updateJoystick(
-clientX,
-clientY
-){
-
-const rect =
-joystick.getBoundingClientRect();
-
-let dx =
-clientX -
-rect.left -
-70;
-
-let dy =
-clientY -
-rect.top -
-70;
-
-const distance =
-Math.sqrt(
-(dx*dx)+
-(dy*dy)
-);
-
-const max = 45;
-
-if(distance > max){
-
-dx =
-(dx / distance)
-* max;
-
-dy =
-(dy / distance)
-* max;
-
-}
-
-joyX = dx / max;
-joyY = dy / max;
-
-stick.style.left =
-(45 + dx)
-+ "px";
-
-stick.style.top =
-(45 + dy)
-+ "px";
-
-}
-
 joystick.addEventListener(
 "touchstart",
-e=>{
-
-const touch =
-e.touches[0];
-
-updateJoystick(
-touch.clientX,
-touch.clientY
-);
-
+()=>{
+    dragging = true;
 }
 );
 
 joystick.addEventListener(
 "touchmove",
-e=>{
+(event)=>{
 
-const touch =
-e.touches[0];
+    if(!dragging)
+    return;
 
-updateJoystick(
-touch.clientX,
-touch.clientY
+    const touch =
+    event.touches[0];
+
+    const rect =
+    joystick.getBoundingClientRect();
+
+    let dx =
+    touch.clientX -
+    (rect.left + 60);
+
+    let dy =
+    touch.clientY -
+    (rect.top + 60);
+
+    const distance =
+    Math.sqrt(dx*dx + dy*dy);
+
+    if(distance > 40){
+
+        dx =
+        (dx/distance)*40;
+
+        dy =
+        (dy/distance)*40;
+
+    }
+
+    joyX = dx;
+    joyY = dy;
+
+    stick.style.left =
+    (30+dx) + "px";
+
+    stick.style.top =
+    (30+dy) + "px";
+
+},
+{passive:false}
 );
-
-e.preventDefault();
-
-}
-);
-
-function resetJoystick(){
-
-joyX = 0;
-joyY = 0;
-
-stick.style.left =
-"45px";
-
-stick.style.top =
-"45px";
-
-}
 
 joystick.addEventListener(
 "touchend",
-resetJoystick
-);
+()=>{
 
-joystick.addEventListener(
-"touchcancel",
-resetJoystick
-);
+    dragging = false;
 
-// =====================
-// CAMERA
-// =====================
+    joyX = 0;
+    joyY = 0;
 
-function updateCamera(){
+    stick.style.left =
+    "30px";
 
-camera.x =
-
-player.x -
-
-(canvas.width / 2);
-
-camera.y =
-
-player.y -
-
-(canvas.height / 2);
+    stick.style.top =
+    "30px";
 
 }
-// =====================
-// EVERSTAR WORLD DATA
-// =====================
-
-// giant scrolling world
-
-const trees = [];
-
-for(let i=0;i<120;i++){
-
-trees.push({
-
-x:Math.random() * world.width,
-
-y:Math.random() * world.height
-
-});
-
-}
-
-// star roads
-
-const roads = [
-
-{
-x1:1500,
-y1:700,
-x2:1500,
-y2:1500
-},
-
-{
-x1:700,
-y1:1500,
-x2:1500,
-y2:1500
-},
-
-{
-x1:1500,
-y1:1500,
-x2:2300,
-y2:1500
-},
-
-{
-x1:1500,
-y1:1500,
-x2:1500,
-y2:2300
-}
-
-];
-
-// realm locations
-
-const realms = [
-
-{
-name:"Earth Realm",
-x:1500,
-y:700,
-color:"#2e8b57"
-},
-
-{
-name:"Water Realm",
-x:700,
-y:1500,
-color:"#2196f3"
-},
-
-{
-name:"Fire Realm",
-x:2300,
-y:1500,
-color:"#ff5722"
-},
-
-{
-name:"Air Realm",
-x:1500,
-y:2300,
-color:"#87ceeb"
-}
-
-];
-
-// =====================
-// PLAYER MOVEMENT
-// =====================
-
-function movePlayer(){
-
-player.x +=
-joyX * player.speed;
-
-player.y +=
-joyY * player.speed;
-
-// keep player
-// inside giant world
-
-player.x = Math.max(
-0,
-Math.min(
-world.width,
-player.x
-)
 );
-
-player.y = Math.max(
-0,
-Math.min(
-world.height,
-player.y
-)
-);
-
-}
-
-// =====================
-// CAMERA FOLLOW
-// =====================
-
-function updateCamera(){
-
-camera.x =
-player.x -
-(canvas.width/2);
-
-camera.y =
-player.y -
-(canvas.height/2);
-
-// stop camera leaving map
-
-camera.x =
-Math.max(
-0,
-Math.min(
-world.width -
-canvas.width,
-camera.x
-)
-);
-
-camera.y =
-Math.max(
-0,
-Math.min(
-world.height -
-canvas.height,
-camera.y
-)
-);
-
-}
-// =====================
-// DRAW WORLD
-// =====================
-
-function drawWorld(){
-
-// grass world
-
-ctx.fillStyle =
-"#5cae55";
-
-ctx.fillRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-// roads
-
-ctx.strokeStyle =
-"#d8c28a";
-
-ctx.lineWidth = 40;
-
-for(const road of roads){
-
-ctx.beginPath();
-
-ctx.moveTo(
-road.x1 - camera.x,
-road.y1 - camera.y
-);
-
-ctx.lineTo(
-road.x2 - camera.x,
-road.y2 - camera.y
-);
-
-ctx.stroke();
-
-}
-
-// Everstar Plaza
-
-ctx.fillStyle =
-"gold";
-
-ctx.beginPath();
-
-ctx.arc(
-1500 - camera.x,
-1500 - camera.y,
-120,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-ctx.fillStyle =
-"black";
-
-ctx.font =
-"24px Arial";
-
-ctx.fillText(
-"EVERSTAR PLAZA",
-1400 - camera.x,
-1500 - camera.y
-);
-
-// Guardian Hall
-
-ctx.fillStyle =
-"#d1b15b";
-
-ctx.fillRect(
-1380 - camera.x,
-1420 - camera.y,
-240,
-140
-);
-
-ctx.strokeStyle =
-"#444";
-
-ctx.lineWidth = 4;
-
-ctx.strokeRect(
-1380 - camera.x,
-1420 - camera.y,
-240,
-140
-);
-
-ctx.fillStyle =
-"black";
-
-ctx.fillText(
-"GUARDIAN HALL",
-1415 - camera.x,
-1495 - camera.y
-);
-
-// trees
-
-for(const tree of trees){
-
-ctx.fillStyle =
-"#6d4c41";
-
-ctx.fillRect(
-tree.x - camera.x - 5,
-tree.y - camera.y,
-10,
-20
-);
-
-ctx.fillStyle =
-"darkgreen";
-
-ctx.beginPath();
-
-ctx.arc(
-tree.x - camera.x,
-tree.y - camera.y,
-18,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-}
-
-// realm portals
-
-for(const realm of realms){
-
-ctx.fillStyle =
-realm.color;
-
-ctx.beginPath();
-
-ctx.arc(
-realm.x - camera.x,
-realm.y - camera.y,
-60,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-ctx.strokeStyle =
-"white";
-
-ctx.lineWidth = 5;
-
-ctx.stroke();
-
-ctx.fillStyle =
-"white";
-
-ctx.font =
-"18px Arial";
-
-ctx.fillText(
-realm.name,
-realm.x - camera.x - 45,
-realm.y - camera.y + 95
-);
-
-const distance =
-Math.hypot(
-player.x - realm.x,
-player.y - realm.y
-);
-
-if(distance < 70){
-
-document
-.getElementById(
-"areaName"
-).innerHTML =
-"⭐ Tap portal area";
-
-currentPortal =
-realm.name;
-
-}
-
-}
-
-}
-// =====================
-// PLAYER RENDER
-// =====================
-
-function drawPlayer(){
-
-// player is ALWAYS
-// drawn in screen center
-
-const screenX =
-canvas.width / 2;
-
-const screenY =
-canvas.height / 2;
-
-// body
-
-ctx.fillStyle =
-"#ff4444";
-
-ctx.beginPath();
-
-ctx.arc(
-screenX,
-screenY,
-28,
-0,
-Math.PI * 2
-);
-
-ctx.fill();
-
-// outline
-
-ctx.strokeStyle =
-"white";
-
-ctx.lineWidth = 4;
-
-ctx.stroke();
-
-// eyes
-
-ctx.fillStyle =
-"white";
-
-ctx.beginPath();
-ctx.arc(
-screenX - 8,
-screenY - 5,
-3,
-0,
-Math.PI*2
-);
-ctx.fill();
-
-ctx.beginPath();
-ctx.arc(
-screenX + 8,
-screenY - 5,
-3,
-0,
-Math.PI*2
-);
-ctx.fill();
-
-// hair
-
-ctx.fillStyle =
-playerData.hair;
-
-ctx.beginPath();
-
-ctx.arc(
-screenX,
-screenY - 15,
-20,
-Math.PI,
-0
-);
-
-ctx.fill();
-
-// player name
-
-ctx.fillStyle =
-"white";
-
-ctx.font =
-"18px Arial";
-
-ctx.fillText(
-playerData.name,
-screenX - 40,
-screenY - 45
-);
-
-}
-
-// =====================
-// GAME LOOP
-// =====================
 
 function gameLoop(){
 
-movePlayer();
+    x += joyX * 0.12;
+    y += joyY * 0.12;
 
-updateCamera();
+    updatePlayer();
 
-drawWorld();
-
-drawPlayer();
-
-requestAnimationFrame(
-gameLoop
-);
+    requestAnimationFrame(
+    gameLoop
+    );
 
 }
 
