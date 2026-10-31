@@ -2,116 +2,185 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
 
-<title>Everstar</title>
+<title>Everstar v0.2</title>
 
 <style>
 
 body{
-    margin:0;
-    overflow:hidden;
-    font-family:Arial,sans-serif;
-    touch-action:none;
+margin:0;
+overflow:hidden;
+font-family:Arial,sans-serif;
+touch-action:none;
+background:black;
+}
+
+#viewport{
+width:100vw;
+height:100vh;
+overflow:hidden;
+position:relative;
 }
 
 #game{
-    width:100vw;
-    height:100vh;
-    position:relative;
-    overflow:hidden;
+position:relative;
+width:4000px;
+height:4000px;
 
-    background:
-    linear-gradient(
-        to bottom,
-        #7bcfff,
-        #95e98f
-    );
+background:
+linear-gradient(
+to bottom,
+#7bcfff,
+#95e98f
+);
+}
+
+#regionLabel{
+position:absolute;
+top:10px;
+right:10px;
+z-index:1000;
+
+background:white;
+padding:10px;
+border-radius:10px;
 }
 
 #player{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    position:absolute;
-    background:gold;
-    border:3px solid white;
-    z-index:50;
+position:absolute;
+width:60px;
+height:60px;
+
+background:#f5d6b2;
+
+border-radius:50%;
+
+z-index:100;
 }
 
-.animal{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    position:absolute;
+.eye{
+width:10px;
+height:10px;
+border-radius:50%;
+background:blue;
+position:absolute;
+top:20px;
 }
 
-.unicorn{
-    background:white;
-    border:2px solid pink;
+#leftEye{
+left:16px;
 }
 
-.lavawolf{
-    background:orangered;
-    border:2px solid black;
+#rightEye{
+right:16px;
 }
 
 #ui{
-    position:absolute;
-    top:10px;
-    left:10px;
-    background:white;
-    padding:12px;
-    border-radius:12px;
-    z-index:100;
+position:fixed;
+left:10px;
+top:10px;
 
-    max-width:260px;
+background:white;
+padding:10px;
+
+border-radius:10px;
+
+z-index:9999;
+max-width:260px;
 }
 
 #message{
-    font-weight:bold;
-    color:purple;
-    margin-top:8px;
+margin-top:10px;
+font-weight:bold;
+color:purple;
+}
+
+#region{
+font-weight:bold;
+position:absolute;
+font-size:24px;
+color:white;
+text-shadow:2px 2px 4px black;
+}
+
+.animal{
+position:absolute;
+width:40px;
+height:40px;
+border-radius:50%;
+}
+
+.unicorn{
+background:white;
+border:2px solid pink;
+}
+
+.lavawolf{
+background:orangered;
+}
+
+#sage{
+position:absolute;
+width:50px;
+height:50px;
+
+background:purple;
+
+border-radius:50%;
 }
 
 #joystick{
-    position:fixed;
-    bottom:30px;
-    left:30px;
+position:fixed;
+left:25px;
+bottom:25px;
 
-    width:120px;
-    height:120px;
+width:120px;
+height:120px;
 
-    border-radius:50%;
-    background:rgba(255,255,255,.2);
+border-radius:50%;
 
-    border:3px solid white;
+background:
+rgba(255,255,255,.2);
 
-    z-index:999;
-    touch-action:none;
+border:3px solid white;
+
+z-index:2000;
 }
 
 #stick{
-    width:60px;
-    height:60px;
+position:absolute;
 
-    border-radius:50%;
+width:60px;
+height:60px;
 
-    background:white;
+left:30px;
+top:30px;
 
-    position:absolute;
-
-    left:30px;
-    top:30px;
-
-    box-shadow:0 0 10px rgba(0,0,0,.4);
+border-radius:50%;
+background:white;
 }
 
-.region{
-    position:absolute;
-    font-weight:bold;
-    color:white;
-    text-shadow:2px 2px 2px black;
+#characterScreen{
+position:fixed;
+inset:0;
+
+background:#111;
+
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+color:white;
+
+z-index:10000;
+}
+
+select,button{
+padding:10px;
+font-size:18px;
 }
 
 </style>
@@ -119,234 +188,549 @@ body{
 
 <body>
 
-<div id="game">
+<div id="characterScreen">
 
-<div id="ui">
+<h1>🌟 EVERSTAR 🌟</h1>
 
-<h2>🌟 Everstar</h2>
+<p>Select Your Element</p>
 
-<div>
-Guardian Rank:
-<span id="rank">
-Apprentice
-</span>
-</div>
+<select id="element">
+
+<option>Fire</option>
+<option>Water</option>
+<option>Earth</option>
+<option>Air</option>
+
+<option>Ice</option>
+<option>Light</option>
+<option>Life</option>
+<option>Death</option>
+
+</select>
 
 <br>
 
-<div>
-Animals Found:
+<button onclick="startGame()">
+Enter Everstar
+</button>
+
+</div>
+
+<div id="ui">
+
+<h2>Everstar</h2>
+
+Guardian:
+<span id="rank">
+Apprentice
+</span>
+
+<br><br>
+
+Star:
+<span id="starName">
+Unknown
+</span>
+
+<br><br>
+
+Animals:
 <span id="animalsFound">
 0
 </span>
-</div>
 
 <div id="message">
-Explore Everstar!
-</div>
+
+Choose your destiny.
 
 </div>
 
-<div id="player"></div>
-
-<div class="animal unicorn"
-style="left:300px;top:220px;">
 </div>
 
-<div class="animal lavawolf"
-style="left:650px;top:350px;">
+<div id="regionLabel">
+Region: Spawn
 </div>
 
-<div class="region"
-style="top:120px;left:240px;">
+<div id="viewport">
+
+<div id="game">
+
+<div id="player">
+
+<div
+class="eye"
+id="leftEye">
+</div>
+
+<div
+class="eye"
+id="rightEye">
+</div>
+
+</div>
+<div
+class="animal unicorn"
+style="
+left:500px;
+top:700px;">
+</div>
+
+<div
+class="animal lavawolf"
+style="
+left:1800px;
+top:900px;">
+</div>
+
+<div
+id="sage"
+style="
+left:2500px;
+top:1200px;">
+</div>
+
+<div
+id="region"
+style="
+left:400px;
+top:600px;">
 🦄 Unicorn Falls
 </div>
 
-<div class="region"
-style="top:300px;left:550px;">
+<div
+id="region"
+style="
+left:1650px;
+top:700px;">
 🌋 Dark Forest of Doom
 </div>
 
+<div
+id="region"
+style="
+left:3100px;
+top:400px;">
+☁️ Air Region
+</div>
+
+<div
+id="region"
+style="
+left:3300px;
+top:2500px;">
+🔥 Fire Region
+</div>
+
+<div
+id="region"
+style="
+left:1200px;
+top:3000px;">
+🌿 Earth Region
+</div>
+
+<div
+id="region"
+style="
+left:400px;
+top:2600px;">
+🌊 Water Region
+</div>
+
+</div>
 </div>
 
 <div id="joystick">
 <div id="stick"></div>
 </div>
-
 <script>
 
 const player =
 document.getElementById("player");
 
-let x = 100;
-let y = 100;
+const game =
+document.getElementById("game");
 
-player.style.left = x + "px";
-player.style.top = y + "px";
+let x = 200;
+let y = 200;
 
 let animalsFound = 0;
 
-const rank =
-document.getElementById("rank");
+let playerElement = "";
+let birthStar = "";
 
-const animalCounter =
-document.getElementById("animalsFound");
+let pets = [];
 
-const message =
-document.getElementById("message");
+const stars = [
+"Aurora",
+"Nova",
+"Celestia",
+"Astrid",
+"Solara",
+"Eclipse",
+"Vega",
+"Lunaris"
+];
+
+function startGame(){
+
+playerElement =
+document.getElementById(
+"element"
+).value;
+
+const colors = {
+
+Fire:"orange",
+Water:"blue",
+Earth:"green",
+Air:"white",
+
+Ice:"silver",
+Light:"gold",
+Life:"lime",
+Death:"black"
+
+};
+
+document
+.querySelectorAll(".eye")
+.forEach(eye=>{
+
+eye.style.background =
+colors[playerElement];
+
+});
+
+birthStar =
+stars[
+Math.floor(
+Math.random()*
+stars.length
+)
+];
+
+document
+.getElementById("starName")
+.innerText = birthStar;
+
+document
+.getElementById(
+"characterScreen"
+).style.display="none";
+
+showMessage(
+"Your star is "
++ birthStar
+);
+
+}
+
+function showMessage(text){
+
+document
+.getElementById("message")
+.innerText = text;
+
+}
+
+function updateCamera(){
+
+const w =
+window.innerWidth;
+
+const h =
+window.innerHeight;
+
+let camX =
+x - w/2;
+
+let camY =
+y - h/2;
+
+camX =
+Math.max(
+0,
+Math.min(
+camX,
+4000-w
+)
+);
+
+camY =
+Math.max(
+0,
+Math.min(
+camY,
+4000-h
+)
+);
+
+game.style.transform=
+`translate(
+${-camX}px,
+${-camY}px
+)`;
+
+}
 
 function updatePlayer(){
 
-    player.style.left = x + "px";
-    player.style.top = y + "px";
+x=Math.max(
+0,
+Math.min(x,3940)
+);
 
-    checkAnimals();
+y=Math.max(
+0,
+Math.min(y,3940)
+);
+
+player.style.left =
+x+"px";
+
+player.style.top =
+y+"px";
+
+updateCamera();
+checkAnimals();
+checkNPC();
+checkRegion();
+
+}
+
+function gainPet(name){
+
+pets.push(name);
+
+showMessage(
+name +
+" joined your team!"
+);
+
+}
+
+function checkAnimals(){
+
+document
+.querySelectorAll(".animal")
+.forEach(animal=>{
+
+if(
+animal.dataset.found
+)
+return;
+
+const dx =
+x-animal.offsetLeft;
+
+const dy =
+y-animal.offsetTop;
+
+const dist =
+Math.sqrt(
+dx*dx+dy*dy
+);
+
+if(dist<80){
+
+animal.dataset.found=true;
+
+animalsFound++;
+
+document
+.getElementById(
+"animalsFound"
+).innerText=
+animalsFound;
+
+if(
+animal.classList.contains(
+"unicorn"
+)
+){
+gainPet("Unicorn");
+}
+
+if(
+animal.classList.contains(
+"lavawolf"
+)
+){
+gainPet("Lava Wolf");
+}
+
+if(
+animalsFound>=2
+){
+
+document
+.getElementById(
+"rank"
+).innerText=
+"Junior Guardian";
+
+showMessage(
+"You became a Junior Guardian!"
+);
+
+}
+
+animal.style.display=
+"none";
+
+}
+
+});
+
+}
+
+function checkNPC(){
+
+const sage =
+document.getElementById(
+"sage"
+);
+
+const dx =
+x-sage.offsetLeft;
+
+const dy =
+y-sage.offsetTop;
+
+const dist =
+Math.sqrt(
+dx*dx+dy*dy
+);
+
+if(dist<100){
+
+showMessage(
+"Sage: The Bronze Phoenix still lives..."
+);
+
+}
+
+}
+
+function checkRegion(){
+
+let region="Wilderness";
+
+if(x<1000 && y<1200)
+region="Unicorn Falls";
+
+if(x>1500&&x<2500)
+region="Dark Forest of Doom";
+
+if(x>2800&&y<1000)
+region="Air Region";
+
+if(x>2800&&y>1800)
+region="Fire Region";
+
+if(x<1000&&y>2200)
+region="Water Region";
+
+if(x>800&&x<2000&&y>2500)
+region="Earth Region";
+
+document
+.getElementById(
+"regionLabel"
+).innerText=
+"Region: "
++region;
+
 }
 
 document.addEventListener(
 "keydown",
-(event)=>{
+e=>{
 
-    const speed = 15;
+const speed=15;
 
-    if(event.key==="ArrowUp")
-        y-=speed;
+if(e.key==="ArrowUp")
+y-=speed;
 
-    if(event.key==="ArrowDown")
-        y+=speed;
+if(e.key==="ArrowDown")
+y+=speed;
 
-    if(event.key==="ArrowLeft")
-        x-=speed;
+if(e.key==="ArrowLeft")
+x-=speed;
 
-    if(event.key==="ArrowRight")
-        x+=speed;
+if(e.key==="ArrowRight")
+x+=speed;
 
-    updatePlayer();
-});
-
-function checkAnimals(){
-
-    const animals =
-    document.querySelectorAll(".animal");
-
-    animals.forEach(animal=>{
-
-        const ax = animal.offsetLeft;
-        const ay = animal.offsetTop;
-
-        const distance =
-        Math.sqrt(
-        (x-ax)*(x-ax) +
-        (y-ay)*(y-ay));
-
-        if(distance < 50){
-
-            if(
-            animal.style.display !==
-            "none"
-            ){
-
-                animal.style.display =
-                "none";
-
-                animalsFound++;
-
-                animalCounter.innerText =
-                animalsFound;
-
-                if(
-                animal.classList.contains(
-                "unicorn"
-                )){
-                    message.innerText =
-                    "🦄 You befriended a Unicorn!";
-                }
-
-                if(
-                animal.classList.contains(
-                "lavawolf"
-                )){
-                    message.innerText =
-                    "🐺 Lava Wolf discovered!";
-                }
-
-                if(animalsFound >= 2){
-
-                    rank.innerText =
-                    "Junior Guardian";
-
-                    message.innerText =
-                    "👑 You became a Junior Guardian!";
-                }
-
-            }
-
-        }
-
-    });
+updatePlayer();
 
 }
+);
 
 const joystick =
-document.getElementById("joystick");
+document.getElementById(
+"joystick"
+);
 
 const stick =
-document.getElementById("stick");
+document.getElementById(
+"stick"
+);
 
-let dragging = false;
-
-let joyX = 0;
-let joyY = 0;
+let joyX=0;
+let joyY=0;
+let dragging=false;
 
 joystick.addEventListener(
 "touchstart",
 ()=>{
-    dragging = true;
+dragging=true;
 }
 );
 
 joystick.addEventListener(
 "touchmove",
-(event)=>{
+e=>{
 
-    if(!dragging)
-    return;
+if(!dragging)
+return;
 
-    const touch =
-    event.touches[0];
+const t=e.touches[0];
 
-    const rect =
-    joystick.getBoundingClientRect();
+const rect=
+joystick.getBoundingClientRect();
 
-    let dx =
-    touch.clientX -
-    (rect.left + 60);
+let dx=
+t.clientX-
+(rect.left+60);
 
-    let dy =
-    touch.clientY -
-    (rect.top + 60);
+let dy=
+t.clientY-
+(rect.top+60);
 
-    const distance =
-    Math.sqrt(dx*dx + dy*dy);
+let dist=
+Math.sqrt(
+dx*dx+dy*dy
+);
 
-    if(distance > 40){
+if(dist>40){
 
-        dx =
-        (dx/distance)*40;
+dx=
+dx/dist*40;
 
-        dy =
-        (dy/distance)*40;
+dy=
+dy/dist*40;
 
-    }
+}
 
-    joyX = dx;
-    joyY = dy;
+joyX=dx;
+joyY=dy;
 
-    stick.style.left =
-    (30+dx) + "px";
+stick.style.left=
+(30+dx)+"px";
 
-    stick.style.top =
-    (30+dy) + "px";
+stick.style.top=
+(30+dy)+"px";
 
 },
 {passive:false}
@@ -356,34 +740,34 @@ joystick.addEventListener(
 "touchend",
 ()=>{
 
-    dragging = false;
+dragging=false;
 
-    joyX = 0;
-    joyY = 0;
+joyX=0;
+joyY=0;
 
-    stick.style.left =
-    "30px";
+stick.style.left=
+"30px";
 
-    stick.style.top =
-    "30px";
+stick.style.top=
+"30px";
 
 }
 );
 
-function gameLoop(){
+function loop(){
 
-    x += joyX * 0.12;
-    y += joyY * 0.12;
+x+=joyX*0.12;
+y+=joyY*0.12;
 
-    updatePlayer();
+updatePlayer();
 
-    requestAnimationFrame(
-    gameLoop
-    );
+requestAnimationFrame(
+loop
+);
 
 }
 
-gameLoop();
+loop();
 
 </script>
 
