@@ -1,138 +1,539 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
 
-<title>Everstar v0.2</title>
+<meta charset="UTF-8">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Everstar v0.3</title>
 
 <style>
 
+*{
+box-sizing:border-box;
+}
+
 body{
+
 margin:0;
 overflow:hidden;
-font-family:Arial,sans-serif;
-touch-action:none;
+
+font-family:
+Arial,
+sans-serif;
+
 background:black;
+
+touch-action:none;
+
 }
 
 #viewport{
+
 width:100vw;
 height:100vh;
+
 overflow:hidden;
+
 position:relative;
+
 }
 
 #game{
+
 position:relative;
+
 width:4000px;
 height:4000px;
 
 background:
 linear-gradient(
 to bottom,
-#7bcfff,
-#95e98f
+#8dd9ff,
+#9cf09b
 );
+
 }
 
-#regionLabel{
-position:absolute;
-top:10px;
-right:10px;
-z-index:1000;
+#characterScreen{
 
-background:white;
+position:fixed;
+
+inset:0;
+
+overflow:auto;
+
+background:
+
+linear-gradient(
+180deg,
+#1d2248,
+#293a7a
+);
+
+color:white;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+padding:20px;
+
+z-index:99999;
+
+}
+
+#creatorPanel{
+
+width:min(
+95vw,
+450px
+);
+
+background:
+rgba(
+255,
+255,
+255,
+0.1
+);
+
+padding:20px;
+
+border-radius:16px;
+
+backdrop-filter:
+blur(8px);
+
+}
+
+#creatorPanel h1{
+
+text-align:center;
+
+margin-top:0;
+
+}
+
+.creatorRow{
+
+margin-bottom:12px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:4px;
+
+}
+
+.creatorRow label{
+
+font-size:14px;
+
+}
+
+.creatorRow input,
+.creatorRow select,
+.creatorRow button{
+
 padding:10px;
-border-radius:10px;
+
+font-size:16px;
+
+border-radius:8px;
+
+border:none;
+
 }
 
-#player{
+#randomButton{
+
+background:#ffd84f;
+cursor:pointer;
+
+}
+
+#enterButton{
+
+background:#78ff8f;
+cursor:pointer;
+
+}
+
+#previewCharacter{
+
+position:relative;
+
+width:120px;
+height:220px;
+
+margin:20px auto;
+
+}
+
+#previewHair{
+
 position:absolute;
+
+left:30px;
+top:12px;
+
+width:60px;
+height:20px;
+
+background:brown;
+
+border-radius:
+15px
+15px
+5px
+5px;
+
+z-index:10;
+
+}
+
+#previewHead{
+
+position:absolute;
+
+left:30px;
+top:20px;
+
 width:60px;
 height:60px;
 
-background:#f5d6b2;
+background:#f8d8bd;
 
 border-radius:50%;
 
-z-index:100;
 }
 
-.eye{
-width:10px;
-height:10px;
-border-radius:50%;
-background:blue;
+.previewEye{
+
 position:absolute;
-top:20px;
+
+width:8px;
+height:8px;
+
+background:black;
+
+border-radius:50%;
+
+top:22px;
+
 }
 
-#leftEye{
-left:16px;
+.previewEye.left{
+
+left:15px;
+
 }
 
-#rightEye{
-right:16px;
+.previewEye.right{
+
+right:15px;
+
+}
+
+#previewBody{
+
+position:absolute;
+
+left:40px;
+top:80px;
+
+width:40px;
+height:50px;
+
+background:#4466ff;
+
+border-radius:8px;
+
+}
+
+#previewJacket{
+
+position:absolute;
+
+left:35px;
+top:78px;
+
+width:50px;
+height:54px;
+
+background:transparent;
+
+border-radius:8px;
+
+}
+
+#previewDress{
+
+position:absolute;
+
+left:30px;
+top:120px;
+
+width:60px;
+height:55px;
+
+background:transparent;
+
+clip-path:
+
+polygon(
+50% 0,
+100% 100%,
+0% 100%
+);
+
+}
+
+#previewLegs{
+
+position:absolute;
+
+left:45px;
+top:130px;
+
+width:30px;
+height:30px;
+
+background:#333;
+
+}
+
+#previewShoes{
+
+position:absolute;
+
+left:43px;
+top:160px;
+
+width:34px;
+height:10px;
+
+background:black;
+
+border-radius:4px;
+
 }
 
 #ui{
+
 position:fixed;
+
 left:10px;
 top:10px;
 
 background:white;
+
+padding:12px;
+
+border-radius:12px;
+
+max-width:260px;
+
+z-index:999;
+
+}
+
+#regionLabel{
+
+position:fixed;
+
+top:10px;
+right:10px;
+
+background:white;
+
 padding:10px;
 
 border-radius:10px;
 
-z-index:9999;
-max-width:260px;
+z-index:999;
+
 }
 
 #message{
+
 margin-top:10px;
+
 font-weight:bold;
+
 color:purple;
+
 }
 
-#region{
-font-weight:bold;
+#player{
+
 position:absolute;
-font-size:24px;
-color:white;
-text-shadow:2px 2px 4px black;
+
+width:60px;
+height:100px;
+
+z-index:50;
+
 }
 
-.animal{
+#playerHair{
+
 position:absolute;
+
+left:9px;
+top:0;
+
+width:42px;
+height:20px;
+
+background:brown;
+
+border-radius:
+15px
+15px
+6px
+6px;
+
+z-index:10;
+
+}
+
+#playerHead{
+
+position:absolute;
+
+left:10px;
+top:10px;
+
 width:40px;
 height:40px;
+
 border-radius:50%;
+
+background:#f8d8bd;
+
 }
 
-.unicorn{
-background:white;
-border:2px solid pink;
-}
+.eye{
 
-.lavawolf{
-background:orangered;
-}
-
-#sage{
 position:absolute;
-width:50px;
-height:50px;
 
-background:purple;
+width:6px;
+height:6px;
+
+background:black;
 
 border-radius:50%;
+
+top:15px;
+
 }
 
+#leftEye{
+
+left:10px;
+
+}
+
+#rightEye{
+
+right:10px;
+
+}
+
+#playerBody{
+
+position:absolute;
+
+left:16px;
+top:50px;
+
+width:28px;
+height:35px;
+
+background:blue;
+
+border-radius:8px;
+
+}
+
+#playerJacket{
+
+position:absolute;
+
+left:12px;
+top:48px;
+
+width:36px;
+height:39px;
+
+background:transparent;
+
+border-radius:8px;
+
+}
+
+#playerDress{
+
+position:absolute;
+
+left:8px;
+top:70px;
+
+width:44px;
+height:28px;
+
+background:transparent;
+
+clip-path:
+
+polygon(
+50% 0,
+100% 100%,
+0% 100%
+);
+
+}
+
+#playerLegs{
+
+position:absolute;
+
+left:19px;
+top:85px;
+
+width:22px;
+height:18px;
+
+background:#222;
+
+}
+
+#playerShoes{
+
+position:absolute;
+
+left:17px;
+top:101px;
+
+width:26px;
+height:8px;
+
+background:black;
+
+border-radius:4px;
+
+}
 #joystick{
+
 position:fixed;
+
 left:25px;
 bottom:25px;
 
@@ -142,45 +543,205 @@ height:120px;
 border-radius:50%;
 
 background:
-rgba(255,255,255,.2);
+rgba(
+255,
+255,
+255,
+0.2
+);
 
-border:3px solid white;
+border:
+3px solid white;
 
 z-index:2000;
+
 }
 
 #stick{
-position:absolute;
 
-width:60px;
-height:60px;
+position:absolute;
 
 left:30px;
 top:30px;
 
+width:60px;
+height:60px;
+
 border-radius:50%;
+
 background:white;
+
 }
 
-#characterScreen{
-position:fixed;
-inset:0;
+.region{
 
-background:#111;
+position:absolute;
 
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
+font-size:24px;
+
+font-weight:bold;
 
 color:white;
 
-z-index:10000;
+text-shadow:
+2px 2px 4px black;
+
 }
 
-select,button{
-padding:10px;
-font-size:18px;
+.animal{
+
+position:absolute;
+
+width:40px;
+height:40px;
+
+border-radius:50%;
+
+}
+
+.unicorn{
+
+background:white;
+
+border:
+2px solid hotpink;
+
+}
+
+.lavawolf{
+
+background:
+orangered;
+
+border:
+2px solid black;
+
+}
+
+.npc{
+
+position:absolute;
+
+width:65px;
+height:110px;
+
+z-index:25;
+
+}
+
+.npc-hair{
+
+position:absolute;
+
+left:10px;
+top:0;
+
+width:45px;
+height:18px;
+
+background:brown;
+
+border-radius:
+15px
+15px
+5px
+5px;
+
+z-index:5;
+
+}
+
+.npc-head{
+
+position:absolute;
+
+left:12px;
+top:10px;
+
+width:40px;
+height:40px;
+
+border-radius:50%;
+
+background:#f2d1a8;
+
+}
+
+.npc-eye{
+
+position:absolute;
+
+width:5px;
+height:5px;
+
+background:black;
+
+border-radius:50%;
+
+top:15px;
+
+}
+
+.npc-eye.left{
+
+left:10px;
+
+}
+
+.npc-eye.right{
+
+right:10px;
+
+}
+
+.npc-body{
+
+position:absolute;
+
+left:18px;
+top:50px;
+
+width:28px;
+height:35px;
+
+background:#4d71ff;
+
+border-radius:8px;
+
+}
+
+.npc-legs{
+
+position:absolute;
+
+left:20px;
+top:85px;
+
+width:24px;
+height:18px;
+
+background:#333;
+
+}
+
+.npc-name{
+
+position:absolute;
+
+top:102px;
+
+background:white;
+
+padding:2px;
+
+border-radius:4px;
+
+font-size:10px;
+
+white-space:nowrap;
+
+left:-10px;
+
 }
 
 </style>
@@ -190,37 +751,177 @@ font-size:18px;
 
 <div id="characterScreen">
 
+<div id="creatorPanel">
+
 <h1>🌟 EVERSTAR 🌟</h1>
 
-<p>Select Your Element</p>
+<div id="previewCharacter">
 
-<select id="element">
+<div id="previewHair"></div>
 
-<option>Fire</option>
-<option>Water</option>
-<option>Earth</option>
-<option>Air</option>
+<div id="previewHead">
 
-<option>Ice</option>
-<option>Light</option>
-<option>Life</option>
-<option>Death</option>
+<div
+class="previewEye left">
+</div>
+
+<div
+class="previewEye right">
+</div>
+
+</div>
+
+<div id="previewBody"></div>
+
+<div id="previewJacket"></div>
+
+<div id="previewDress"></div>
+
+<div id="previewLegs"></div>
+
+<div id="previewShoes"></div>
+
+</div>
+
+<div class="creatorRow">
+<label>Name</label>
+<input
+id="playerName"
+placeholder="Player Name">
+</div>
+
+<div class="creatorRow">
+<label>Gender</label>
+
+<select id="gender">
+
+<option>Girl</option>
+<option>Boy</option>
+
+</select>
+</div>
+
+<div class="creatorRow">
+
+<label>Skin Tone</label>
+
+<select id="skinTone">
+
+<option value="#f8d8bd">Light</option>
+<option value="#e1b899">Tan</option>
+<option value="#c68642">Brown</option>
+<option value="#8d5524">Dark Brown</option>
 
 </select>
 
-<br>
+</div>
 
-<button onclick="startGame()">
-Enter Everstar
+<div class="creatorRow">
+
+<label>Hair Style</label>
+
+<select id="hairStyle">
+
+<option>Short</option>
+<option>Long</option>
+<option>Spiky</option>
+<option>Ponytail</option>
+<option>Curly</option>
+<option>Braids</option>
+
+</select>
+
+</div>
+
+<div class="creatorRow">
+
+<label>Hair Color</label>
+
+<input
+type="color"
+id="hairColor"
+value="#5c3a21">
+
+</div>
+
+<div class="creatorRow">
+
+<label>Outfit</label>
+
+<select id="outfitType">
+
+<option>Shirt</option>
+<option>Jacket</option>
+<option>Dress</option>
+
+</select>
+
+</div>
+
+<div class="creatorRow">
+
+<label>Top Color</label>
+
+<input
+type="color"
+id="topColor"
+value="#4466ff">
+
+</div>
+
+<div class="creatorRow">
+
+<label>Pants Color</label>
+
+<input
+type="color"
+id="pantsColor"
+value="#333333">
+
+</div>
+
+<div class="creatorRow">
+
+<label>Shoe Color</label>
+
+<input
+type="color"
+id="shoeColor"
+value="#000000">
+
+</div>
+
+<button
+id="randomButton"
+onclick="randomCharacter()">
+
+🎲 Random Character
+
 </button>
+
+<br><br>
+
+<button
+id="enterButton"
+onclick="startGame()">
+
+Enter Everstar
+
+</button>
+
+</div>
 
 </div>
 
 <div id="ui">
 
-<h2>Everstar</h2>
+<b id="playerDisplayName">
+Traveler
+</b>
 
-Guardian:
+<br><br>
+
+Guardian Rank:
 <span id="rank">
 Apprentice
 </span>
@@ -241,14 +942,16 @@ Animals:
 
 <div id="message">
 
-Choose your destiny.
+Welcome to Everstar
 
 </div>
 
 </div>
 
 <div id="regionLabel">
-Region: Spawn
+
+Region: Wilderness
+
 </div>
 
 <div id="viewport">
@@ -256,6 +959,10 @@ Region: Spawn
 <div id="game">
 
 <div id="player">
+
+<div id="playerHair"></div>
+
+<div id="playerHead">
 
 <div
 class="eye"
@@ -268,91 +975,211 @@ id="rightEye">
 </div>
 
 </div>
+
+<div id="playerBody"></div>
+
+<div id="playerJacket"></div>
+
+<div id="playerDress"></div>
+
+<div id="playerLegs"></div>
+
+<div id="playerShoes"></div>
+
+</div>
+
 <div
 class="animal unicorn"
-style="
-left:500px;
-top:700px;">
+style="left:500px;top:700px;">
 </div>
 
 <div
 class="animal lavawolf"
-style="
-left:1800px;
-top:900px;">
+style="left:1900px;top:900px;">
 </div>
 
 <div
+class="region"
+style="left:350px;top:650px;">
+
+🦄 Unicorn Falls
+
+</div>
+
+<div
+class="region"
+style="left:1750px;top:800px;">
+
+🌋 Dark Forest of Doom
+
+</div>
+
+<div
+class="region"
+style="left:3000px;top:450px;">
+
+☁️ Air Region
+
+</div>
+
+<div
+class="region"
+style="left:3200px;top:2500px;">
+
+🔥 Fire Region
+
+</div>
+
+<div
+class="region"
+style="left:1100px;top:2900px;">
+
+🌿 Earth Region
+
+</div>
+
+<div
+class="region"
+style="left:500px;top:2500px;">
+
+🌊 Water Region
+
+</div>
+
+<!-- Ancient Sage -->
+
+<div
+class="npc"
 id="sage"
 style="
 left:2500px;
 top:1200px;">
+
+<div class="npc-hair"></div>
+
+<div class="npc-head">
+
+<div
+class="npc-eye left">
 </div>
 
 <div
-id="region"
-style="
-left:400px;
-top:600px;">
-🦄 Unicorn Falls
+class="npc-eye right">
+</div>
+
 </div>
 
 <div
-id="region"
+class="npc-body"
 style="
-left:1650px;
-top:700px;">
-🌋 Dark Forest of Doom
+background:purple;">
+</div>
+
+<div class="npc-legs"></div>
+
+<div class="npc-name">
+Ancient Sage
+</div>
+
+</div>
+
+<!-- Unicorn Keeper -->
+
+<div
+class="npc"
+id="keeper"
+style="
+left:650px;
+top:650px;">
+
+<div class="npc-hair"
+style="
+background:gold;">
+</div>
+
+<div class="npc-head">
+
+<div
+class="npc-eye left">
 </div>
 
 <div
-id="region"
-style="
-left:3100px;
-top:400px;">
-☁️ Air Region
+class="npc-eye right">
+</div>
+
 </div>
 
 <div
-id="region"
+class="npc-body"
 style="
-left:3300px;
-top:2500px;">
-🔥 Fire Region
+background:pink;">
+</div>
+
+<div class="npc-legs"></div>
+
+<div class="npc-name">
+Unicorn Keeper
+</div>
+
+</div>
+
+<!-- Wolf Ranger -->
+
+<div
+class="npc"
+id="ranger"
+style="
+left:1800px;
+top:1050px;">
+
+<div class="npc-hair"
+style="
+background:black;">
+</div>
+
+<div class="npc-head">
+
+<div
+class="npc-eye left">
 </div>
 
 <div
-id="region"
-style="
-left:1200px;
-top:3000px;">
-🌿 Earth Region
+class="npc-eye right">
+</div>
+
 </div>
 
 <div
-id="region"
+class="npc-body"
 style="
-left:400px;
-top:2600px;">
-🌊 Water Region
+background:darkred;">
+</div>
+
+<div class="npc-legs"></div>
+
+<div class="npc-name">
+Wolf Ranger
+</div>
+
 </div>
 
 </div>
 </div>
 
 <div id="joystick">
+
 <div id="stick"></div>
+
 </div>
 <script>
 
-const player =
-document.getElementById("player");
-
-const game =
-document.getElementById("game");
-
 let x = 200;
 let y = 200;
+
+let joyX = 0;
+let joyY = 0;
+
+let dragging = false;
 
 let animalsFound = 0;
 
@@ -365,72 +1192,458 @@ const stars = [
 "Aurora",
 "Nova",
 "Celestia",
+"Lunaris",
 "Astrid",
-"Solara",
 "Eclipse",
 "Vega",
-"Lunaris"
+"Solara"
 ];
+
+const girlNames = [
+"Luna",
+"Aurora",
+"Willow",
+"Nova",
+"Iris",
+"Ruby",
+"Aria",
+"Violet",
+"Celeste",
+"Sophia"
+];
+
+const boyNames = [
+"Orion",
+"Atlas",
+"Leo",
+"Finn",
+"Jasper",
+"Ash",
+"Rowan",
+"Elliot",
+"Theo",
+"Felix"
+];
+
+const hiddenElements = [
+"Fire",
+"Water",
+"Earth",
+"Air",
+"Ice",
+"Light",
+"Life",
+"Death"
+];
+
+const player =
+document.getElementById("player");
+
+const game =
+document.getElementById("game");
+
+const message =
+document.getElementById("message");
+
+function randomCharacter(){
+
+const gender =
+Math.random() < 0.5
+?
+"Girl"
+:
+"Boy";
+
+document
+.getElementById(
+"gender"
+)
+.value =
+gender;
+
+const names =
+gender === "Girl"
+?
+girlNames
+:
+boyNames;
+
+document
+.getElementById(
+"playerName"
+)
+.value =
+names[
+Math.floor(
+Math.random() *
+names.length
+)
+];
+
+const hairstyles = [
+"Short",
+"Long",
+"Spiky",
+"Ponytail",
+"Curly",
+"Braids"
+];
+
+document
+.getElementById(
+"hairStyle"
+)
+.value =
+hairstyles[
+Math.floor(
+Math.random() *
+hairstyles.length
+)
+];
+
+document
+.getElementById(
+"hairColor"
+)
+.value =
+"#5c3a21";
+
+updatePreview();
+
+}
+
+function updateHairStyle(){
+
+const style =
+document
+.getElementById(
+"hairStyle"
+)
+.value;
+
+const hair =
+document
+.getElementById(
+"previewHair"
+);
+
+hair.style.height =
+"20px";
+
+hair.style.borderRadius =
+"15px";
+
+hair.style.clipPath = "";
+
+switch(style){
+
+case "Long":
+hair.style.height =
+"45px";
+break;
+
+case "Spiky":
+hair.style.height =
+"30px";
+
+hair.style.clipPath =
+"polygon(0 100%,10% 15%,20% 100%,35% 5%,50% 100%,65% 10%,80% 100%,90% 20%,100% 100%)";
+
+break;
+
+case "Ponytail":
+hair.style.height =
+"35px";
+break;
+
+case "Curly":
+hair.style.height =
+"30px";
+hair.style.borderRadius =
+"50%";
+break;
+
+case "Braids":
+hair.style.height =
+"40px";
+break;
+}
+
+}
+
+function updatePreview(){
+
+const skin =
+document
+.getElementById(
+"skinTone"
+)
+.value;
+
+const hairColor =
+document
+.getElementById(
+"hairColor"
+)
+.value;
+
+const topColor =
+document
+.getElementById(
+"topColor"
+)
+.value;
+
+const pantsColor =
+document
+.getElementById(
+"pantsColor"
+)
+.value;
+
+const shoeColor =
+document
+.getElementById(
+"shoeColor"
+)
+.value;
+
+const outfit =
+document
+.getElementById(
+"outfitType"
+)
+.value;
+
+document
+.getElementById(
+"previewHead"
+)
+.style.background =
+skin;
+
+document
+.getElementById(
+"previewHair"
+)
+.style.background =
+hairColor;
+
+document
+.getElementById(
+"previewBody"
+)
+.style.background =
+topColor;
+
+document
+.getElementById(
+"previewLegs"
+)
+.style.background =
+pantsColor;
+
+document
+.getElementById(
+"previewShoes"
+)
+.style.background =
+shoeColor;
+
+document
+.getElementById(
+"previewDress"
+)
+.style.background =
+"transparent";
+
+document
+.getElementById(
+"previewJacket"
+)
+.style.background =
+"transparent";
+
+if(
+outfit === "Dress"
+){
+
+document
+.getElementById(
+"previewDress"
+)
+.style.background =
+topColor;
+
+}
+
+if(
+outfit === "Jacket"
+){
+
+document
+.getElementById(
+"previewJacket"
+)
+.style.background =
+topColor;
+
+}
+
+updateHairStyle();
+}
 
 function startGame(){
 
-playerElement =
-document.getElementById(
-"element"
-).value;
-
-const colors = {
-
-Fire:"orange",
-Water:"blue",
-Earth:"green",
-Air:"white",
-
-Ice:"silver",
-Light:"gold",
-Life:"lime",
-Death:"black"
-
-};
+const name =
+document
+.getElementById(
+"playerName"
+)
+.value ||
+"Traveler";
 
 document
-.querySelectorAll(".eye")
-.forEach(eye=>{
+.getElementById(
+"playerDisplayName"
+)
+.innerText =
+name;
 
-eye.style.background =
-colors[playerElement];
-
-});
+playerElement =
+hiddenElements[
+Math.floor(
+Math.random() *
+hiddenElements.length
+)
+];
 
 birthStar =
 stars[
 Math.floor(
-Math.random()*
+Math.random() *
 stars.length
 )
 ];
 
 document
-.getElementById("starName")
-.innerText = birthStar;
+.getElementById(
+"starName"
+)
+.innerText =
+birthStar;
 
 document
 .getElementById(
 "characterScreen"
-).style.display="none";
+)
+.style.display =
+"none";
+
+document
+.getElementById(
+"playerHair"
+)
+.style.background =
+document
+.getElementById(
+"hairColor"
+)
+.value;
+
+document
+.getElementById(
+"playerHead"
+)
+.style.background =
+document
+.getElementById(
+"skinTone"
+)
+.value;
+
+document
+.getElementById(
+"playerBody"
+)
+.style.background =
+document
+.getElementById(
+"topColor"
+)
+.value;
+
+document
+.getElementById(
+"playerLegs"
+)
+.style.background =
+document
+.getElementById(
+"pantsColor"
+)
+.value;
+
+document
+.getElementById(
+"playerShoes"
+)
+.style.background =
+document
+.getElementById(
+"shoeColor"
+)
+.value;
+
+const outfit =
+document
+.getElementById(
+"outfitType"
+)
+.value;
+
+if(outfit==="Dress"){
+
+document
+.getElementById(
+"playerDress"
+)
+.style.background =
+document
+.getElementById(
+"topColor"
+)
+.value;
+
+}
+
+if(outfit==="Jacket"){
+
+document
+.getElementById(
+"playerJacket"
+)
+.style.background =
+document
+.getElementById(
+"topColor"
+)
+.value;
+
+}
 
 showMessage(
-"Your star is "
-+ birthStar
+"Your star is " +
+birthStar +
+"."
 );
 
 }
 
 function showMessage(text){
 
-document
-.getElementById("message")
-.innerText = text;
+message.innerText =
+text;
 
 }
 
@@ -466,54 +1679,17 @@ camY,
 )
 );
 
-game.style.transform=
-`translate(
-${-camX}px,
-${-camY}px
-)`;
-
-}
-
-function updatePlayer(){
-
-x=Math.max(
-0,
-Math.min(x,3940)
-);
-
-y=Math.max(
-0,
-Math.min(y,3940)
-);
-
-player.style.left =
-x+"px";
-
-player.style.top =
-y+"px";
-
-updateCamera();
-checkAnimals();
-checkNPC();
-checkRegion();
-
-}
-
-function gainPet(name){
-
-pets.push(name);
-
-showMessage(
-name +
-" joined your team!"
-);
+game.style.transform =
+`translate(${-camX}px,${-camY}px)`;
 
 }
 
 function checkAnimals(){
 
 document
-.querySelectorAll(".animal")
+.querySelectorAll(
+".animal"
+)
 .forEach(animal=>{
 
 if(
@@ -522,62 +1698,82 @@ animal.dataset.found
 return;
 
 const dx =
-x-animal.offsetLeft;
+x -
+animal.offsetLeft;
 
 const dy =
-y-animal.offsetTop;
+y -
+animal.offsetTop;
 
 const dist =
 Math.sqrt(
-dx*dx+dy*dy
+dx*dx +
+dy*dy
 );
 
-if(dist<80){
+if(dist < 80){
 
-animal.dataset.found=true;
+animal.dataset.found =
+true;
+
+animal.style.display =
+"none";
 
 animalsFound++;
 
 document
 .getElementById(
 "animalsFound"
-).innerText=
+)
+.innerText =
 animalsFound;
 
 if(
-animal.classList.contains(
+animal.classList
+.contains(
 "unicorn"
 )
 ){
-gainPet("Unicorn");
+pets.push(
+"Unicorn"
+);
+
+showMessage(
+"🦄 Unicorn joined your team!"
+);
 }
 
 if(
-animal.classList.contains(
+animal.classList
+.contains(
 "lavawolf"
 )
 ){
-gainPet("Lava Wolf");
+pets.push(
+"Lava Wolf"
+);
+
+showMessage(
+"🐺 Lava Wolf joined your team!"
+);
 }
 
 if(
-animalsFound>=2
+animalsFound >= 2
 ){
 
 document
 .getElementById(
 "rank"
-).innerText=
+)
+.innerText =
 "Junior Guardian";
 
 showMessage(
-"You became a Junior Guardian!"
+"👑 You became a Junior Guardian!"
 );
 
 }
-
-animal.style.display=
-"none";
 
 }
 
@@ -585,70 +1781,151 @@ animal.style.display=
 
 }
 
-function checkNPC(){
+function checkNPCs(){
 
-const sage =
-document.getElementById(
-"sage"
-);
+document
+.querySelectorAll(
+".npc"
+)
+.forEach(npc=>{
 
 const dx =
-x-sage.offsetLeft;
+x -
+npc.offsetLeft;
 
 const dy =
-y-sage.offsetTop;
+y -
+npc.offsetTop;
 
 const dist =
 Math.sqrt(
-dx*dx+dy*dy
+dx*dx +
+dy*dy
 );
 
-if(dist<100){
+if(dist < 100){
+
+if(
+npc.id === "sage"
+){
 
 showMessage(
-"Sage: The Bronze Phoenix still lives..."
+"The Bronze Phoenix still lives..."
+);
+
+}
+
+if(
+npc.id === "keeper"
+){
+
+showMessage(
+"The unicorns know secrets."
+);
+
+}
+
+if(
+npc.id === "ranger"
+){
+
+showMessage(
+"Something lurks in the forest."
 );
 
 }
 
 }
 
-function checkRegion(){
+});
 
-let region="Wilderness";
+}
 
-if(x<1000 && y<1200)
-region="Unicorn Falls";
+function updateRegion(){
 
-if(x>1500&&x<2500)
-region="Dark Forest of Doom";
+let region =
+"Wilderness";
 
-if(x>2800&&y<1000)
-region="Air Region";
+if(x < 1200 && y < 1200)
+region =
+"Unicorn Falls";
 
-if(x>2800&&y>1800)
-region="Fire Region";
+if(x > 1500 && x < 2600)
+region =
+"Dark Forest of Doom";
 
-if(x<1000&&y>2200)
-region="Water Region";
+if(x > 2600 && y < 1200)
+region =
+"Air Region";
 
-if(x>800&&x<2000&&y>2500)
-region="Earth Region";
+if(x > 2800 && y > 1800)
+region =
+"Fire Region";
+
+if(x < 1000 && y > 2200)
+region =
+"Water Region";
+
+if(
+x > 800 &&
+x < 2000 &&
+y > 2500
+)
+region =
+"Earth Region";
 
 document
 .getElementById(
 "regionLabel"
-).innerText=
-"Region: "
-+region;
+)
+.innerText =
+"Region: " +
+region;
 
 }
 
-document.addEventListener(
+function updatePlayer(){
+
+x =
+Math.max(
+0,
+Math.min(
+x,
+3940
+)
+);
+
+y =
+Math.max(
+0,
+Math.min(
+y,
+3940
+)
+);
+
+player.style.left =
+x + "px";
+
+player.style.top =
+y + "px";
+
+updateCamera();
+
+checkAnimals();
+
+checkNPCs();
+
+updateRegion();
+
+}
+
+document
+.addEventListener(
 "keydown",
 e=>{
 
-const speed=15;
+const speed = 12;
 
 if(e.key==="ArrowUp")
 y-=speed;
@@ -677,97 +1954,118 @@ document.getElementById(
 "stick"
 );
 
-let joyX=0;
-let joyY=0;
-let dragging=false;
-
-joystick.addEventListener(
+joystick
+.addEventListener(
 "touchstart",
 ()=>{
-dragging=true;
+dragging = true;
 }
 );
 
-joystick.addEventListener(
+joystick
+.addEventListener(
 "touchmove",
 e=>{
 
 if(!dragging)
 return;
 
-const t=e.touches[0];
+const touch =
+e.touches[0];
 
-const rect=
+const rect =
 joystick.getBoundingClientRect();
 
-let dx=
-t.clientX-
+let dx =
+touch.clientX -
 (rect.left+60);
 
-let dy=
-t.clientY-
+let dy =
+touch.clientY -
 (rect.top+60);
 
-let dist=
+const dist =
 Math.sqrt(
-dx*dx+dy*dy
+dx*dx +
+dy*dy
 );
 
-if(dist>40){
+if(dist > 40){
 
-dx=
+dx =
 dx/dist*40;
 
-dy=
+dy =
 dy/dist*40;
 
 }
 
-joyX=dx;
-joyY=dy;
+joyX = dx;
+joyY = dy;
 
-stick.style.left=
+stick.style.left =
 (30+dx)+"px";
 
-stick.style.top=
+stick.style.top =
 (30+dy)+"px";
 
 },
-{passive:false}
+{
+passive:false
+}
 );
 
-joystick.addEventListener(
+joystick
+.addEventListener(
 "touchend",
 ()=>{
 
-dragging=false;
+dragging = false;
 
-joyX=0;
-joyY=0;
+joyX = 0;
+joyY = 0;
 
-stick.style.left=
+stick.style.left =
 "30px";
 
-stick.style.top=
+stick.style.top =
 "30px";
 
 }
 );
 
-function loop(){
+function gameLoop(){
 
-x+=joyX*0.12;
-y+=joyY*0.12;
+x += joyX * 0.12;
+y += joyY * 0.12;
 
 updatePlayer();
 
 requestAnimationFrame(
-loop
+gameLoop
 );
 
 }
 
-loop();
+document
+.querySelectorAll(
+"select,input"
+)
+.forEach(control=>{
+
+control
+.addEventListener(
+"input",
+updatePreview
+);
+
+});
+
+randomCharacter();
+
+updatePreview();
+
+gameLoop();
 
 </script>
 
