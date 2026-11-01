@@ -826,8 +826,8 @@
       g.fill();
 
       g.beginPath();
-      g.arc(-13, -18, 3, 0, Math.PI*2);
-      g.arc(13, -18, 3, 0, Math.PI*2);
+      g.arc(-13, -18, 3, 0, Math.PI * 2);
+      g.arc(13, -18, 3, 0, Math.PI * 2);
       g.fill();
 
       g.fillStyle = c.hair;
@@ -1445,22 +1445,154 @@
       if (document.hidden && game.dialogue) closeDialogue();
     });
 
-    function drawGround() {
-      ctx.fillStyle = "#6f966d";
-      ctx.fillRect(0, 0, WORLD_SIZE, WORLD_SIZE);
-
-      ctx.fillStyle = "#c9e2ff";
+    function drawAirRegion() {
+      ctx.fillStyle = "#c9e8ff";
       ctx.fillRect(3200, 0, 1800, 2500);
 
-      ctx.fillStyle = "#ffc7a6";
+      for (let i = 0; i < 15; i++) {
+        const x = 3300 + i * 110 + Math.sin(i * 1.7) * 20;
+        const y = 120 + (i % 4) * 180 + Math.cos(i * 2.1) * 25;
+        ctx.fillStyle = "rgba(255,255,255,.82)";
+        ctx.beginPath();
+        ctx.arc(x, y, 30 + (i % 3) * 8, 0, Math.PI * 2);
+        ctx.arc(x + 26, y + 10, 24 + (i % 2) * 7, 0, Math.PI * 2);
+        ctx.arc(x - 22, y + 8, 20 + (i % 2) * 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 16; i++) {
+        const x = 3300 + i * 100;
+        const y = 2000 + (i % 4) * 120;
+        ctx.strokeStyle = "rgba(255,255,255,.5)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + 30, y - 45, x + 60, y);
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < 8; i++) {
+        const x = 3420 + i * 140;
+        const y = 600 + (i % 3) * 140;
+        ctx.fillStyle = "#c0d8ff";
+        ctx.fillRect(x, y + 30, 8, 75);
+        ctx.beginPath();
+        ctx.moveTo(x - 18, y + 30);
+        ctx.lineTo(x + 14, y - 10);
+        ctx.lineTo(x + 44, y + 30);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    function drawFireRegion() {
+      ctx.fillStyle = "#ffb07a";
       ctx.fillRect(3200, 2500, 1800, 2500);
 
-      ctx.fillStyle = "#a7d6ff";
+      for (let i = 0; i < 18; i++) {
+        const x = 3300 + (i * 90) + (i % 2) * 20;
+        const y = 2600 + (i % 5) * 140 + Math.sin(i) * 18;
+        ctx.fillStyle = "#7d2d20";
+        ctx.beginPath();
+        ctx.moveTo(x, y + 50);
+        ctx.lineTo(x + 18, y - 18);
+        ctx.lineTo(x + 36, y + 50);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 22; i++) {
+        const x = 3320 + (i * 75) % 700;
+        const y = 2750 + Math.floor(i / 7) * 220 + (i % 3) * 15;
+        ctx.fillStyle = "rgba(255, 120, 40, .8)";
+        ctx.beginPath();
+        ctx.arc(x, y, 18 + (i % 2) * 7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 11; i++) {
+        const x = 3380 + i * 120;
+        const y = 3000 + (i % 3) * 180;
+        ctx.fillStyle = "rgba(255,180,80,.25)";
+        ctx.beginPath();
+        ctx.arc(x, y, 60, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawWaterRegion() {
+      ctx.fillStyle = "#8ecbf0";
       ctx.fillRect(0, 2500, 1800, 2500);
 
-      ctx.fillStyle = "#96d592";
+      ctx.fillStyle = "rgba(120, 205, 255, .7)";
+      ctx.beginPath();
+      ctx.arc(900, 3500, 420, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(38, 130, 179, .4)";
+      ctx.beginPath();
+      ctx.arc(900, 3500, 260, 0, Math.PI * 2);
+      ctx.fill();
+
+      for (let i = 0; i < 18; i++) {
+        const x = 150 + i * 85;
+        const y = 2800 + (i % 4) * 100;
+        ctx.fillStyle = "#96d7a2";
+        ctx.beginPath();
+        ctx.ellipse(x, y, 28, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 16; i++) {
+        const x = 180 + i * 90;
+        const y = 3100 + (i % 5) * 130;
+        ctx.strokeStyle = "rgba(255,255,255,.8)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + 20, y - 12, x + 40, y);
+        ctx.stroke();
+      }
+    }
+
+    function drawEarthRegion() {
+      ctx.fillStyle = "#92cf7d";
       ctx.fillRect(0, 0, 1800, 2500);
 
+      for (let i = 0; i < 20; i++) {
+        const x = 150 + i * 75;
+        const y = 200 + (i % 5) * 130;
+        ctx.fillStyle = "#6d8a45";
+        ctx.fillRect(x, y + 30, 18, 50);
+        ctx.fillStyle = "#89b96b";
+        ctx.beginPath();
+        ctx.arc(x + 10, y, 28, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 12; i++) {
+        const x = 200 + i * 120;
+        const y = 1000 + (i % 3) * 200;
+        ctx.fillStyle = "#a8a08d";
+        ctx.beginPath();
+        ctx.moveTo(x, y + 30);
+        ctx.lineTo(x + 25, y - 20);
+        ctx.lineTo(x + 52, y + 30);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 18; i++) {
+        const x = 90 + i * 80;
+        const y = 1500 + (i % 6) * 90;
+        ctx.fillStyle = "#f5d690";
+        ctx.beginPath();
+        ctx.arc(x, y, 12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawCourtyard() {
       ctx.fillStyle = "#d9d4a8";
       ctx.fillRect(2000, 2000, 1000, 1000);
       ctx.fillRect(2200, 1800, 600, 2400);
@@ -1480,6 +1612,28 @@
       ctx.lineTo(2800, 2500);
       ctx.stroke();
 
+      ctx.fillStyle = "#b7d4d3";
+      ctx.beginPath();
+      ctx.arc(2500, 2790, 50, 0, Math.PI * 2);
+      ctx.fill();
+
+      for (let i = 0; i < 8; i++) {
+        const angle = i * (Math.PI / 4);
+        const x = 2500 + Math.cos(angle) * 140;
+        const y = 2500 + Math.sin(angle) * 140;
+        ctx.fillStyle = "#e6d39a";
+        ctx.beginPath();
+        ctx.arc(x, y, 13, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawGround() {
+      drawAirRegion();
+      drawFireRegion();
+      drawWaterRegion();
+      drawEarthRegion();
+      drawCourtyard();
       drawAcademyStar();
       drawAcademyBuilding();
     }
@@ -1508,6 +1662,7 @@
       ctx.arc(0, 0, 38, 0, Math.PI * 2);
       ctx.fillStyle = "#8a6a3a";
       ctx.fill();
+
       ctx.restore();
     }
 
@@ -1537,6 +1692,7 @@
 
     function drawPortal(portal) {
       const pulse = 1 + Math.sin((Date.now() * 0.006) + portal.x * 0.1) * 0.1;
+
       ctx.save();
       ctx.translate(portal.x, portal.y);
       ctx.scale(pulse, pulse);
@@ -1561,6 +1717,7 @@
       ctx.font = "bold 18px Georgia";
       ctx.textAlign = "center";
       ctx.fillText(portal.name, 0, 95);
+
       ctx.restore();
     }
 
@@ -1632,7 +1789,7 @@
         ctx.fillStyle = "#1c1a20";
         ctx.beginPath();
         ctx.arc(-6, -5, 3, 0, Math.PI * 2);
-        ctx.arc(6, -5, 3, 3, Math.PI * 2);
+        ctx.arc(6, -5, 3, 0, Math.PI * 2);
         ctx.fill();
       }
 
