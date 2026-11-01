@@ -1,23 +1,23 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#17152e" />
-  <title>Everstar Academy</title>
+  <title>Everstar Academy — A Fantasy Life RPG</title>
   <style>
     :root {
       --gold: #f5d58b;
       --gold-dark: #a77a3b;
       --purple: #272044;
-      --panel: rgba(28, 25, 52, 0.94);
+      --panel: rgba(28, 25, 52, .94);
       --cream: #fff8e8;
       --green: #79b98b;
       --bg: #15152a;
     }
 
     * { box-sizing: border-box; }
+
     html, body {
       width: 100%;
       height: 100%;
@@ -30,23 +30,21 @@
       user-select: none;
     }
 
-    button, input, select {
-      font: inherit;
-    }
+    button, input, select { font: inherit; }
 
     button {
       cursor: pointer;
       color: var(--cream);
-      background: linear-gradient(135deg, #67528c, #40345f);
+      background: linear-gradient(135deg,#67528c,#40345f);
       border: 1px solid var(--gold-dark);
       border-radius: 9px;
       padding: 10px 15px;
-      transition: filter 0.15s ease, transform 0.15s ease;
+      transition: filter .15s ease, transform .15s ease;
     }
 
     button:hover { filter: brightness(1.2); }
     button:active { transform: translateY(1px); }
-    button:disabled { opacity: 0.4; cursor: default; }
+    button:disabled { opacity: .4; cursor: default; }
 
     #game {
       position: fixed;
@@ -72,9 +70,9 @@
 
     .panel {
       background: var(--panel);
-      border: 1px solid rgba(245, 213, 139, 0.65);
+      border: 1px solid rgba(245,213,139,.65);
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 4px 20px rgba(0,0,0,.35);
       padding: 11px;
     }
 
@@ -82,7 +80,7 @@
       position: absolute;
       top: 12px;
       left: 12px;
-      width: min(235px, 48vw);
+      width: min(235px,48vw);
       font-size: 13px;
       line-height: 1.7;
     }
@@ -97,7 +95,7 @@
       position: absolute;
       top: 12px;
       right: 12px;
-      width: min(270px, 48vw);
+      width: min(270px,48vw);
       font-size: 13px;
       line-height: 1.55;
     }
@@ -116,7 +114,7 @@
       bottom: 22px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(23, 21, 42, 0.92);
+      background: rgba(23,21,42,.92);
       border: 1px solid var(--gold);
       padding: 10px 18px;
       border-radius: 30px;
@@ -125,7 +123,7 @@
       width: max-content;
       max-width: 85%;
       opacity: 0;
-      transition: opacity 0.2s ease;
+      transition: opacity .2s ease;
       pointer-events: none;
       z-index: 8;
     }
@@ -137,13 +135,13 @@
       top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      width: min(650px, calc(100% - 24px));
-      background: linear-gradient(145deg, #fffef5, #f3e9d2);
+      width: min(650px,calc(100% - 24px));
+      background: linear-gradient(145deg,#fffef5,#f3e9d2);
       color: #352b43;
       border: 3px solid #c29a59;
       border-radius: 15px;
       padding: 19px 50px 19px 20px;
-      box-shadow: 0 8px 35px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 35px rgba(0,0,0,.5);
       display: none;
       pointer-events: auto;
       z-index: 20;
@@ -152,12 +150,12 @@
 
     #dialogue.visible {
       display: block;
-      animation: appear 0.2s ease-out;
+      animation: appear .2s ease-out;
     }
 
     @keyframes appear {
-      from { opacity: 0; transform: translate(-50%, -12px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
+      from { opacity: 0; transform: translate(-50%,-12px); }
+      to { opacity: 1; transform: translate(-50%,0); }
     }
 
     #speaker {
@@ -184,7 +182,7 @@
       width: 32px;
       height: 32px;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial,sans-serif;
       font-size: 19px;
     }
 
@@ -201,8 +199,8 @@
       width: 145px;
       height: 145px;
       border-radius: 50%;
-      background: rgba(25, 22, 46, 0.38);
-      border: 2px solid rgba(255, 255, 255, 0.35);
+      background: rgba(25, 22, 46, .38);
+      border: 2px solid rgba(255,255,255,.35);
       pointer-events: auto;
       touch-action: none;
       z-index: 50;
@@ -215,12 +213,12 @@
       top: 50%;
       width: 60px;
       height: 60px;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%,-50%);
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #eee0c0, #8977ac);
+      background: radial-gradient(circle at 35% 30%,#eee0c0,#8977ac);
       border: 2px solid #e9d19a;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.45);
-      transition: transform 0.05s linear;
+      box-shadow: 0 3px 12px rgba(0,0,0,.45);
+      transition: transform .05s linear;
     }
 
     #actionButton {
@@ -232,7 +230,7 @@
       border-radius: 50%;
       font-size: 17px;
       font-weight: bold;
-      background: radial-gradient(circle at 30% 25%, #b38fcb, #55406f);
+      background: radial-gradient(circle at 30% 25%,#b38fcb,#55406f);
       pointer-events: auto;
       touch-action: none;
       z-index: 50;
@@ -267,18 +265,18 @@
       justify-content: center;
       align-items: center;
       padding: 14px;
-      background: radial-gradient(ellipse at center, #493c69, #17152e 75%);
+      background: radial-gradient(ellipse at center,#493c69,#17152e 75%);
       overflow-y: auto;
       touch-action: pan-y;
     }
 
     .creatorCard {
-      width: min(900px, 100%);
-      background: linear-gradient(145deg, #30294c, #1c1933);
+      width: min(900px,100%);
+      background: linear-gradient(145deg,#30294c,#1c1933);
       border: 2px solid var(--gold-dark);
       border-radius: 19px;
       padding: 22px;
-      box-shadow: 0 15px 60px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 15px 60px rgba(0,0,0,.55);
       display: grid;
       grid-template-columns: 1fr 1.15fr;
       gap: 22px;
@@ -288,7 +286,7 @@
       grid-column: 1 / -1;
       text-align: center;
       color: var(--gold);
-      font-size: clamp(25px, 5vw, 38px);
+      font-size: clamp(25px,5vw,38px);
       margin: 0;
       letter-spacing: 2px;
     }
@@ -302,7 +300,7 @@
     }
 
     .previewArea {
-      background: radial-gradient(ellipse, #77729c, #33304e 75%);
+      background: radial-gradient(ellipse,#77729c,#33304e 75%);
       border: 1px solid #a68cbd;
       border-radius: 14px;
       display: flex;
@@ -361,13 +359,8 @@
       gap: 7px;
     }
 
-    .genderChoices button {
-      flex: 1;
-    }
-
-    .genderChoices button.selected {
-      background: #a27a49;
-    }
+    .genderChoices button { flex: 1; }
+    .genderChoices button.selected { background: #a27a49; }
 
     .creatorActions {
       grid-column: 1 / -1;
@@ -378,7 +371,7 @@
     }
 
     .primaryButton {
-      background: linear-gradient(135deg, #a27b43, #74522f);
+      background: linear-gradient(135deg,#a27b43,#74522f);
       padding: 13px 24px;
       font-weight: bold;
     }
@@ -406,12 +399,12 @@
       transform: translateX(-50%);
       font-size: 11px;
       color: #fff;
-      text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.8);
+      text-shadow: 1px 2px 3px rgba(0,0,0,.8);
       pointer-events: none;
       z-index: 5;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width:600px) {
       .creatorCard {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -472,6 +465,7 @@
 <body>
   <div id="game">
     <canvas id="world"></canvas>
+
     <div id="hud">
       <div id="playerInfo" class="panel">
         <div class="name" id="hudName">New Student</div>
@@ -484,7 +478,7 @@
       <div id="questPanel" class="panel">
         <div class="panelTitle">✧ Academy Journal</div>
         <div id="questText">Welcome to Everstar Academy!</div>
-        <div id="questProgress" style="color:#c6a7e5; margin-top:7px;">Qualification Week</div>
+        <div id="questProgress" style="color:#c6a7e5;margin-top:7px">Qualification Week</div>
       </div>
 
       <div id="message"></div>
@@ -625,8 +619,8 @@
 
     const WORLD_SIZE = 5000;
     const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-    const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
-    const $ = (id) => document.getElementById(id);
+    const random = arr => arr[Math.floor(Math.random() * arr.length)];
+    const $ = id => document.getElementById(id);
 
     const canvas = $("world");
     const ctx = canvas.getContext("2d");
@@ -660,8 +654,8 @@
         shoes: "#503b34"
       },
       player: { x: 2500, y: 2630, speed: 220, direction: "down", moving: false },
-      birthStar: random(["Aurora", "Solara", "Vega", "Nova", "Astrid", "Eclipse", "Lunaris", "Celestia"]),
-      hiddenElement: random(["Fire", "Water", "Earth", "Air", "Ice", "Light", "Life", "Death"]),
+      birthStar: random(["Aurora","Solara","Vega","Nova","Astrid","Eclipse","Lunaris","Celestia"]),
+      hiddenElement: random(["Fire","Water","Earth","Air","Ice","Light","Life","Death"]),
       scores: { animal: 0, nature: 0, knowledge: 0, adventure: 0 },
       visitedPortals: [],
       talkedTo: [],
@@ -675,19 +669,6 @@
       animals: [],
       decorations: [],
       effects: []
-    };
-
-    const fields = {
-      name: "characterName",
-      skin: "skinColor",
-      hair: "hairColor",
-      hairStyle: "hairStyle",
-      outfit: "outfit",
-      shirt: "shirtColor",
-      jacket: "jacketColor",
-      dress: "dressColor",
-      pants: "pantsColor",
-      shoes: "shoeColor"
     };
 
     const questDefinitions = [
@@ -718,14 +699,25 @@
       }
     ];
 
-    game.quests = questDefinitions.map((q, i) => ({ ...q, completed: false }));
+    game.quests = questDefinitions.map(q => ({ ...q, completed: false }));
+
+    const fields = {
+      name: "characterName",
+      skin: "skinColor",
+      hair: "hairColor",
+      hairStyle: "hairStyle",
+      outfit: "outfit",
+      shirt: "shirtColor",
+      jacket: "jacketColor",
+      dress: "dressColor",
+      pants: "pantsColor",
+      shoes: "shoeColor"
+    };
 
     function resizeCanvas() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.floor(window.innerWidth * dpr);
       canvas.height = Math.floor(window.innerHeight * dpr);
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       updateCamera();
     }
@@ -734,17 +726,9 @@
     resizeCanvas();
 
     function updateCamera() {
-      if (!game.started) {
-        game.camera.x = 0;
-        game.camera.y = 0;
-        return;
-      }
-
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      game.camera.x = clamp(game.player.x - width / 2, 0, WORLD_SIZE - width);
-      game.camera.y = clamp(game.player.y - height / 2, 0, WORLD_SIZE - height);
+      if (!game.started) return;
+      game.camera.x = clamp(game.player.x - window.innerWidth / 2, 0, WORLD_SIZE - window.innerWidth);
+      game.camera.y = clamp(game.player.y - window.innerHeight / 2, 0, WORLD_SIZE - window.innerHeight);
     }
 
     function readCharacter() {
@@ -763,7 +747,7 @@
       g.translate(x, y);
       g.scale(scale, scale);
 
-      g.fillStyle = "rgba(0, 0, 0, 0.24)";
+      g.fillStyle = "rgba(0,0,0,.24)";
       g.beginPath();
       g.ellipse(0, 42, 18, 6, 0, 0, Math.PI * 2);
       g.fill();
@@ -776,7 +760,7 @@
       }
       if (c.hairStyle === "ponytail") {
         g.beginPath();
-        g.ellipse(12, -5, 7, 15, -0.5, 0, Math.PI * 2);
+        g.ellipse(12, -5, 7, 15, -.5, 0, Math.PI * 2);
         g.fill();
       }
 
@@ -842,8 +826,8 @@
       g.fill();
 
       g.beginPath();
-      g.arc(-13, -18, 3, 0, Math.PI * 2);
-      g.arc(13, -18, 3, 0, Math.PI * 2);
+      g.arc(-13, -18, 3, 0, Math.PI*2);
+      g.arc(13, -18, 3, 0, Math.PI*2);
       g.fill();
 
       g.fillStyle = c.hair;
@@ -892,7 +876,7 @@
       g.strokeStyle = "#a05d56";
       g.lineWidth = 1;
       g.beginPath();
-      g.arc(0, -12, 3, 0.2, Math.PI - 0.2);
+      g.arc(0, -12, 3, 0.2, Math.PI - .2);
       g.stroke();
 
       g.fillStyle = "#f7d47c";
@@ -931,23 +915,18 @@
     });
 
     function randomCharacter() {
-      $("characterName").value = random(["Willow", "Ash", "Rowan", "Luna", "Ember", "Skye", "Nova", "River", "Sage", "Iris"]);
-      $("skinColor").value = random(["#f8d5b5", "#e8b68f", "#c88d68", "#956044", "#623f32", "#f0d9c9"]);
-      $("hairColor").value = random(["#493026", "#24202c", "#d7a84e", "#9b453e", "#e7e2d9", "#704b9c", "#397d84", "#d77ca4"]);
-      $("hairStyle").value = random(["short", "long", "ponytail", "bob", "curly", "braid"]);
-      $("outfit").value = random(["shirt", "jacket", "dress"]);
-      $("shirtColor").value = random(["#e9d9bb", "#a9d4ce", "#e2a9ad", "#d4c1ed"]);
-      $("jacketColor").value = random(["#584b83", "#335b70", "#85505e", "#586c51"]);
-      $("dressColor").value = random(["#9865a8", "#b85f87", "#5b82ae", "#d18d63"]);
-      $("pantsColor").value = random(["#39435c", "#55515f", "#425b4e", "#79594a"]);
-      $("shoeColor").value = random(["#503b34", "#2d3142", "#795a43"]);
-
-      if (Math.random() > 0.5) {
-        $("girlButton").click();
-      } else {
-        $("boyButton").click();
-      }
-
+      $("characterName").value = random(["Willow","Ash","Rowan","Luna","Ember","Skye","Nova","River","Sage","Iris"]);
+      $("skinColor").value = random(["#f8d5b5","#e8b68f","#c88d68","#956044","#623f32","#f0d9c9"]);
+      $("hairColor").value = random(["#493026","#24202c","#d7a84e","#9b453e","#e7e2d9","#704b9c","#397d84","#d77ca4"]);
+      $("hairStyle").value = random(["short","long","ponytail","bob","curly","braid"]);
+      $("outfit").value = random(["shirt","jacket","dress"]);
+      $("shirtColor").value = random(["#e9d9bb","#a9d4ce","#e2a9ad","#d4c1ed"]);
+      $("jacketColor").value = random(["#584b83","#335b70","#85505e","#586c51"]);
+      $("dressColor").value = random(["#9865a8","#b85f87","#5b82ae","#d18d63"]);
+      $("pantsColor").value = random(["#39435c","#55515f","#425b4e","#79594a"]);
+      $("shoeColor").value = random(["#503b34","#2d3142","#795a43"]);
+      if (Math.random() > .5) $("girlButton").click();
+      else $("boyButton").click();
       updatePreview();
     }
 
@@ -958,7 +937,7 @@
     }
 
     function addPortal(name, x, y, color, region) {
-      game.portals.push({ name, x, y, color, region, active: true });
+      game.portals.push({ name, x, y, color, region });
     }
 
     function addAnimal(name, x, y, type) {
@@ -976,10 +955,10 @@
       game.decorations = [];
 
       addNPC("Principal Solara", 2500, 2440, "Academy Courtyard", "#e8b65f", "Welcome, young star! I am Principal Solara. Everstar Academy is a place where every heart has the power to shine. Your Qualification Week begins with courage, curiosity, and care.");
-      addNPC("Professor Willow", 2300, 2350, "Academy Building", "#7fbd80", "Nature remembers everything, little one. I teach the ancient art of growth and harmony. Find the courage to care for the living world.");
-      addNPC("Professor Tide", 2680, 2350, "Academy Building", "#65bad2", "The waters of Everstar hold stories older than the stars. Listen closely, and they may tell you yours. Explore the Water Region and discover hidden currents.");
-      addNPC("Professor Ember", 2300, 2520, "Academy Building", "#e78362", "A spark is not a flame, and a flame is not a destiny. True courage comes from knowing when to shine bravely. The Fire Region awaits those ready to grow.");
-      addNPC("Professor Nimbus", 2680, 2520, "Academy Building", "#b5a8e8", "The skies are endless, and so are the possibilities of a curious mind. Explore the Air Region. Knowledge gives wings to every dream.");
+      addNPC("Professor Willow", 1500, 2000, "Earth Region", "#7fbd80", "Nature remembers everything, little one. I teach the ancient art of growth and harmony. Earth is where courage takes root.");
+      addNPC("Professor Tide", 1500, 3400, "Water Region", "#65bad2", "The waters of Everstar hold stories older than the stars. Listen closely, and they may tell you yours. The Water Region is full of secrets.");
+      addNPC("Professor Ember", 3500, 3400, "Fire Region", "#e78362", "A spark is not a flame, and a flame is not a destiny. True courage comes from knowing when to shine bravely. The Fire Region teaches resilience.");
+      addNPC("Professor Nimbus", 3500, 2000, "Air Region", "#b5a8e8", "The skies are endless, and so are the possibilities of a curious mind. Knowledge gives wings to every dream. Explore the Air Region and learn.");
 
       addPortal("Air", 3650, 1800, "#a9e9ef", "Air Region");
       addPortal("Fire", 3650, 3650, "#ff8956", "Fire Region");
@@ -987,16 +966,16 @@
       addPortal("Earth", 1300, 1800, "#8bd47e", "Earth Region");
 
       for (let i = 0; i < 5; i++) {
-        addAnimal("Moon Unicorn", random([900, 1150, 1400]), random([800, 1000, 1200]), "unicorn");
-        addAnimal("Lava Wolf", random([3900, 4100, 4300]), random([3900, 4100, 4300]), "wolf");
+        addAnimal("Moon Unicorn", random([900,1150,1400]), random([800,1000,1200]), "unicorn");
+        addAnimal("Lava Wolf", random([3900,4100,4300]), random([3900,4100,4300]), "wolf");
       }
 
       for (let i = 0; i < 12; i++) {
-        addDecoration("tree", 1800 + Math.random() * 1400, 1900 + Math.random() * 1200, 0.8 + Math.random() * 0.7);
+        addDecoration("tree", 1800 + Math.random() * 1400, 1900 + Math.random() * 1200, .8 + Math.random() * .7);
       }
 
       for (let i = 0; i < 15; i++) {
-        addDecoration("flower", 1900 + Math.random() * 1200, 2050 + Math.random() * 1000, 0.6 + Math.random() * 0.7);
+        addDecoration("flower", 1900 + Math.random() * 1200, 2050 + Math.random() * 1000, .6 + Math.random() * .7);
       }
 
       for (let i = 0; i < 5; i++) {
@@ -1022,9 +1001,7 @@
       toast.textContent = message;
       toast.classList.add("show");
       clearTimeout(showToast.timeoutId);
-      showToast.timeoutId = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 1800);
+      showToast.timeoutId = setTimeout(() => toast.classList.remove("show"), 1800);
     }
 
     function showMessage(message, duration = 1800) {
@@ -1032,17 +1009,14 @@
       el.textContent = message;
       el.classList.add("show");
       clearTimeout(showMessage.timeoutId);
-      showMessage.timeoutId = setTimeout(() => {
-        el.classList.remove("show");
-      }, duration);
+      showMessage.timeoutId = setTimeout(() => el.classList.remove("show"), duration);
     }
 
     function showDialogue(name, lines, onFinish = null) {
       if (game.dialogueCooldown > 0 || game.dialogue) return false;
 
-      game.dialogue = { name, lines: Array.isArray(lines) ? lines : [lines], onFinish, closed: false };
+      game.dialogue = { name, lines: Array.isArray(lines) ? lines : [lines], onFinish };
       game.dialogueIndex = 0;
-
       $("speaker").textContent = name;
       $("dialogueText").textContent = game.dialogue.lines[0];
       $("dialogue").classList.add("visible");
@@ -1052,27 +1026,21 @@
 
     function closeDialogue() {
       if (!game.dialogue) return;
-
       const finished = game.dialogue;
       game.dialogue = null;
       $("dialogue").classList.remove("visible");
       $("actionButton").disabled = false;
       game.dialogueCooldown = 0.65;
-
-      if (typeof finished.onFinish === "function") {
-        finished.onFinish();
-      }
+      if (typeof finished.onFinish === "function") finished.onFinish();
     }
 
     function advanceDialogue() {
       if (!game.dialogue) return;
-
-      game.dialogueIndex += 1;
+      game.dialogueIndex++;
       if (game.dialogueIndex >= game.dialogue.lines.length) {
         closeDialogue();
         return;
       }
-
       $("dialogueText").textContent = game.dialogue.lines[game.dialogueIndex];
     }
 
@@ -1080,25 +1048,17 @@
     $("dialogueNext").addEventListener("click", advanceDialogue);
 
     function talkToNPC(npc) {
-      if (game.interactionCooldown > 0 || game.dialogue) return;
+      if (!game.started || !npc) return;
 
       const alreadyTalked = game.talkedTo.includes(npc.name);
-      let lines;
 
-      if (alreadyTalked) {
-        lines = [npc.description.split(". ").slice(0, 2).join(". ") + ".\n\nI am happy to see you again, student."];
-      } else {
-        lines = [npc.description];
-      }
-
-      showDialogue(npc.name, lines, () => {
+      showDialogue(npc.name, [npc.description], () => {
         if (alreadyTalked) return;
 
         game.talkedTo.push(npc.name);
 
-        if (npc.name === "Principal Solara") {
-          game.scores.knowledge += 1;
-        } else if (npc.name === "Professor Willow") {
+        if (npc.name === "Principal Solara") game.scores.knowledge += 1;
+        else if (npc.name === "Professor Willow") {
           game.scores.nature += 1;
           game.scores.knowledge += 1;
         } else if (npc.name === "Professor Tide") {
@@ -1134,7 +1094,7 @@
       } else {
         const q = game.quests[active];
         $("questText").textContent = q.description;
-        const count = game.quests.filter(qv => qv.completed).length;
+        const count = game.quests.filter(q => q.completed).length;
         $("questProgress").textContent = "Quest " + (active + 1) + " of " + game.quests.length + " · " + count + " completed";
       }
 
@@ -1163,18 +1123,15 @@
 
     function graduate() {
       if (game.graduation) return;
-
       game.graduation = true;
       updateProfession();
       updateQuests();
 
-      const message = [
+      showDialogue("Principal Solara", [
         "You have completed Qualification Week!",
         "The Academy sees your growth, courage, and heart.",
         "Your path is set: " + game.profession + "."
-      ];
-
-      showDialogue("Principal Solara", message, () => {
+      ], () => {
         showToast("Graduation achieved! You are now a " + game.profession + "!");
       });
     }
@@ -1197,9 +1154,7 @@
       updateQuests();
       updateProfession();
 
-      const creator = $("creator");
-      creator.style.display = "none";
-
+      $("creator").style.display = "none";
       showMessage("Qualification Week begins!", 1800);
       showToast("Welcome to Everstar Academy!");
     }
@@ -1213,8 +1168,8 @@
       const dx = event.clientX - centerX;
       const dy = event.clientY - centerY;
       const maxRadius = rect.width * 0.35;
-
       const distance = Math.hypot(dx, dy);
+
       const limitedX = distance > maxRadius ? (dx / distance) * maxRadius : dx;
       const limitedY = distance > maxRadius ? (dy / distance) * maxRadius : dy;
 
@@ -1237,9 +1192,9 @@
       startJoystickFromEvent(event);
     });
 
-    $("joystick").addEventListener("pointerup", () => resetJoystick());
-    $("joystick").addEventListener("pointercancel", () => resetJoystick());
-    $("joystick").addEventListener("pointerleave", () => resetJoystick());
+    $("joystick").addEventListener("pointerup", resetJoystick);
+    $("joystick").addEventListener("pointercancel", resetJoystick);
+    $("joystick").addEventListener("pointerleave", resetJoystick);
 
     function resetJoystick() {
       game.joystick.x = 0;
@@ -1269,11 +1224,8 @@
         const moveX = (dx / length) * game.player.speed * dt;
         const moveY = (dy / length) * game.player.speed * dt;
 
-        const nextX = clamp(game.player.x + moveX, 0, WORLD_SIZE);
-        const nextY = clamp(game.player.y + moveY, 0, WORLD_SIZE);
-
-        game.player.x = nextX;
-        game.player.y = nextY;
+        game.player.x = clamp(game.player.x + moveX, 0, WORLD_SIZE);
+        game.player.y = clamp(game.player.y + moveY, 0, WORLD_SIZE);
 
         if (Math.abs(moveX) > Math.abs(moveY)) {
           game.player.direction = moveX >= 0 ? "right" : "left";
@@ -1286,9 +1238,6 @@
         game.player.moving = false;
       }
 
-      if (game.player.x < 0 || game.player.x > WORLD_SIZE) game.player.x = clamp(game.player.x, 0, WORLD_SIZE);
-      if (game.player.y < 0 || game.player.y > WORLD_SIZE) game.player.y = clamp(game.player.y, 0, WORLD_SIZE);
-
       updateCamera();
       $("hudRegion").textContent = regionAt(game.player.x, game.player.y);
       $("mapLabel").textContent = regionAt(game.player.x, game.player.y) + " · WASD / Arrow Keys to move · E / SPACE to interact";
@@ -1300,7 +1249,7 @@
 
       for (const npc of game.npcs) {
         const dist = Math.hypot(game.player.x - npc.x, game.player.y - npc.y);
-        if (dist < 120 && dist < nearestDist) {
+        if (dist < 160 && dist < nearestDist) {
           nearest = npc;
           nearestDist = dist;
         }
@@ -1315,7 +1264,7 @@
 
       for (const portal of game.portals) {
         const dist = Math.hypot(game.player.x - portal.x, game.player.y - portal.y);
-        if (dist < 110 && dist < nearestDist) {
+        if (dist < 120 && dist < nearestDist) {
           nearest = portal;
           nearestDist = dist;
         }
@@ -1341,34 +1290,33 @@
 
     function activatePortal(portal) {
       if (!portal) return;
-
       if (game.portalCooldown > 0) {
         showMessage("Portal is recharging...", 900);
         return;
       }
 
-      game.portalCooldown = 2;
+      const targets = {
+        Air: { x: 3650, y: 1800 },
+        Fire: { x: 3650, y: 3650 },
+        Water: { x: 1300, y: 3650 },
+        Earth: { x: 1300, y: 1800 }
+      };
 
+      game.portalCooldown = 2;
       if (!game.visitedPortals.includes(portal.name)) {
         game.visitedPortals.push(portal.name);
       }
 
-      const targets = {
-        Air: { x: 3650, y: 1600 },
-        Fire: { x: 3650, y: 3550 },
-        Water: { x: 1400, y: 3550 },
-        Earth: { x: 1400, y: 1450 }
-      };
-
-      const destination = targets[portal.name] || { x: 2500, y: 2500 };
-      game.player.x = destination.x;
-      game.player.y = destination.y;
+      const to = targets[portal.name] || { x: 2500, y: 2500 };
+      game.player.x = to.x;
+      game.player.y = to.y;
 
       game.scores.adventure += 1;
       updateProfession();
       updateQuests();
       showMessage("You step through the " + portal.name + " portal!", 1500);
       showToast("Portal entry: " + portal.name + " Region");
+      updateCamera();
     }
 
     function interactAnimal(animal) {
@@ -1408,15 +1356,6 @@
         return;
       }
 
-      const principal = game.npcs.find(n => n.name === "Principal Solara");
-      if (principal && Math.hypot(game.player.x - principal.x, game.player.y - principal.y) < 140) {
-        if (game.quests.every(q => q.completed) && !game.graduation) {
-          game.interactionCooldown = 0.35;
-          graduate();
-          return;
-        }
-      }
-
       const region = regionAt(game.player.x, game.player.y);
       showMessage("Nothing here to interact with in the " + region + ".", 1200);
       game.interactionCooldown = 0.35;
@@ -1426,7 +1365,7 @@
       const key = event.key.toLowerCase();
       const code = event.code;
 
-      if (["arrowup", "arrowdown", "arrowleft", "arrowright", " ", "e", "w", "a", "s", "d"].includes(key) || code === "Space") {
+      if (["arrowup","arrowdown","arrowleft","arrowright"," ","e","w","a","s","d"].includes(key) || code === "Space") {
         event.preventDefault();
       }
 
@@ -1460,23 +1399,23 @@
     $("actionButton").addEventListener("click", attemptInteraction);
 
     $("menuButton").addEventListener("click", () => {
-      const panel = $("menuPanel");
-      panel.classList.toggle("visible");
+      $("menuPanel").classList.toggle("visible");
     });
 
-    $("closeMenu").addEventListener("click", () => {
-      $("menuPanel").classList.remove("visible");
-    });
+    $("closeMenu").addEventListener("click", () => $("menuPanel").classList.remove("visible"));
 
     $("journalButton").addEventListener("click", () => {
-      const q = game.quests.findIndex(item => !item.completed);
-      if (q >= 0) {
+      const idx = game.quests.findIndex(item => !item.completed);
+      if (idx >= 0) {
         showDialogue("Academy Journal", [
-          "Quest: " + game.quests[q].title,
-          "Objective: " + game.quests[q].description
+          "Quest: " + game.quests[idx].title,
+          "Objective: " + game.quests[idx].description
         ]);
       } else {
-        showDialogue("Academy Journal", ["All qualifications are complete.", "Everstar Academy is proud of you."]);
+        showDialogue("Academy Journal", [
+          "All qualifications are complete.",
+          "Everstar Academy is proud of you."
+        ]);
       }
       $("menuPanel").classList.remove("visible");
     });
@@ -1503,20 +1442,24 @@
     });
 
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        if (game.dialogue) closeDialogue();
-      }
+      if (document.hidden && game.dialogue) closeDialogue();
     });
 
     function drawGround() {
       ctx.fillStyle = "#6f966d";
       ctx.fillRect(0, 0, WORLD_SIZE, WORLD_SIZE);
 
-      ctx.fillStyle = "#5a7d5a";
-      ctx.fillRect(0, 0, WORLD_SIZE, 1800);
-      ctx.fillRect(0, 3200, WORLD_SIZE, 1800);
-      ctx.fillRect(0, 0, 1800, WORLD_SIZE);
-      ctx.fillRect(3200, 0, 1800, WORLD_SIZE);
+      ctx.fillStyle = "#c9e2ff";
+      ctx.fillRect(3200, 0, 1800, 2500);
+
+      ctx.fillStyle = "#ffc7a6";
+      ctx.fillRect(3200, 2500, 1800, 2500);
+
+      ctx.fillStyle = "#a7d6ff";
+      ctx.fillRect(0, 2500, 1800, 2500);
+
+      ctx.fillStyle = "#96d592";
+      ctx.fillRect(0, 0, 1800, 2500);
 
       ctx.fillStyle = "#d9d4a8";
       ctx.fillRect(2000, 2000, 1000, 1000);
@@ -1565,7 +1508,6 @@
       ctx.arc(0, 0, 38, 0, Math.PI * 2);
       ctx.fillStyle = "#8a6a3a";
       ctx.fill();
-
       ctx.restore();
     }
 
@@ -1595,12 +1537,11 @@
 
     function drawPortal(portal) {
       const pulse = 1 + Math.sin((Date.now() * 0.006) + portal.x * 0.1) * 0.1;
-
       ctx.save();
       ctx.translate(portal.x, portal.y);
       ctx.scale(pulse, pulse);
 
-      ctx.fillStyle = "rgba(255,255,255,0.14)";
+      ctx.fillStyle = "rgba(255,255,255,.14)";
       ctx.beginPath();
       ctx.arc(0, 0, 70, 0, Math.PI * 2);
       ctx.fill();
@@ -1620,7 +1561,6 @@
       ctx.font = "bold 18px Georgia";
       ctx.textAlign = "center";
       ctx.fillText(portal.name, 0, 95);
-
       ctx.restore();
     }
 
@@ -1692,7 +1632,7 @@
         ctx.fillStyle = "#1c1a20";
         ctx.beginPath();
         ctx.arc(-6, -5, 3, 0, Math.PI * 2);
-        ctx.arc(6, -5, 3, 0, Math.PI * 2);
+        ctx.arc(6, -5, 3, 3, Math.PI * 2);
         ctx.fill();
       }
 
@@ -1712,8 +1652,7 @@
       ctx.scale(size, size);
 
       if (type === "tree") {
-        const trunk = "#7f563b";
-        ctx.fillStyle = trunk;
+        ctx.fillStyle = "#7f563b";
         ctx.fillRect(-6, 6, 12, 30);
 
         ctx.fillStyle = "#4e7d43";
@@ -1761,55 +1700,25 @@
     }
 
     function drawPlayer() {
-      const currentRegion = regionAt(game.player.x, game.player.y);
-      const drawX = game.player.x;
-      const drawY = game.player.y;
-
-      if (currentRegion === "Academy Courtyard" || currentRegion === "Academy Building") {
-        ctx.fillStyle = "rgba(255,255,255,0.08)";
-        ctx.beginPath();
-        ctx.arc(drawX, drawY, 26, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
       const facing = game.player.direction === "left" ? -1 : 1;
-      const offsetX = drawX + (facing * 2);
-      drawCharacter(ctx, offsetX, drawY, 1.3);
+      drawCharacter(ctx, game.player.x + facing * 2, game.player.y, 1.3);
     }
 
     function render() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       ctx.save();
-
       ctx.translate(-game.camera.x, -game.camera.y);
+
       drawGround();
 
-      for (const portal of game.portals) {
-        drawPortal(portal);
-      }
+      for (const portal of game.portals) drawPortal(portal);
+      for (const decoration of game.decorations) drawDecoration(decoration);
+      for (const npc of game.npcs) drawNPC(npc);
+      for (const animal of game.animals) drawAnimal(animal);
 
-      for (const decoration of game.decorations) {
-        drawDecoration(decoration);
-      }
-
-      for (const npc of game.npcs) {
-        drawNPC(npc);
-      }
-
-      for (const animal of game.animals) {
-        drawAnimal(animal);
-      }
-
-      if (game.started) {
-        drawPlayer();
-      }
+      if (game.started) drawPlayer();
 
       ctx.restore();
-
-      if (game.started && game.player) {
-        const region = regionAt(game.player.x, game.player.y);
-        $("hudRegion").textContent = region;
-      }
     }
 
     function update(dt) {
@@ -1821,9 +1730,7 @@
       updateHUD();
 
       if (game.started) {
-        const region = regionAt(game.player.x, game.player.y);
-        const label = region === "Academy Courtyard" ? "Academy Courtyard" : region;
-        $("mapLabel").textContent = label + " · WASD / Arrow Keys to move · E / SPACE to interact";
+        $("mapLabel").textContent = regionAt(game.player.x, game.player.y) + " · WASD / Arrow Keys to move · E / SPACE to interact";
       }
     }
 
@@ -1834,7 +1741,6 @@
 
       update(dt);
       render();
-
       requestAnimationFrame(loop);
     }
 
@@ -1852,9 +1758,7 @@
 
     initializeCreator();
     requestAnimationFrame(loop);
-
     $("beginButton").addEventListener("click", beginGame);
   </script>
 </body>
 </html>
-```
