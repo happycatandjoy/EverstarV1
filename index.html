@@ -1,3020 +1,1798 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1.0">
-
-<title>Everstar v0.5</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-
-background:black;
-
-overflow:hidden;
-
-touch-action:none;
-
-user-select:none;
-
-}
-
-/* =====================
-WORLD
-===================== */
-
-#viewport{
-
-width:100vw;
-height:100vh;
-
-overflow:hidden;
-
-position:relative;
-
-}
-
-#game{
-
-position:relative;
-
-width:5000px;
-height:5000px;
-
-background:
-linear-gradient(
-180deg,
-#8fdfff 0%,
-#8cf58f 100%
-);
-
-}
-
-/* =====================
-CHARACTER CREATOR
-===================== */
-
-#characterScreen{
-
-position:fixed;
-
-inset:0;
-
-overflow:auto;
-
-padding:20px;
-
-color:white;
-
-background:
-linear-gradient(
-180deg,
-#17224d,
-#324695
-);
-
-z-index:99999;
-
-}
-
-#creatorPanel{
-
-max-width:520px;
-
-margin:auto;
-
-padding:20px;
-
-border-radius:20px;
-
-background:
-rgba(
-255,
-255,
-255,
-0.15
-);
-
-backdrop-filter:
-blur(8px);
-
-}
-
-#creatorPanel h1{
-
-text-align:center;
-
-margin-bottom:15px;
-
-}
-
-.creatorRow{
-
-display:flex;
-
-flex-direction:column;
-
-gap:6px;
-
-margin-bottom:12px;
-
-}
-
-.creatorRow label{
-
-font-size:14px;
-
-}
-
-.creatorRow input,
-.creatorRow select{
-
-padding:10px;
-
-font-size:16px;
-
-border:none;
-
-border-radius:10px;
-
-}
-
-/* =====================
-BUTTONS
-===================== */
-
-#randomButton,
-#enterButton{
-
-width:100%;
-
-padding:12px;
-
-font-size:16px;
-
-font-weight:bold;
-
-border:none;
-
-border-radius:12px;
-
-cursor:pointer;
-
-}
-
-#randomButton{
-
-background:#ffd75d;
-
-margin-bottom:10px;
-
-}
-
-#enterButton{
-
-background:#7cff97;
-
-}
-
-/* =====================
-CHARACTER PREVIEW
-===================== */
-
-#previewCharacter{
-
-position:relative;
-
-width:140px;
-height:260px;
-
-margin:20px auto;
-
-}
-
-#previewHair{
-
-position:absolute;
-
-left:35px;
-top:10px;
-
-width:70px;
-height:20px;
-
-background:brown;
-
-border-radius:
-15px 15px 5px 5px;
-
-z-index:20;
-
-}
-
-#previewHead{
-
-position:absolute;
-
-left:35px;
-top:20px;
-
-width:70px;
-height:70px;
-
-border-radius:50%;
-
-background:#f8d8bd;
-
-}
-
-.previewEye{
-
-position:absolute;
-
-width:8px;
-height:8px;
-
-background:black;
-
-border-radius:50%;
-
-top:28px;
-
-}
-
-.previewEye.left{
-
-left:18px;
-
-}
-
-.previewEye.right{
-
-right:18px;
-
-}
-
-#previewBody{
-
-position:absolute;
-
-left:47px;
-top:92px;
-
-width:46px;
-height:60px;
-
-border-radius:8px;
-
-background:#4d71ff;
-
-}
-
-#previewJacket{
-
-position:absolute;
-
-left:40px;
-top:88px;
-
-width:60px;
-height:64px;
-
-background:transparent;
-
-border-radius:8px;
-
-}
-
-#previewDress{
-
-position:absolute;
-
-left:35px;
-top:138px;
-
-width:70px;
-height:70px;
-
-background:transparent;
-
-clip-path:
-polygon(
-50% 0%,
-100% 100%,
-0% 100%
-);
-
-}
-
-#previewLegs{
-
-position:absolute;
-
-left:53px;
-top:155px;
-
-width:34px;
-height:35px;
-
-background:#333;
-
-}
-
-#previewShoes{
-
-position:absolute;
-
-left:50px;
-top:190px;
-
-width:40px;
-height:12px;
-
-background:black;
-
-border-radius:4px;
-
-}
-
-/* =====================
-PLAYER
-===================== */
-
-#player{
-
-position:absolute;
-
-width:60px;
-height:110px;
-
-z-index:500;
-
-}
-
-#playerHair{
-
-position:absolute;
-
-left:8px;
-top:0;
-
-width:44px;
-height:18px;
-
-background:brown;
-
-border-radius:
-15px 15px 5px 5px;
-
-z-index:5;
-
-}
-
-#playerHead{
-
-position:absolute;
-
-left:10px;
-top:10px;
-
-width:40px;
-height:40px;
-
-background:#f8d8bd;
-
-border-radius:50%;
-
-}
-
-.eye{
-
-position:absolute;
-
-width:6px;
-height:6px;
-
-background:black;
-
-border-radius:50%;
-
-top:15px;
-
-}
-
-#leftEye{
-left:10px;
-}
-
-#rightEye{
-right:10px;
-}
-
-#playerBody{
-
-position:absolute;
-
-left:15px;
-top:50px;
-
-width:30px;
-height:40px;
-
-background:#4d71ff;
-
-border-radius:8px;
-
-}
-
-#playerJacket{
-
-position:absolute;
-
-left:12px;
-top:48px;
-
-width:36px;
-height:44px;
-
-background:transparent;
-
-border-radius:8px;
-
-}
-
-#playerDress{
-
-position:absolute;
-
-left:8px;
-top:72px;
-
-width:44px;
-height:28px;
-
-background:transparent;
-
-clip-path:
-polygon(
-50% 0,
-100% 100%,
-0% 100%
-);
-
-}
-
-#playerLegs{
-
-position:absolute;
-
-left:20px;
-top:90px;
-
-width:20px;
-height:18px;
-
-background:#333;
-
-}
-
-#playerShoes{
-
-position:absolute;
-
-left:17px;
-top:104px;
-
-width:26px;
-height:8px;
-
-background:black;
-
-border-radius:4px;
-
-}
-/* =====================
-UI
-===================== */
-
-#ui{
-
-position:fixed;
-
-top:10px;
-left:10px;
-
-max-width:220px;
-
-padding:12px;
-
-font-size:14px;
-
-background:
-rgba(255,255,255,.95);
-
-border-radius:12px;
-
-z-index:5000;
-
-box-shadow:
-0 3px 12px
-rgba(0,0,0,.15);
-
-}
-
-#regionLabel{
-
-position:fixed;
-
-top:10px;
-right:10px;
-
-padding:10px;
-
-font-weight:bold;
-
-background:white;
-
-border-radius:12px;
-
-z-index:5000;
-
-}
-
-#message{
-
-margin-top:10px;
-
-font-weight:bold;
-
-color:#6933d3;
-
-}
-
-#questTracker{
-
-margin-top:10px;
-
-font-size:13px;
-
-line-height:1.4;
-
-}
-
-/* =====================
-DIALOGUE (UPDATED)
-===================== */
-
-#dialogueBox{
-
-position:fixed;
-
-left:50%;
-top:15px;
-
-transform:translateX(-50%);
-
-width:min(92vw,700px);
-
-background:#fffef8;
-
-color:#222;
-
-padding:18px;
-
-padding-top:55px;
-
-border-radius:18px;
-
-border:4px solid gold;
-
-display:none;
-
-z-index:99999;
-
-box-shadow:
-0 5px 25px
-rgba(0,0,0,.25);
-
-}
-
-#dialogueSpeaker{
-
-font-size:22px;
-
-font-weight:bold;
-
-color:#5f2dbd;
-
-margin-bottom:10px;
-
-}
-
-#dialogueText{
-
-line-height:1.5;
-
-font-size:16px;
-
-}
-
-#closeDialogue{
-
-position:absolute;
-
-top:10px;
-right:10px;
-
-width:36px;
-height:36px;
-
-display:flex;
-
-justify-content:center;
-align-items:center;
-
-border:none;
-
-border-radius:50%;
-
-background:#ff5c5c;
-
-color:white;
-
-font-size:20px;
-
-font-weight:bold;
-
-cursor:pointer;
-
-}
-
-/* =====================
-MOBILE JOYSTICK
-===================== */
-
-#joystick{
-
-position:fixed;
-
-left:15px;
-bottom:15px;
-
-width:150px;
-height:150px;
-
-border-radius:50%;
-
-background:
-rgba(
-255,
-255,
-255,
-0.20
-);
-
-border:
-3px solid white;
-
-z-index:9000;
-
-backdrop-filter:
-blur(5px);
-
-}
-
-#stick{
-
-position:absolute;
-
-left:37px;
-top:37px;
-
-width:75px;
-height:75px;
-
-border-radius:50%;
-
-background:white;
-
-}
-
-/* =====================
-NPCS
-===================== */
-
-.npc{
-
-position:absolute;
-
-width:70px;
-height:110px;
-
-z-index:100;
-
-}
-
-.npc-hair{
-
-position:absolute;
-
-left:12px;
-top:0;
-
-width:45px;
-height:18px;
-
-background:brown;
-
-border-radius:
-15px 15px 5px 5px;
-
-z-index:10;
-
-}
-
-.npc-head{
-
-position:absolute;
-
-left:14px;
-top:10px;
-
-width:40px;
-height:40px;
-
-border-radius:50%;
-
-background:#f2d1a8;
-
-}
-
-.npc-eye{
-
-position:absolute;
-
-width:5px;
-height:5px;
-
-background:black;
-
-border-radius:50%;
-
-top:15px;
-
-}
-
-.npc-eye.left{
-left:10px;
-}
-
-.npc-eye.right{
-right:10px;
-}
-
-.npc-body{
-
-position:absolute;
-
-left:18px;
-top:50px;
-
-width:32px;
-height:38px;
-
-background:#4d71ff;
-
-border-radius:8px;
-
-}
-
-.npc-legs{
-
-position:absolute;
-
-left:22px;
-top:88px;
-
-width:22px;
-height:18px;
-
-background:#333;
-
-}
-
-.npc-name{
-
-position:absolute;
-
-top:105px;
-
-left:-5px;
-
-font-size:10px;
-
-background:white;
-
-padding:2px 4px;
-
-border-radius:4px;
-
-white-space:nowrap;
-
-}
-
-/* =====================
-ACADEMY STAR
-===================== */
-
-#academyStar{
-
-position:absolute;
-
-left:2150px;
-top:2150px;
-
-width:700px;
-height:700px;
-
-background:#efe1ac;
-
-clip-path:
-polygon(
-50% 0,
-65% 35%,
-100% 50%,
-65% 65%,
-50% 100%,
-35% 65%,
-0 50%,
-35% 35%
-);
-
-z-index:1;
-
-}
-
-#academy{
-
-position:absolute;
-
-left:2350px;
-top:2350px;
-
-width:300px;
-height:200px;
-
-background:#d2aa6c;
-
-border:
-8px solid #7a4d20;
-
-border-radius:20px;
-
-display:flex;
-
-justify-content:center;
-align-items:center;
-
-font-size:34px;
-
-font-weight:bold;
-
-z-index:10;
-
-}
-
-/* =====================
-PORTALS
-===================== */
-
-.portal{
-
-position:absolute;
-
-width:120px;
-height:120px;
-
-border-radius:50%;
-
-display:flex;
-
-justify-content:center;
-align-items:center;
-
-font-size:24px;
-
-font-weight:bold;
-
-color:white;
-
-border:
-5px solid white;
-
-box-shadow:
-0 0 30px white;
-
-z-index:20;
-
-}
-
-.airPortal{
-
-background:
-radial-gradient(
-white,
-#8fdfff
-);
-
-}
-
-.firePortal{
-
-background:
-radial-gradient(
-#ffdd8e,
-#ff6924
-);
-
-}
-
-.waterPortal{
-
-background:
-radial-gradient(
-#d1fcff,
-#33a8ff
-);
-
-}
-
-.earthPortal{
-
-background:
-radial-gradient(
-#caffb5,
-#349f4c
-);
-
-}
-/* =====================
-TREES & PLANTS
-===================== */
-
-.tree{
-
-position:absolute;
-
-width:50px;
-height:80px;
-
-}
-
-.tree::before{
-
-content:"";
-
-position:absolute;
-
-left:15px;
-top:35px;
-
-width:20px;
-height:45px;
-
-background:#7a4d20;
-
-}
-
-.tree::after{
-
-content:"";
-
-position:absolute;
-
-width:50px;
-height:50px;
-
-background:#2f9e44;
-
-border-radius:50%;
-
-}
-
-.flower{
-
-position:absolute;
-
-width:10px;
-height:10px;
-
-background:pink;
-
-border-radius:50%;
-
-box-shadow:
-10px 0 pink,
--10px 0 pink,
-0 10px pink,
-0 -10px pink;
-
-}
-
-.waterPlant{
-
-position:absolute;
-
-width:12px;
-height:35px;
-
-background:#5ac7ff;
-
-border-radius:10px;
-
-}
-
-.earthPlant{
-
-position:absolute;
-
-width:20px;
-height:35px;
-
-background:#33b44a;
-
-border-radius:
-0 0 50% 50%;
-
-}
-
-.airPlant{
-
-position:absolute;
-
-width:18px;
-height:18px;
-
-background:white;
-
-border-radius:50%;
-
-box-shadow:
-0 0 10px white;
-
-}
-
-.firePlant{
-
-position:absolute;
-
-width:18px;
-height:35px;
-
-background:orange;
-
-clip-path:
-polygon(
-50% 0%,
-100% 100%,
-0% 100%
-);
-
-}
-
-/* =====================
-ANIMALS
-===================== */
-
-.animal{
-
-position:absolute;
-
-width:40px;
-height:40px;
-
-border-radius:50%;
-
-}
-
-.unicorn{
-
-background:white;
-
-border:
-2px solid hotpink;
-
-}
-
-.lavawolf{
-
-background:orangered;
-
-border:
-2px solid black;
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#17152e">
+  <title>Everstar Academy — A Fantasy Life RPG</title>
+  <style>
+    :root {
+      --gold: #f5d58b;
+      --gold-dark: #a77a3b;
+      --purple: #272044;
+      --panel: rgba(28, 25, 52, .94);
+      --cream: #fff8e8;
+      --green: #79b98b;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #15152a;
+      font-family: Georgia, serif;
+      color: var(--cream);
+      touch-action: none;
+      user-select: none;
+    }
+    button, input, select { font: inherit; }
+    button {
+      cursor: pointer;
+      color: var(--cream);
+      background: linear-gradient(135deg,#67528c,#40345f);
+      border: 1px solid var(--gold-dark);
+      border-radius: 9px;
+      padding: 10px 15px;
+    }
+    button:hover { filter: brightness(1.2); }
+    button:disabled { opacity: .4; cursor: default; }
+
+    #game {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #658b65;
+    }
+    #world { display: block; width: 100%; height: 100%; }
+
+    #hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(245,213,139,.65);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px #0005;
+      padding: 11px;
+    }
+
+    #playerInfo {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: min(235px,48vw);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    #playerInfo .name {
+      color: var(--gold);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    #questPanel {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: min(270px,48vw);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .panelTitle {
+      font-size: 16px;
+      color: var(--gold);
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    #questText { color: #fff6d8; }
+
+    #message {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(23,21,42,.92);
+      border: 1px solid var(--gold);
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 13px;
+      text-align: center;
+      width: max-content;
+      max-width: 85%;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    #message.show { opacity: 1; }
+
+    #dialogue {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(650px,calc(100% - 24px));
+      background: linear-gradient(145deg,#fffef5,#f3e9d2);
+      color: #352b43;
+      border: 3px solid #c29a59;
+      border-radius: 15px;
+      padding: 19px 50px 19px 20px;
+      box-shadow: 0 8px 35px #0008;
+      display: none;
+      pointer-events: auto;
+      z-index: 20;
+      min-height: 125px;
+    }
+    #dialogue.visible {
+      display: block;
+      animation: appear .2s ease-out;
+    }
+    @keyframes appear {
+      from { opacity: 0; transform: translate(-50%,-12px); }
+      to { opacity: 1; transform: translate(-50%,0); }
+    }
+    #speaker {
+      color: #91612e;
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    #dialogueText {
+      font-size: 15px;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+    #dialogueClose {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #b83c45;
+      color: white;
+      border: 1px solid #8d2933;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      font-family: Arial,sans-serif;
+      font-size: 19px;
+    }
+    #dialogueNext {
+      margin-top: 12px;
+      background: #70518b;
+      color: white;
+    }
+
+    #joystick {
+      position: absolute;
+      left: 22px;
+      bottom: 25px;
+      width: 145px;
+      height: 145px;
+      border-radius: 50%;
+      background: rgba(25,22,46,.38);
+      border: 2px solid rgba(255,255,255,.35);
+      pointer-events: auto;
+      touch-action: none;
+    }
+    #stick {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 60px;
+      height: 60px;
+      transform: translate(-50%,-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%,#eee0c0,#8977ac);
+      border: 2px solid #e9d19a;
+      box-shadow: 0 3px 12px #0007;
+    }
+
+    #actionButton {
+      position: absolute;
+      bottom: 48px;
+      right: 25px;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      font-size: 17px;
+      font-weight: bold;
+      background: radial-gradient(circle at 30% 25%,#b38fcb,#55406f);
+      pointer-events: auto;
+      touch-action: none;
+    }
+
+    #menuButton {
+      position: absolute;
+      right: 12px;
+      bottom: 145px;
+      pointer-events: auto;
+    }
+    #menuPanel {
+      display: none;
+      position: absolute;
+      right: 12px;
+      bottom: 195px;
+      width: 190px;
+      pointer-events: auto;
+    }
+    #menuPanel.visible { display: grid; gap: 7px; }
+    #menuPanel button { width: 100%; }
+
+    #creator {
+      position: fixed;
+      z-index: 50;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+      background: radial-gradient(ellipse at center,#493c69,#17152e 75%);
+      overflow-y: auto;
+      touch-action: pan-y;
+    }
+    .creatorCard {
+      width: min(900px,100%);
+      background: linear-gradient(145deg,#30294c,#1c1933);
+      border: 2px solid var(--gold-dark);
+      border-radius: 19px;
+      padding: 22px;
+      box-shadow: 0 15px 60px #0009;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 22px;
+    }
+    .creatorTitle {
+      grid-column: 1/-1;
+      text-align: center;
+      color: var(--gold);
+      font-size: clamp(25px,5vw,38px);
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    .creatorSubtitle {
+      grid-column: 1/-1;
+      text-align: center;
+      color: #d5c8e9;
+      margin: -12px 0 2px;
+      font-size: 13px;
+    }
+    .previewArea {
+      background: radial-gradient(ellipse,#77729c,#33304e 75%);
+      border: 1px solid #a68cbd;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 330px;
+    }
+    #preview { width: 200px; height: 250px; }
+    .previewLabel { color: var(--gold); margin-top: 5px; }
+
+    .formArea {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+      align-content: center;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+    .field.full { grid-column: 1/-1; }
+    .field label {
+      font-size: 12px;
+      color: #e4d7f2;
+    }
+    .field input, .field select {
+      width: 100%;
+      min-width: 0;
+      background: #17152c;
+      color: white;
+      border: 1px solid #77638d;
+      border-radius: 7px;
+      padding: 9px;
+    }
+    .field input[type=color] {
+      height: 39px;
+      padding: 3px;
+    }
+
+    .genderChoices {
+      display: flex;
+      gap: 7px;
+    }
+    .genderChoices button {
+      flex: 1;
+    }
+    .genderChoices button.selected {
+      background: #a27a49;
+    }
+
+    .creatorActions {
+      grid-column: 1/-1;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .primaryButton {
+      background: linear-gradient(135deg,#a27b43,#74522f);
+      padding: 13px 24px;
+      font-weight: bold;
+    }
+
+    #toast {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: #272044;
+      border: 1px solid var(--gold);
+      padding: 9px 17px;
+      border-radius: 25px;
+      font-size: 13px;
+      display: none;
+    }
+    #toast.show { display: block; }
+
+    #mapLabel {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: #fff;
+      text-shadow: 1px 2px 3px #000;
+      pointer-events: none;
+    }
+
+    @media(max-width:600px) {
+      .creatorCard {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 14px;
+      }
+      .creatorTitle { font-size: 25px; }
+      .creatorSubtitle { margin-top: -8px; }
+      .previewArea { min-height: 190px; }
+      #preview {
+        height: 155px;
+        width: 150px;
+      }
+      .formArea { gap: 8px; }
+      .field label { font-size: 11px; }
+      .field input,.field select {
+        padding: 8px;
+        font-size: 12px;
+      }
+      #playerInfo,#questPanel {
+        font-size: 11px;
+        padding: 8px;
+      }
+      #playerInfo .name { font-size: 15px; }
+      .panelTitle { font-size: 13px; }
+      #joystick {
+        width: 125px;
+        height: 125px;
+      }
+      #stick {
+        width: 52px;
+        height: 52px;
+      }
+      #actionButton {
+        width: 66px;
+        height: 66px;
+      }
+      #dialogue {
+        padding: 16px 43px 15px 14px;
+      }
+      #dialogueText { font-size: 14px; }
+    }
+  </style>
 </head>
-
 <body>
-
-<!-- =====================
-CHARACTER CREATOR
-===================== -->
-
-<div id="characterScreen">
-
-<div id="creatorPanel">
-
-<h1>🌟 Everstar Academy 🌟</h1>
-
-<p style="margin-bottom:15px;">
-Every child in Everstar attends the Academy before Qualification Week.
-</p>
-
-<div id="previewCharacter">
-
-<div id="previewHair"></div>
-
-<div id="previewHead">
-
-<div class="previewEye left"></div>
-<div class="previewEye right"></div>
-
-</div>
-
-<div id="previewBody"></div>
-<div id="previewJacket"></div>
-<div id="previewDress"></div>
-<div id="previewLegs"></div>
-<div id="previewShoes"></div>
-
-</div>
-
-<div class="creatorRow">
-<label>Name</label>
-<input id="playerName" placeholder="Student Name">
-</div>
-
-<div class="creatorRow">
-<label>Gender</label>
-
-<select id="gender">
-
-<option>Girl</option>
-<option>Boy</option>
-
-</select>
-
-</div>
-
-<div class="creatorRow">
-
-<label>Skin Tone</label>
-
-<select id="skinTone">
-
-<option value="#f8d8bd">Light</option>
-<option value="#e0b190">Tan</option>
-<option value="#c68642">Brown</option>
-<option value="#8d5524">Dark Brown</option>
-
-</select>
-
-</div>
-
-<div class="creatorRow">
-
-<label>Hair Style</label>
-
-<select id="hairStyle">
-
-<option>Short</option>
-<option>Long</option>
-<option>Ponytail</option>
-<option>Braids</option>
-<option>Curly</option>
-<option>Spiky</option>
-
-</select>
-
-</div>
-
-<div class="creatorRow">
-
-<label>Hair Color</label>
-
-<input
-type="color"
-id="hairColor"
-value="#5c3a21">
-
-</div>
-
-<div class="creatorRow">
-
-<label>Outfit</label>
-
-<select id="outfitType">
-
-<option>Shirt</option>
-<option>Jacket</option>
-<option>Dress</option>
-
-</select>
-
-</div>
-
-<div class="creatorRow">
-
-<label>Top Color</label>
-
-<input
-type="color"
-id="topColor"
-value="#4d71ff">
-
-</div>
-
-<div class="creatorRow">
-
-<label>Pants Color</label>
-
-<input
-type="color"
-id="pantsColor"
-value="#333333">
-
-</div>
-
-<div class="creatorRow">
-
-<label>Shoe Color</label>
-
-<input
-type="color"
-id="shoeColor"
-value="#000000">
-
-</div>
-
-<button
-id="randomButton"
-onclick="randomCharacter()">
-
-🎲 Random Character
-
-</button>
-
-<button
-id="enterButton"
-onclick="startGame()">
-
-Begin Qualification Week
-
-</button>
-
-</div>
-
-</div>
-
-<!-- =====================
-UI
-===================== -->
-
-<div id="ui">
-
-<b id="playerDisplayName">
-
-Student
-
-</b>
-
-<br><br>
-
-Rank:
-
-<span id="profession">
-
-Student
-
-</span>
-
-<br><br>
-
-Star:
-
-<span id="starName">
-
-Unknown
-
-</span>
-
-<div id="message">
-
-Welcome to Everstar Academy.
-
-</div>
-
-<hr style="margin:10px 0;">
-
-<div id="questTracker">
-
-Quest:
-<br>
-
-Talk to all professors
-
-</div>
-
-</div>
-
-<div id="regionLabel">
-
-Region: Academy Grounds
-
-</div>
-
-<!-- =====================
-DIALOGUE
-===================== -->
-
-<div id="dialogueBox">
-
-<button id="closeDialogue">
-
-✕
-
-</button>
-
-<div id="dialogueSpeaker">
-
-Speaker
-
-</div>
-
-<div id="dialogueText">
-
-Dialogue
-
-</div>
-
-</div>
-
-<!-- =====================
-WORLD START
-===================== -->
-
-<div id="viewport">
-
-<div id="game">
-
-<div id="academyStar"></div>
-
-<div id="academy">
-
-🏫 Academy
-
-</div>
-
-<div
-class="portal airPortal"
-id="airPortal"
-style="
-left:2440px;
-top:2050px;">
-
-☁️
-
-</div>
-
-<div
-class="portal firePortal"
-id="firePortal"
-style="
-left:2730px;
-top:2440px;">
-
-🔥
-
-</div>
-
-<div
-class="portal waterPortal"
-id="waterPortal"
-style="
-left:2440px;
-top:2730px;">
-
-🌊
-
-</div>
-
-<div
-class="portal earthPortal"
-id="earthPortal"
-style="
-left:2150px;
-top:2440px;">
-
-🌿
-
-</div>
-
-<!-- PLAYER -->
-
-<div id="player">
-
-<div id="playerHair"></div>
-
-<div id="playerHead">
-
-<div
-class="eye"
-id="leftEye"></div>
-
-<div
-class="eye"
-id="rightEye"></div>
-
-</div>
-
-<div id="playerBody"></div>
-<div id="playerJacket"></div>
-<div id="playerDress"></div>
-<div id="playerLegs"></div>
-<div id="playerShoes"></div>
-
-</div>
-<!-- =====================
-PRINCIPAL SOLARA
-===================== -->
-
-<div
-class="npc"
-id="solara"
-style="
-left:2480px;
-top:2480px;">
-
-<div
-class="npc-hair"
-style="background:gold;">
-</div>
-
-<div class="npc-head">
-
-<div class="npc-eye left"></div>
-<div class="npc-eye right"></div>
-
-</div>
-
-<div
-class="npc-body"
-style="background:#fff29b;">
-</div>
-
-<div class="npc-legs"></div>
-
-<div class="npc-name">
-Principal Solara
-</div>
-
-</div>
-
-<!-- =====================
-PROFESSOR WILLOW
-===================== -->
-
-<div
-class="npc"
-id="willow"
-style="
-left:2070px;
-top:2450px;">
-
-<div
-class="npc-hair"
-style="
-background:#725033;">
-</div>
-
-<div class="npc-head">
-
-<div class="npc-eye left"></div>
-<div class="npc-eye right"></div>
-
-</div>
-
-<div
-class="npc-body"
-style="
-background:green;">
-</div>
-
-<div class="npc-legs"></div>
-
-<div class="npc-name">
-Prof. Willow
-</div>
-
-</div>
-
-<!-- =====================
-PROFESSOR EMBER
-===================== -->
-
-<div
-class="npc"
-id="ember"
-style="
-left:2860px;
-top:2450px;">
-
-<div
-class="npc-hair"
-style="
-background:orangered;">
-</div>
-
-<div class="npc-head">
-
-<div class="npc-eye left"></div>
-<div class="npc-eye right"></div>
-
-</div>
-
-<div
-class="npc-body"
-style="
-background:#ff7b2f;">
-</div>
-
-<div class="npc-legs"></div>
-
-<div class="npc-name">
-Prof. Ember
-</div>
-
-</div>
-
-<!-- =====================
-PROFESSOR TIDE
-===================== -->
-
-<div
-class="npc"
-id="tide"
-style="
-left:2440px;
-top:2870px;">
-
-<div
-class="npc-hair"
-style="
-background:#33bfff;">
-</div>
-
-<div class="npc-head">
-
-<div class="npc-eye left"></div>
-<div class="npc-eye right"></div>
-
-</div>
-
-<div
-class="npc-body"
-style="
-background:#67c7ff;">
-</div>
-
-<div class="npc-legs"></div>
-
-<div class="npc-name">
-Prof. Tide
-</div>
-
-</div>
-
-<!-- =====================
-PROFESSOR NIMBUS
-===================== -->
-
-<div
-class="npc"
-id="nimbus"
-style="
-left:2440px;
-top:1870px;">
-
-<div
-class="npc-hair"
-style="
-background:white;">
-</div>
-
-<div class="npc-head">
-
-<div class="npc-eye left"></div>
-<div class="npc-eye right"></div>
-
-</div>
-
-<div
-class="npc-body"
-style="
-background:#dff7ff;">
-</div>
-
-<div class="npc-legs"></div>
-
-<div class="npc-name">
-Prof. Nimbus
-</div>
-
-</div>
-
-<!-- =====================
-ACADEMY DECORATIONS
-===================== -->
-
-<div
-style="
-position:absolute;
-left:2470px;
-top:2280px;
-
-width:60px;
-height:60px;
-
-border-radius:50%;
-
-background:#69dfff;
-
-border:4px solid white;
-
-z-index:20;">
-</div>
-
-<div
-style="
-position:absolute;
-left:2610px;
-top:2370px;
-
-font-size:48px;
-
-z-index:20;">
-
-🦄
-
-</div>
-
-<div
-style="
-position:absolute;
-left:2290px;
-top:2390px;
-
-width:80px;
-height:18px;
-
-background:#7a4d20;
-
-border-radius:4px;
-
-z-index:15;">
-</div>
-
-<div
-style="
-position:absolute;
-left:2620px;
-top:2570px;
-
-width:80px;
-height:18px;
-
-background:#7a4d20;
-
-border-radius:4px;
-
-z-index:15;">
-</div>
-
-<!-- =====================
-ACADEMY TREES
-===================== -->
-
-<div class="tree"
-style="left:2230px;top:2230px;"></div>
-
-<div class="tree"
-style="left:2730px;top:2230px;"></div>
-
-<div class="tree"
-style="left:2230px;top:2730px;"></div>
-
-<div class="tree"
-style="left:2730px;top:2730px;"></div>
-
-<div class="tree"
-style="left:2420px;top:2050px;"></div>
-
-<div class="tree"
-style="left:2550px;top:2050px;"></div>
-
-<!-- =====================
-ACADEMY FLOWERS
-===================== -->
-
-<div class="flower"
-style="left:2280px;top:2460px;"></div>
-
-<div class="flower"
-style="left:2350px;top:2520px;"></div>
-
-<div class="flower"
-style="left:2660px;top:2460px;"></div>
-
-<div class="flower"
-style="left:2590px;top:2520px;"></div>
-
-<!-- =====================
-EARTH REGION FOLIAGE
-===================== -->
-
-<div class="earthPlant"
-style="left:2090px;top:2410px;"></div>
-
-<div class="earthPlant"
-style="left:2130px;top:2360px;"></div>
-
-<div class="earthPlant"
-style="left:2140px;top:2510px;"></div>
-
-<div class="earthPlant"
-style="left:2190px;top:2470px;"></div>
-
-<div class="tree"
-style="left:1990px;top:2360px;"></div>
-
-<div class="tree"
-style="left:2000px;top:2530px;"></div>
-
-<!-- =====================
-WATER REGION FOLIAGE
-===================== -->
-
-<div class="waterPlant"
-style="left:2410px;top:2880px;"></div>
-
-<div class="waterPlant"
-style="left:2470px;top:2920px;"></div>
-
-<div class="waterPlant"
-style="left:2550px;top:2930px;"></div>
-
-<div class="waterPlant"
-style="left:2600px;top:2890px;"></div>
-
-<!-- =====================
-FIRE REGION FOLIAGE
-===================== -->
-
-<div class="firePlant"
-style="left:2800px;top:2410px;"></div>
-
-<div class="firePlant"
-style="left:2870px;top:2370px;"></div>
-
-<div class="firePlant"
-style="left:2910px;top:2510px;"></div>
-
-<div class="firePlant"
-style="left:2820px;top:2570px;"></div>
-
-<div class="tree"
-style="left:2960px;top:2460px;"></div>
-
-<!-- =====================
-AIR REGION FOLIAGE
-===================== -->
-
-<div class="airPlant"
-style="left:2390px;top:1960px;"></div>
-
-<div class="airPlant"
-style="left:2450px;top:1930px;"></div>
-
-<div class="airPlant"
-style="left:2540px;top:1940px;"></div>
-
-<div class="airPlant"
-style="left:2600px;top:1980px;"></div>
-
-<!-- =====================
-REGION LABELS
-===================== -->
-
-<div
-style="
-position:absolute;
-left:2400px;
-top:1000px;
-
-font-size:42px;
-font-weight:bold;
-
-color:white;
-
-text-shadow:
-3px 3px 6px black;">
-
-☁️ AIR REGION
-
-</div>
-
-<div
-style="
-position:absolute;
-left:3900px;
-top:2450px;
-
-font-size:42px;
-font-weight:bold;
-
-color:white;
-
-text-shadow:
-3px 3px 6px black;">
-
-🔥 FIRE REGION
-
-</div>
-
-<div
-style="
-position:absolute;
-left:2400px;
-top:3950px;
-
-font-size:42px;
-font-weight:bold;
-
-color:white;
-
-text-shadow:
-3px 3px 6px black;">
-
-🌊 WATER REGION
-
-</div>
-
-<div
-style="
-position:absolute;
-left:800px;
-top:2450px;
-
-font-size:42px;
-font-weight:bold;
-
-color:white;
-
-text-shadow:
-3px 3px 6px black;">
-
-🌿 EARTH REGION
-
-</div>
-
-<!-- =====================
-TRIAL ANIMALS
-===================== -->
-
-<div
-class="animal unicorn"
-style="
-left:1000px;
-top:2500px;">
-</div>
-
-<div
-class="animal unicorn"
-style="
-left:1150px;
-top:2400px;">
-</div>
-
-<div
-class="animal unicorn"
-style="
-left:1250px;
-top:2600px;">
-</div>
-
-<div
-class="animal lavawolf"
-style="
-left:3950px;
-top:2450px;">
-</div>
-
-<div
-class="animal lavawolf"
-style="
-left:4100px;
-top:2550px;">
-</div>
-
-<!-- =====================
-JOYSTICK
-===================== -->
-
-<div id="joystick">
-
-<div id="stick"></div>
-
-</div>
-
-</div>
-</div>
-
-<script>
-/* =====================
-PLAYER DATA
-===================== */
-
-let x = 2500;
-let y = 2500;
-
-let joyX = 0;
-let joyY = 0;
-
-let dragging = false;
-
-let dialogueOpen = false;
-let recentlyClosedDialogue = false;
-
-let hiddenElement = "";
-let birthStar = "";
-
-let animalScore = 0;
-let natureScore = 0;
-let knowledgeScore = 0;
-let adventureScore = 0;
-
-let profession = "Student";
-
-let qualificationStage = 0;
-
-let talkedTo = {};
-
-let lastTeleport = 0;
-
-/* =====================
-RANDOM DATA
-===================== */
-
-const girlNames = [
-"Luna",
-"Aurora",
-"Nova",
-"Willow",
-"Iris",
-"Ruby",
-"Celeste",
-"Aria",
-"Violet",
-"Sophia"
-];
-
-const boyNames = [
-"Orion",
-"Atlas",
-"Leo",
-"Finn",
-"Theo",
-"Rowan",
-"Ash",
-"Felix",
-"Jasper",
-"Elliot"
-];
-
-const stars = [
-"Aurora",
-"Solara",
-"Vega",
-"Nova",
-"Astrid",
-"Eclipse",
-"Lunaris",
-"Celestia"
-];
-
-const elements = [
-"Fire",
-"Water",
-"Earth",
-"Air",
-"Ice",
-"Light",
-"Life",
-"Death"
-];
-
-/* =====================
-UTILITIES
-===================== */
-
-function showMessage(text){
-
-document
-.getElementById(
-"message"
-)
-.innerText = text;
-
-}
-
-function openDialogue(
-speaker,
-text
-){
-
-dialogueOpen = true;
-
-document
-.getElementById(
-"dialogueSpeaker"
-)
-.innerText =
-speaker;
-
-document
-.getElementById(
-"dialogueText"
-)
-.innerText =
-text;
-
-document
-.getElementById(
-"dialogueBox"
-)
-.style.display =
-"block";
-
-}
-
-function closeDialogue(){
-
-dialogueOpen = false;
-
-document
-.getElementById(
-"dialogueBox"
-)
-.style.display =
-"none";
-
-recentlyClosedDialogue = true;
-
-setTimeout(()=>{
-
-recentlyClosedDialogue = false;
-
-},1500);
-
-}
-
-document
-.getElementById(
-"closeDialogue"
-)
-.addEventListener(
-"click",
-closeDialogue
-);
-
-document
-.addEventListener(
-"keydown",
-e=>{
-
-if(
-e.key==="Escape" &&
-dialogueOpen
-){
-
-closeDialogue();
-
-}
-
-}
-);
-
-/* =====================
-RANDOM CHARACTER
-===================== */
-
-function randomCharacter(){
-
-const gender =
-Math.random() < 0.5
-?
-"Girl"
-:
-"Boy";
-
-document
-.getElementById(
-"gender"
-)
-.value =
-gender;
-
-const names =
-gender === "Girl"
-?
-girlNames
-:
-boyNames;
-
-document
-.getElementById(
-"playerName"
-)
-.value =
-
-names[
-Math.floor(
-Math.random() *
-names.length
-)
-];
-
-updatePreview();
-
-}
-
-/* =====================
-CHARACTER PREVIEW
-===================== */
-
-function updatePreview(){
-
-const skin =
-document.getElementById(
-"skinTone"
-).value;
-
-const hairColor =
-document.getElementById(
-"hairColor"
-).value;
-
-const topColor =
-document.getElementById(
-"topColor"
-).value;
-
-const pantsColor =
-document.getElementById(
-"pantsColor"
-).value;
-
-const shoeColor =
-document.getElementById(
-"shoeColor"
-).value;
-
-const outfit =
-document.getElementById(
-"outfitType"
-).value;
-
-document.getElementById(
-"previewHead"
-).style.background =
-skin;
-
-document.getElementById(
-"previewHair"
-).style.background =
-hairColor;
-
-document.getElementById(
-"previewBody"
-).style.background =
-topColor;
-
-document.getElementById(
-"previewLegs"
-).style.background =
-pantsColor;
-
-document.getElementById(
-"previewShoes"
-).style.background =
-shoeColor;
-
-document.getElementById(
-"previewJacket"
-).style.background =
-"transparent";
-
-document.getElementById(
-"previewDress"
-).style.background =
-"transparent";
-
-if(
-outfit === "Jacket"
-){
-
-document
-.getElementById(
-"previewJacket"
-)
-.style.background =
-topColor;
-
-}
-
-if(
-outfit === "Dress"
-){
-
-document
-.getElementById(
-"previewDress"
-)
-.style.background =
-topColor;
-
-}
-
-}
-
-document
-.querySelectorAll(
-"input,select"
-)
-.forEach(control=>{
-
-control.addEventListener(
-"input",
-updatePreview
-);
-
-});
-
-/* =====================
-START GAME
-===================== */
-
-function startGame(){
-
-hiddenElement =
-
-elements[
-Math.floor(
-Math.random()*
-elements.length
-)
-];
-
-birthStar =
-
-stars[
-Math.floor(
-Math.random()*
-stars.length
-)
-];
-
-console.log(
-"Hidden Element:",
-hiddenElement
-);
-
-const playerName =
-
-document
-.getElementById(
-"playerName"
-)
-.value ||
-
-"Student";
-
-document
-.getElementById(
-"playerDisplayName"
-)
-.innerText =
-playerName;
-
-document
-.getElementById(
-"starName"
-)
-.innerText =
-birthStar;
-
-document
-.getElementById(
-"characterScreen"
-)
-.style.display =
-"none";
-
-document
-.getElementById(
-"playerHead"
-)
-.style.background =
-document
-.getElementById(
-"skinTone"
-)
-.value;
-
-document
-.getElementById(
-"playerHair"
-)
-.style.background =
-document
-.getElementById(
-"hairColor"
-)
-.value;
-
-document
-.getElementById(
-"playerBody"
-)
-.style.background =
-document
-.getElementById(
-"topColor"
-)
-.value;
-
-document
-.getElementById(
-"playerLegs"
-)
-.style.background =
-document
-.getElementById(
-"pantsColor"
-)
-.value;
-
-document
-.getElementById(
-"playerShoes"
-)
-.style.background =
-document
-.getElementById(
-"shoeColor"
-)
-.value;
-
-openDialogue(
-
-"Principal Solara",
-
-"Welcome to Everstar Academy. Speak with each professor and begin Qualification Week."
-
-);
-
-qualificationStage = 1;
-
-showMessage(
-"Talk to the professors."
-);
-
-}
-
-/* =====================
-PROFESSIONS
-===================== */
-
-function assignProfession(){
-
-if(
-
-animalScore >= 3 &&
-natureScore >= 1 &&
-knowledgeScore >= 1 &&
-adventureScore >= 1
-
-){
-
-profession =
-"Junior Guardian";
-
-}
-else if(
-animalScore >= natureScore &&
-animalScore >= knowledgeScore &&
-animalScore >= adventureScore
-){
-
-profession =
-"Animal Keeper";
-
-}
-else if(
-natureScore >= knowledgeScore
-){
-
-profession =
-"Botanist";
-
-}
-else if(
-knowledgeScore >= adventureScore
-){
-
-profession =
-"Teacher";
-
-}
-else{
-
-profession =
-"Explorer";
-
-}
-
-document
-.getElementById(
-"profession"
-)
-.innerText =
-profession;
-
-document
-.getElementById(
-"questTracker"
-)
-.innerHTML =
-
-"Quest:<br>Graduation Complete";
-
-openDialogue(
-
-"Principal Solara",
-
-"Congratulations. Your assigned profession is " + profession + "."
-
-);
-
-}
-/* =====================
-CAMERA
-===================== */
-
-function updateCamera(){
-
-const viewportWidth =
-window.innerWidth;
-
-const viewportHeight =
-window.innerHeight;
-
-let cameraX =
-x - viewportWidth / 2;
-
-let cameraY =
-y - viewportHeight / 2;
-
-cameraX =
-Math.max(
-0,
-Math.min(
-cameraX,
-5000 - viewportWidth
-)
-);
-
-cameraY =
-Math.max(
-0,
-Math.min(
-cameraY,
-5000 - viewportHeight
-)
-);
-
-document
-.getElementById("game")
-.style.transform =
-
-`translate(
-${-cameraX}px,
-${-cameraY}px
-)`;
-
-}
-
-/* =====================
-PLAYER
-===================== */
-
-function updatePlayer(){
-
-x =
-Math.max(
-0,
-Math.min(
-x,
-4940
-)
-);
-
-y =
-Math.max(
-0,
-Math.min(
-y,
-4940
-)
-);
-
-const player =
-document.getElementById(
-"player"
-);
-
-player.style.left =
-x + "px";
-
-player.style.top =
-y + "px";
-
-updateCamera();
-
-checkNPCs();
-checkPortals();
-checkAnimals();
-updateRegion();
-
-}
-
-/* =====================
-KEYBOARD
-===================== */
-
-document.addEventListener(
-"keydown",
-e=>{
-
-if(dialogueOpen)
-return;
-
-const speed = 15;
-
-if(e.key==="ArrowUp")
-y -= speed;
-
-if(e.key==="ArrowDown")
-y += speed;
-
-if(e.key==="ArrowLeft")
-x -= speed;
-
-if(e.key==="ArrowRight")
-x += speed;
-
-updatePlayer();
-
-}
-);
-
-/* =====================
-JOYSTICK
-===================== */
-
-const joystick =
-document.getElementById(
-"joystick"
-);
-
-const stick =
-document.getElementById(
-"stick"
-);
-
-joystick.addEventListener(
-"touchstart",
-()=>{
-dragging = true;
-}
-);
-
-joystick.addEventListener(
-"touchmove",
-e=>{
-
-if(!dragging)
-return;
-
-const touch =
-e.touches[0];
-
-const rect =
-joystick.getBoundingClientRect();
-
-let dx =
-touch.clientX -
-(rect.left + 75);
-
-let dy =
-touch.clientY -
-(rect.top + 75);
-
-const dist =
-Math.sqrt(
-dx*dx +
-dy*dy
-);
-
-if(dist > 55){
-
-dx =
-dx/dist*55;
-
-dy =
-dy/dist*55;
-
-}
-
-joyX = dx;
-joyY = dy;
-
-stick.style.left =
-(37 + dx) + "px";
-
-stick.style.top =
-(37 + dy) + "px";
-
-},
-{passive:false}
-);
-
-joystick.addEventListener(
-"touchend",
-()=>{
-
-dragging = false;
-
-joyX = 0;
-joyY = 0;
-
-stick.style.left =
-"37px";
-
-stick.style.top =
-"37px";
-
-}
-);
-
-/* =====================
-NPCS
-===================== */
-
-function checkNPCs(){
-
-if(
-dialogueOpen ||
-recentlyClosedDialogue
-)
-return;
-
-document
-.querySelectorAll(".npc")
-.forEach(npc=>{
-
-const dx =
-x - npc.offsetLeft;
-
-const dy =
-y - npc.offsetTop;
-
-const dist =
-Math.sqrt(
-dx*dx +
-dy*dy
-);
-
-if(dist < 75){
-
-if(talkedTo[npc.id])
-return;
-
-talkedTo[npc.id] = true;
-
-document
-.getElementById(
-"questTracker"
-)
-.innerHTML =
-
-"Quest:<br>Visit a region portal";
-
-switch(npc.id){
-
-case "solara":
-
-openDialogue(
-"Principal Solara",
-"Welcome to Qualification Week. Speak with every professor and learn about Everstar."
-);
-
-break;
-
-case "willow":
-
-natureScore = 1;
-
-openDialogue(
-"Professor Willow",
-"Life grows wherever it is nurtured. Explore the Earth Region and study its plants."
-);
-
-break;
-
-case "ember":
-
-adventureScore = 1;
-
-openDialogue(
-"Professor Ember",
-"Courage is not fearlessness. Explore the Fire Region and learn from challenge."
-);
-
-break;
-
-case "tide":
-
-animalScore = 1;
-
-openDialogue(
-"Professor Tide",
-"Animals are our friends and partners. Visit the training fields and observe them."
-);
-
-break;
-
-case "nimbus":
-
-knowledgeScore = 1;
-
-openDialogue(
-"Professor Nimbus",
-"Every student is born beneath a guiding star."
-);
-
-break;
-
-}
-
-}
-
-});
-
-}
-
-/* =====================
-PORTALS
-===================== */
-
-function checkPortals(){
-
-const portals = [
-
-{
-id:"airPortal",
-x:2500,
-y:1200
-},
-
-{
-id:"firePortal",
-x:3900,
-y:2500
-},
-
-{
-id:"waterPortal",
-x:2500,
-y:3900
-},
-
-{
-id:"earthPortal",
-x:1200,
-y:2500
-}
-
-];
-
-portals.forEach(p=>{
-
-const portal =
-document.getElementById(
-p.id
-);
-
-const dx =
-x - portal.offsetLeft;
-
-const dy =
-y - portal.offsetTop;
-
-const dist =
-Math.sqrt(
-dx*dx +
-dy*dy
-);
-
-if(
-
-dist < 60 &&
-Date.now() - lastTeleport > 2000
-
-){
-
-lastTeleport =
-Date.now();
-
-x = p.x;
-y = p.y;
-
-showMessage(
-"Travelling..."
-);
-
-}
-
-});
-
-}
-
-/* =====================
-ANIMAL TRIALS
-===================== */
-
-function checkAnimals(){
-
-document
-.querySelectorAll(
-".animal"
-)
-.forEach(animal=>{
-
-if(animal.dataset.done)
-return;
-
-const dx =
-x - animal.offsetLeft;
-
-const dy =
-y - animal.offsetTop;
-
-const dist =
-Math.sqrt(
-dx*dx +
-dy*dy
-);
-
-if(dist < 60){
-
-animal.dataset.done =
-"true";
-
-animal.style.opacity =
-"0.4";
-
-animalScore++;
-
-showMessage(
-"Animal Care +1"
-);
-
-if(
-
-animalScore >= 3 &&
-natureScore >= 1 &&
-knowledgeScore >= 1 &&
-adventureScore >= 1
-
-){
-
-assignProfession();
-
-}
-
-}
-
-});
-
-}
-
-/* =====================
-REGIONS
-===================== */
-
-function updateRegion(){
-
-let region =
-"Academy Grounds";
-
-if(y < 1700)
-region =
-"Air Region";
-
-if(x > 3300)
-region =
-"Fire Region";
-
-if(y > 3300)
-region =
-"Water Region";
-
-if(x < 1700)
-region =
-"Earth Region";
-
-document
-.getElementById(
-"regionLabel"
-)
-.innerText =
-
-"Region: " +
-region;
-
-}
-
-/* =====================
-MAIN LOOP
-===================== */
-
-function loop(){
-
-if(!dialogueOpen){
-
-x += joyX * 0.10;
-y += joyY * 0.10;
-
-updatePlayer();
-
-}
-
-requestAnimationFrame(
-loop
-);
-
-}
-
-/* =====================
-STARTUP
-===================== */
-
-updatePreview();
-
-randomCharacter();
-
-updatePlayer();
-
-updateCamera();
-
-loop();
-
-</script>
-
+  <div id="game">
+    <canvas id="world"></canvas>
+    <div id="hud">
+      <div id="playerInfo" class="panel">
+        <div class="name" id="hudName">New Student</div>
+        <div>✦ Birth Star: <span id="hudStar">Unknown</span></div>
+        <div>Profession: <span id="hudProfession">Undecided</span></div>
+        <div>Region: <span id="hudRegion">Academy Courtyard</span></div>
+        <div>Qualification: <span id="hudProgress">0 / 5</span></div>
+      </div>
+
+      <div id="questPanel" class="panel">
+        <div class="panelTitle">✧ Academy Journal</div>
+        <div id="questText">Welcome to Everstar Academy!</div>
+        <div id="questProgress" style="color:#c6a7e5;margin-top:7px">Qualification Week</div>
+      </div>
+
+      <div id="message"></div>
+
+      <div id="dialogue">
+        <button id="dialogueClose" aria-label="Close dialogue">×</button>
+        <div id="speaker">Speaker</div>
+        <div id="dialogueText"></div>
+        <button id="dialogueNext">Continue ▸</button>
+      </div>
+
+      <div id="joystick" aria-label="Movement joystick">
+        <div id="stick"></div>
+      </div>
+
+      <button id="actionButton">TALK</button>
+      <button id="menuButton">☰ Menu</button>
+
+      <div id="menuPanel" class="panel">
+        <button id="journalButton">✧ Academy Journal</button>
+        <button id="statsButton">✦ Student Records</button>
+        <button id="helpButton">? Controls</button>
+        <button id="closeMenu">Close Menu</button>
+      </div>
+
+      <div id="mapLabel">WASD / Arrow Keys to move · E / SPACE to interact</div>
+    </div>
+  </div>
+
+  <div id="creator">
+    <div class="creatorCard">
+      <h1 class="creatorTitle">✧ EVERSTAR ACADEMY ✧</h1>
+      <p class="creatorSubtitle">Your magical story begins beneath the stars.</p>
+
+      <div class="previewArea">
+        <canvas id="preview" width="200" height="250"></canvas>
+        <div class="previewLabel">Your Future Adventurer</div>
+      </div>
+
+      <div class="formArea">
+        <div class="field full">
+          <label for="characterName">Character Name</label>
+          <input id="characterName" maxlength="18" value="Starlight" autocomplete="off">
+        </div>
+
+        <div class="field full">
+          <label>Character</label>
+          <div class="genderChoices">
+            <button id="boyButton" class="selected" type="button">Boy</button>
+            <button id="girlButton" type="button">Girl</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="skinColor">Skin Tone</label>
+          <select id="skinColor">
+            <option value="#f8d5b5">Fair</option>
+            <option value="#e8b68f">Peach</option>
+            <option value="#c88d68">Warm</option>
+            <option value="#956044">Brown</option>
+            <option value="#623f32">Deep</option>
+            <option value="#f0d9c9">Pale</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="hairColor">Hair Color</label>
+          <select id="hairColor">
+            <option value="#493026">Chestnut</option>
+            <option value="#24202c">Midnight</option>
+            <option value="#d7a84e">Golden</option>
+            <option value="#9b453e">Auburn</option>
+            <option value="#e7e2d9">Silver</option>
+            <option value="#704b9c">Violet</option>
+            <option value="#397d84">Teal</option>
+            <option value="#d77ca4">Rose</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="hairStyle">Hair Style</label>
+          <select id="hairStyle">
+            <option value="short">Short</option>
+            <option value="long">Long</option>
+            <option value="ponytail">Ponytail</option>
+            <option value="bob">Bob</option>
+            <option value="curly">Curly</option>
+            <option value="braid">Braid</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="outfit">Outfit</label>
+          <select id="outfit">
+            <option value="shirt">Academy Shirt</option>
+            <option value="jacket">Academy Jacket</option>
+            <option value="dress">Academy Dress</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="shirtColor">Shirt Color</label>
+          <input id="shirtColor" type="color" value="#e9d9bb">
+        </div>
+
+        <div class="field">
+          <label for="jacketColor">Jacket Color</label>
+          <input id="jacketColor" type="color" value="#584b83">
+        </div>
+
+        <div class="field">
+          <label for="dressColor">Dress Color</label>
+          <input id="dressColor" type="color" value="#9865a8">
+        </div>
+
+        <div class="field">
+          <label for="pantsColor">Pants Color</label>
+          <input id="pantsColor" type="color" value="#39435c">
+        </div>
+
+        <div class="field">
+          <label for="shoeColor">Shoe Color</label>
+          <input id="shoeColor" type="color" value="#503b34">
+        </div>
+      </div>
+
+      <div class="creatorActions">
+        <button id="randomButton" type="button">✧ Random Character</button>
+        <button id="beginButton" class="primaryButton" type="button">Begin Qualification Week ✦</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    "use strict";
+
+    /* ========================================================= EVERSTAR ACADEMY - GAME ENGINE ========================================================= */
+    const $ = id => document.getElementById(id);
+    const canvas = $("world");
+    const ctx = canvas.getContext("2d");
+    const previewCanvas = $("preview");
+    const pctx = previewCanvas.getContext("2d");
+
+    const WORLD_SIZE = 5000;
+    const TILE = 100;
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    const random = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    const game = {
+      started: false,
+      running: true,
+      lastTime: 0,
+      camera: { x: 0, y: 0 },
+      keys: {},
+      dialogue: null,
+      dialogueIndex: 0,
+      dialogueCooldown: 0,
+      messageTimer: 0,
+      portalCooldown: 0,
+      interactionCooldown: 0,
+      joystick: { x: 0, y: 0, active: false, pointer: null },
+      gender: "boy",
+      character: {
+        name: "Starlight",
+        skin: "#f8d5b5",
+        hair: "#493026",
+        hairStyle: "short",
+        outfit: "shirt",
+        shirt: "#e9d9bb",
+        jacket: "#584b83",
+        dress: "#9865a8",
+        pants: "#39435c",
+        shoes: "#503b34"
+      },
+      player: { x: 2500, y: 2630, speed: 220, direction: "down", moving: false },
+      birthStar: random(["Aurora", "Solara", "Vega", "Nova", "Astrid", "Eclipse", "Lunaris", "Celestia"]),
+      hiddenElement: random(["Fire", "Water", "Earth", "Air", "Ice", "Light", "Life", "Death"]),
+      scores: { animal: 0, nature: 0, knowledge: 0, adventure: 0 },
+      visitedPortals: [],
+      talkedTo: [],
+      completedTrials: [],
+      graduation: false,
+      profession: "Undecided",
+      quests: [],
+      activeQuest: 0,
+      npcs: [],
+      portals: [],
+      animals: [],
+      decorations: [],
+      effects: []
+    };
+
+    const questDefinitions = [
+      { title: "Welcome to Everstar", description: "Meet Principal Solara in the Academy Courtyard.", done: () => game.talkedTo.includes("Principal Solara") },
+      { title: "Meet Your Professors", description: "Speak with Professor Willow, Professor Tide, Professor Ember and Professor Nimbus.", done: () => ["Professor Willow", "Professor Tide", "Professor Ember", "Professor Nimbus"].every(n => game.talkedTo.includes(n)) },
+      { title: "Explore the Regions", description: "Visit at least one magical elemental portal.", done: () => game.visitedPortals.length >= 1 },
+      { title: "The Animal Trial", description: "Make friends with three magical creatures.", done: () => game.completedTrials.length >= 3 },
+      { title: "Graduation Day", description: "Return to Principal Solara and complete Qualification Week.", done: () => game.graduation }
+    ];
+    game.quests = questDefinitions.map((q, i) => ({ ...q, completed: false }));
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(innerWidth * dpr);
+      canvas.height = Math.floor(innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    /* ========================================================= CHARACTER SYSTEM ========================================================= */
+    const fields = {
+      name: "characterName",
+      skin: "skinColor",
+      hair: "hairColor",
+      hairStyle: "hairStyle",
+      outfit: "outfit",
+      shirt: "shirtColor",
+      jacket: "jacketColor",
+      dress: "dressColor",
+      pants: "pantsColor",
+      shoes: "shoeColor"
+    };
+
+    function readCharacter() {
+      for (const key in fields) {
+        const el = $(fields[key]);
+        if (!el) throw new Error("Missing character field: " + fields[key]);
+        game.character[key] = el.value;
+      }
+      game.character.name = game.character.name.trim() || "Starlight";
+    }
+
+    function drawCharacter(g, x, y, scale = 1, preview = false) {
+      const c = game.character;
+      g.save();
+      g.translate(x, y);
+      g.scale(scale, scale);
+
+      // Shadow
+      g.fillStyle = "rgba(0,0,0,.24)";
+      g.beginPath();
+      g.ellipse(0, 42, 18, 6, 0, 0, Math.PI * 2);
+      g.fill();
+
+      // Hair behind body
+      g.fillStyle = c.hair;
+      if (c.hairStyle === "long" || c.hairStyle === "braid") {
+        g.beginPath();
+        g.ellipse(0, -12, 15, 23, 0, 0, Math.PI * 2);
+        g.fill();
+      }
+      if (c.hairStyle === "ponytail") {
+        g.beginPath();
+        g.ellipse(12, -5, 7, 15, -.5, 0, Math.PI * 2);
+        g.fill();
+      }
+
+      // Legs / outfit
+      if (c.outfit === "dress") {
+        g.fillStyle = c.dress;
+        g.beginPath();
+        g.moveTo(-10, -1);
+        g.lineTo(10, -1);
+        g.lineTo(17, 32);
+        g.lineTo(-17, 32);
+        g.closePath();
+        g.fill();
+
+        g.fillStyle = c.pants;
+        g.fillRect(-10, 29, 8, 11);
+        g.fillRect(2, 29, 8, 11);
+      } else {
+        g.fillStyle = c.pants;
+        g.fillRect(-10, 10, 8, 27);
+        g.fillRect(2, 10, 8, 27);
+
+        g.fillStyle = c.outfit === "jacket" ? c.jacket : c.shirt;
+        g.beginPath();
+        g.roundRect(-13, -5, 26, 25, 6);
+        g.fill();
+
+        if (c.outfit === "jacket") {
+          g.strokeStyle = "#e8cc8a";
+          g.lineWidth = 1.5;
+          g.beginPath();
+          g.moveTo(0, -3);
+          g.lineTo(0, 18);
+          g.stroke();
+        }
+      }
+
+      // Shoes
+      g.fillStyle = c.shoes;
+      g.fillRect(-12, 36, 12, 6);
+      g.fillRect(1, 36, 12, 6);
+
+      // Arms
+      g.fillStyle = c.skin;
+      g.beginPath();
+      g.roundRect(-18, -3, 7, 24, 4);
+      g.roundRect(11, -3, 7, 24, 4);
+      g.fill();
+
+      // Head
+      g.fillStyle = c.skin;
+      g.beginPath();
+      g.ellipse(0, -18, 13, 16, 0, 0, Math.PI * 2);
+      g.fill();
+
+      // Ears
+      g.beginPath();
+      g.arc(-13, -18, 3, 0, Math.PI * 2);
+      g.arc(13, -18, 3, 0, Math.PI * 2);
+      g.fill();
+
+      // Hair cap
+      g.fillStyle = c.hair;
+      g.beginPath();
+      g.arc(0, -22, 14, Math.PI, Math.PI * 2);
+      g.lineTo(13, -18);
+      if (c.hairStyle === "short") {
+        g.lineTo(7, -26);
+        g.lineTo(0, -29);
+        g.lineTo(-8, -25);
+      } else if (c.hairStyle === "curly") {
+        g.arc(-8, -29, 5, 0, Math.PI * 2);
+        g.arc(0, -31, 6, 0, Math.PI * 2);
+        g.arc(9, -28, 5, 0, Math.PI * 2);
+      } else if (c.hairStyle === "bob") {
+        g.lineTo(13, -7);
+        g.lineTo(-13, -7);
+        g.lineTo(-13, -19);
+      } else if (c.hairStyle === "ponytail") {
+        g.lineTo(13, -12);
+        g.lineTo(8, -26);
+      } else {
+        g.lineTo(13, -10);
+        g.lineTo(-13, -10);
+        g.lineTo(-13, -19);
+      }
+      g.closePath();
+      g.fill();
+
+      if (c.hairStyle === "braid") {
+        g.strokeStyle = c.hair;
+        g.lineWidth = 5;
+        g.beginPath();
+        g.moveTo(12, -7);
+        g.lineTo(15, 5);
+        g.lineTo(12, 15);
+        g.stroke();
+      }
+
+      // Eyes
+      g.fillStyle = "#35283a";
+      g.beginPath();
+      g.arc(-5, -17, 1.7, 0, Math.PI * 2);
+      g.arc(5, -17, 1.7, 0, Math.PI * 2);
+      g.fill();
+
+      // Smile
+      g.strokeStyle = "#a05d56";
+      g.lineWidth = 1;
+      g.beginPath();
+      g.arc(0, -12, 3, 0.2, Math.PI - .2);
+      g.stroke();
+
+      // Academy star pin
+      g.fillStyle = "#f7d47c";
+      g.beginPath();
+      g.arc(9, -4, 2.2, 0, Math.PI * 2);
+      g.fill();
+
+      g.restore();
+    }
+
+    function updatePreview() {
+      readCharacter();
+      pctx.clearRect(0, 0, 200, 250);
+      pctx.save();
+      pctx.translate(100, 110);
+      pctx.scale(2.1, 2.1);
+      drawCharacter(pctx, 0, 0, 1, true);
+      pctx.restore();
+    }
+
+    for (const id of Object.values(fields)) {
+      const el = $(id);
+      if (el) el.addEventListener("input", updatePreview);
+    }
+
+    $("boyButton").addEventListener("click", () => {
+      game.gender = "boy";
+      $("boyButton").classList.add("selected");
+      $("girlButton").classList.remove("selected");
+    });
+
+    $("girlButton").addEventListener("click", () => {
+      game.gender = "girl";
+      $("girlButton").classList.add("selected");
+      $("boyButton").classList.remove("selected");
+    });
+
+    function randomCharacter() {
+      $("characterName").value = random(["Willow", "Ash", "Rowan", "Luna", "Ember", "Skye", "Nova", "River", "Sage", "Iris"]);
+      $("skinColor").value = random(["#f8d5b5", "#e8b68f", "#c88d68", "#956044", "#623f32", "#f0d9c9"]);
+      $("hairColor").value = random(["#493026", "#24202c", "#d7a84e", "#9b453e", "#e7e2d9", "#704b9c", "#397d84", "#d77ca4"]);
+      $("hairStyle").value = random(["short", "long", "ponytail", "bob", "curly", "braid"]);
+      $("outfit").value = random(["shirt", "jacket", "dress"]);
+      $("shirtColor").value = random(["#e9d9bb", "#a9d4ce", "#e2a9ad", "#d4c1ed"]);
+      $("jacketColor").value = random(["#584b83", "#335b70", "#85505e", "#586c51"]);
+      $("dressColor").value = random(["#9865a8", "#b85f87", "#5b82ae", "#d18d63"]);
+      $("pantsColor").value = random(["#39435c", "#55515f", "#425b4e", "#79594a"]);
+      $("shoeColor").value = random(["#503b34", "#2d3142", "#795a43"]);
+
+      if (Math.random() > .5) {
+        $("girlButton").click();
+      } else {
+        $("boyButton").click();
+      }
+      updatePreview();
+    }
+    $("randomButton").addEventListener("click", randomCharacter);
+
+    /* ========================================================= WORLD GENERATION ========================================================= */
+    function addNPC(name, x, y, region, color, description) {
+      game.npcs.push({ name, x, y, region, color, description });
+    }
+
+    function addPortal(name, x, y, color, region) {
+      game.portals.push({ name, x, y, color, region });
+    }
+
+    function addAnimal(name, x, y, type) {
+      game.animals.push({ name, x, y, type, interacted: false, phase: Math.random() * 6 });
+    }
+
+    function addDecoration(type, x, y, size = 1) {
+      game.decorations.push({ type, x, y, size });
+    }
+
+    function generateWorld() {
+      game.npcs = [];
+      game.portals = [];
+      game.animals = [];
+      game.decorations = [];
+
+      addNPC("Principal Solara", 2500, 2440, "Academy Courtyard", "#e8b65f", "Welcome, young star! I am Principal Solara. Everstar Academy is a place where every heart has the power to shine. Your Qualification Week begins now. Meet your professors, explore the regions and discover your gifts.");
+      addNPC("Professor Willow", 2300, 2350, "Academy Building", "#7fbd80", "Nature remembers everything, little one. I teach the ancient art of growth and harmony. Find the courage to care for the living world. Every flower is a tiny miracle.");
+      addNPC("Professor Tide", 2680, 2350, "Academy Building", "#65bad2", "The waters of Everstar hold stories older than the stars. Listen closely, and they may tell you yours. Explore the Water Region and discover the beauty of patience.");
+      addNPC("Professor Ember", 2300, 2520, "Academy Building", "#e78362", "A spark is not a flame, and a flame is not a destiny. True courage comes from knowing when to shine. The Fire Region awaits your brave heart!");
+      addNPC("Professor Nimbus", 2680, 2520, "Academy Building", "#b5a8e8", "The skies are endless, and so are the possibilities of a curious mind. Explore the Air Region. Knowledge gives wings to even the smallest dream.");
+
+      addPortal("Air", 3650, 1800, "#a9e9ef", "Air Region");
+      addPortal("Fire", 3650, 3650, "#ff8956", "Fire Region");
+      addPortal("Water", 1300, 3650, "#60c8f1", "Water Region");
+      addPortal("Earth", 1300, 1800, "#8bd47e", "Earth Region");
+
+      for (let i = 0; i < 5; i++) {
+        addAnimal("Moon Unicorn", random([900, 1150, 1400]), random([800, 1000, 1200]), "unicorn");
+        addAnimal("Lava Wolf", random([3900, 4100, 4300]), random([3900, 4100, 4300]), "wolf");
+      }
+
+      for (let i = 0; i < 12; i++) {
+        addDecoration("tree", 1800 + Math.random() * 1400, 1900 + Math.random() * 1200, .8 + Math.random() * .7);
+      }
+      for (let i = 0; i < 15; i++) {
+        addDecoration("flower", 1900 + Math.random() * 1200, 2050 + Math.random() * 1000, .6 + Math.random() * .7);
+      }
+      for (let i = 0; i < 5; i++) {
+        addDecoration("bench", 2350 + i * 150, 2730 + (i % 2) * 75, 1);
+      }
+      addDecoration("fountain", 2500, 2780, 1.5);
+      addDecoration("unicornStatue", 2500, 2300, 1.5);
+    }
+
+    function regionAt(x, y) {
+      if (x > 3200 && y < 2500) return "Air Region";
+      if (x > 3200 && y >= 2500) return "Fire Region";
+      if (x < 1800 && y >= 2500) return "Water Region";
+      if (x < 1800 && y < 2500) return "Earth Region";
+      if (x > 2100 && x < 2900 && y > 2100 && y < 2700) return "Academy Courtyard";
+      if (x > 2100 && x < 2900 && y > 1800 && y < 2800) return "Academy Building";
+      return "Everstar Grounds";
+    }
+
+    /* ========================================================= DIALOGUE ========================================================= */
+    function showDialogue(name, lines, onFinish = null) {
+      if (game.dialogueCooldown > 0 || game.dialogue) return false;
+      game.dialogue = { name, lines: Array.isArray(lines) ? lines : [lines], onFinish, closed: false };
+      game.dialogueIndex = 0;
+      $("speaker").textContent = name;
+      $("dialogueText").textContent = game.dialogue.lines[0];
+      $("dialogue").classList.add("visible");
+      $("actionButton").disabled = true;
+      return true;
+    }
+
+    function closeDialogue() {
+      if (!game.dialogue) return;
+      const finished = game.dialogue;
+      game.dialogue = null;
+      $("dialogue").classList.remove("visible");
+      $("actionButton").disabled = false;
+      game.dialogueCooldown = 0.65;
+      if (typeof finished.onFinish === "function") finished.onFinish();
+    }
+
+    function advanceDialogue() {
+      if (!game.dialogue) return;
+      game.dialogueIndex++;
+      if (game.dialogueIndex >= game.dialogue.lines.length) {
+        closeDialogue();
+        return;
+      }
+      $("dialogueText").textContent = game.dialogue.lines[game.dialogueIndex];
+    }
+    $("dialogueClose").addEventListener("click", closeDialogue);
+    $("dialogueNext").addEventListener("click", advanceDialogue);
+
+    function talkToNPC(npc) {
+      if (game.talkedTo.includes(npc.name)) {
+        showDialogue(npc.name, npc.description.split(". ").slice(0, 2).join(". ") + ".\n\nI am happy to see you again!");
+        return;
+      }
+
+      showDialogue(npc.name, npc.description, () => {
+        game.talkedTo.push(npc.name);
+        game.scores.knowledge++;
+        if (npc.name === "Professor Willow") game.scores.nature++;
+        updateQuests();
+        updateProfession();
+        notify("You learned something wonderful from " + npc.name + "!");
+      });
+    }
+
+    /* ========================================================= QUESTS AND PROFESSIONS ========================================================= */
+    function updateQuests() {
+      for (const quest of game.quests) {
+        if (!quest.completed && quest.done()) {
+          quest.completed = true;
+          notify("Quest completed: " + quest.title);
+        }
+      }
+
+      let active = game.quests.findIndex(q => !q.completed);
+      game.activeQuest = active;
+
+      if (active === -1) {
+        $("questText").textContent = "All qualification tasks complete!";
+        $("questProgress").textContent = "✦ Qualification Week Complete";
+      } else {
+        const q = game.quests[active];
+        $("questText").textContent = q.description;
+        $("questProgress").textContent = "Quest " + (active + 1) + " of " + game.quests.length + " · " + game.quests.filter(q => q.completed).length + " completed";
+      }
+
+      $("hudProgress").textContent = game.quests.filter(q => q.completed).length + " / " + game.quests.length;
+    }
+
+    function updateProfession() {
+      const s = game.scores;
+      if (s.animal >= 3 && s.nature >= 1 && s.knowledge >= 1 && s.adventure >= 1) {
+        game.profession = "Junior Guardian";
+      } else if (s.animal >= 3) {
+        game.profession = "Animal Keeper";
+      } else if (s.nature >= 1 && s.knowledge >= 1) {
+        game.profession = "Botanist";
+      } else if (s.knowledge >= 2) {
+        game.profession = "Teacher";
+      } else if (s.adventure >= 1) {
+        game.profession = "Explorer";
+      } else {
+        game.profession = "Undecided";
+      }
+      $("hudProfession").textContent = game.profession;
+    }
+
+    function graduate() {
+      if (game.graduation) return;
+      game.graduation = true;
+      game.profession = "Junior Guardian";
+      updateQuests();
+      updateProfession();
+      showDialogue("Principal Solara", [
+        "You have done it, " + game.character.name + "!",
+        "You have shown kindness to creatures, care for nature, curiosity and courage.",
+        "By the light of Everstar, I welcome you as a Junior Guardian!",
+        "Your journey has only just begun. The stars have many secrets left to reveal.",
+        "Congratulations, graduate! ✦"
+      ], () => notify("You graduated from Everstar Academy!"));
+    }
+
+    /* ========================================================= INTERACTIONS ========================================================= */
+    function distance(a, b) {
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    }
+
+    function nearestInteractable() {
+      const p = game.player;
+      let candidates = [];
+
+      for (const npc of game.npcs) candidates.push({ object: npc, type: "npc", distance: distance(p, npc) });
+      for (const portal of game.portals) candidates.push({ object: portal, type: "portal", distance: distance(p, portal) });
+      for (const animal of game.animals) candidates.push({ object: animal, type: "animal", distance: distance(p, animal) });
+
+      for (const d of game.decorations) {
+        if (d.type === "fountain" || d.type === "unicornStatue") {
+          candidates.push({ object: d, type: "decoration", distance: distance(p, d) });
+        }
+      }
+
+      candidates = candidates.filter(c => c.distance < 100);
+      candidates.sort((a, b) => a.distance - b.distance);
+      return candidates[0] || null;
+    }
+
+    function interact() {
+      if (!game.started || game.dialogue || game.interactionCooldown > 0) return;
+      game.interactionCooldown = .3;
+
+      const target = nearestInteractable();
+      if (!target) {
+        notify("There is nothing nearby to interact with.");
+        return;
+      }
+
+      if (target.type === "npc") {
+        const npc = target.object;
+        if (npc.name === "Principal Solara" && game.quests.every(q => q.completed)) {
+          graduate();
+        } else {
+          talkToNPC(npc);
+        }
+      } else if (target.type === "portal") {
+        usePortal(target.object);
+      } else if (target.type === "animal") {
+        interactAnimal(target.object);
+      } else if (target.type === "decoration") {
+        if (target.object.type === "fountain") {
+          showDialogue("Enchanted Fountain", "The water glimmers with tiny stars. You feel refreshed and peaceful.");
+          game.scores.nature++;
+          updateProfession();
+        } else {
+          showDialogue("Unicorn Statue", "The marble unicorn watches over the academy. A golden star is carved into its forehead.");
+        }
+      }
+    }
+
+    function usePortal(portal) {
+      if (game.portalCooldown > 0) {
+        notify("The portal is recharging. Please wait.");
+        return;
+      }
+
+      game.portalCooldown = 2;
+      const destinations = {
+        "Air": { x: 3650, y: 1800 },
+        "Fire": { x: 3650, y: 3650 },
+        "Water": { x: 1300, y: 3650 },
+        "Earth": { x: 1300, y: 1800 }
+      };
+
+      const dest = destinations[portal.name];
+      if (!dest) return;
+
+      game.player.x = dest.x;
+      game.player.y = dest.y + 100;
+
+      if (!game.visitedPortals.includes(portal.name)) {
+        game.visitedPortals.push(portal.name);
+        game.scores.adventure++;
+        updateQuests();
+        updateProfession();
+      }
+
+      game.effects.push({ x: dest.x, y: dest.y, color: portal.color, time: 1 });
+      notify("Travelled through the " + portal.name + " Portal!");
+    }
+
+    function interactAnimal(animal) {
+      if (animal.interacted) {
+        showDialogue(animal.name, animal.type === "unicorn" ? "The Moon Unicorn nuzzles your hand. It trusts you!" : "The Lava Wolf wags its fiery tail. It recognizes you as a friend.");
+        return;
+      }
+
+      const lines = animal.type === "unicorn" ? [
+        "A beautiful Moon Unicorn looks at you with curious silver eyes.",
+        "It lowers its head gently, allowing you to approach.",
+        "Your kindness makes its horn glow with starlight. You have made a friend!"
+      ] : [
+        "A Lava Wolf emerges from a warm glowing rock.",
+        "Its fiery paws leave tiny glowing footprints.",
+        "You remain calm and offer it a friendly greeting. It happily accepts!"
+      ];
+
+      showDialogue(animal.name, lines, () => {
+        animal.interacted = true;
+        game.completedTrials.push(animal.name + " " + game.completedTrials.length);
+        game.scores.animal++;
+        updateQuests();
+        updateProfession();
+        notify("Animal Trial progress: " + game.scores.animal + " / 3");
+      });
+    }
+
+    /* ========================================================= MOVEMENT AND CAMERA ========================================================= */
+    function movePlayer(dt) {
+      if (game.dialogue) return;
+
+      const p = game.player;
+      let dx = 0, dy = 0;
+
+      if (game.keys["KeyW"] || game.keys["ArrowUp"]) dy--;
+      if (game.keys["KeyS"] || game.keys["ArrowDown"]) dy++;
+      if (game.keys["KeyA"] || game.keys["ArrowLeft"]) dx--;
+      if (game.keys["KeyD"] || game.keys["ArrowRight"]) dx++;
+
+      dx += game.joystick.x;
+      dy += game.joystick.y;
+
+      const len = Math.hypot(dx, dy);
+      if (len > 1) {
+        dx /= len;
+        dy /= len;
+      }
+
+      p.moving = len > .08;
+      if (p.moving) {
+        p.x = clamp(p.x + dx * p.speed * dt, 25, WORLD_SIZE - 25);
+        p.y = clamp(p.y + dy * p.speed * dt, 25, WORLD_SIZE - 25);
+
+        if (Math.abs(dx) > Math.abs(dy)) p.direction = dx > 0 ? "right" : "left";
+        else if (Math.abs(dy) > 0) p.direction = dy > 0 ? "down" : "up";
+      }
+    }
+
+    function updateCamera() {
+      const w = innerWidth;
+      const h = innerHeight;
+      game.camera.x = clamp(game.player.x - w / 2, 0, WORLD_SIZE - w);
+      game.camera.y = clamp(game.player.y - h / 2, 0, WORLD_SIZE - h);
+    }
+
+    /* ========================================================= DRAWING HELPERS ========================================================= */
+    function worldRect(x, y, w, h, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, w, h);
+    }
+
+    function drawTree(x, y, size = 1) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size, size);
+      ctx.fillStyle = "#66462f";
+      ctx.fillRect(-6, -5, 12, 34);
+      const colors = ["#397e55", "#468c59", "#579c64"];
+      for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = colors[i];
+        ctx.beginPath();
+        ctx.arc(0, -17 - i * 8, 19 - i * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawFlower(x, y, size = 1) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size, size);
+      ctx.strokeStyle = "#39754c";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 5);
+      ctx.lineTo(0, -8);
+      ctx.stroke();
+
+      ctx.fillStyle = "#f4d18b";
+      for (let i = 0; i < 5; i++) {
+        const a = i * Math.PI * 2 / 5;
+        ctx.beginPath();
+        ctx.arc(Math.cos(a) * 5, Math.sin(a) * 5 - 9, 3.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = "#9c5d9a";
+      ctx.beginPath();
+      ctx.arc(0, -9, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawBench(x, y) {
+      ctx.fillStyle = "#795038";
+      ctx.fillRect(x - 23, y - 6, 46, 8);
+      ctx.fillRect(x - 20, y + 3, 5, 10);
+      ctx.fillRect(x + 15, y + 3, 5, 10);
+      ctx.fillStyle = "#9c714c";
+      ctx.fillRect(x - 23, y - 15, 46, 7);
+    }
+
+    function drawFountain(x, y) {
+      ctx.fillStyle = "#a8b5bb";
+      ctx.beginPath();
+      ctx.ellipse(x, y, 52, 25, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#5bbbd3";
+      ctx.beginPath();
+      ctx.ellipse(x, y - 4, 43, 18, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#d7e6e9";
+      ctx.fillRect(x - 4, y - 37, 8, 30);
+      ctx.beginPath();
+      ctx.arc(x, y - 38, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#9deaff";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y - 32);
+      ctx.quadraticCurveTo(x - 14, y - 47, x - 8, y - 53);
+      ctx.moveTo(x, y - 32);
+      ctx.quadraticCurveTo(x + 14, y - 47, x + 8, y - 53);
+      ctx.stroke();
+    }
+
+    function drawStatue(x, y) {
+      ctx.fillStyle = "#b9c6c3";
+      ctx.fillRect(x - 24, y + 5, 48, 12); // base
+      ctx.fillStyle = "#d7d5c8";
+      ctx.beginPath();
+      ctx.ellipse(x, y - 5, 19, 20, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#e8d7a0";
+      ctx.beginPath();
+      ctx.moveTo(x + 3, y - 30);
+      ctx.lineTo(x + 9, y - 43);
+      ctx.lineTo(x + 12, y - 26);
+      ctx.lineTo(x + 22, y - 35);
+      ctx.lineTo(x + 16, y - 16);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = "#fff0b4";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x + 15, y - 37);
+      ctx.lineTo(x + 15, y - 51);
+      ctx.stroke();
+    }
+
+    function drawAcademy() {
+      // Main academy grounds
+      worldRect(0, 0, WORLD_SIZE, WORLD_SIZE, "#789d69");
+
+      // Region boundaries and ground patterns
+      worldRect(0, 0, 1800, 2500, "#87a96f");
+      worldRect(3200, 0, 1800, 2500, "#80a8ae");
+      worldRect(0, 2500, 1800, 2500, "#609cb0");
+      worldRect(3200, 2500, 1800, 2500, "#ad7658");
+      worldRect(1800, 1800, 1400, 1400, "#91aa7b");
+
+      // Decorative paths
+      ctx.fillStyle = "#d6c59c";
+      ctx.fillRect(2420, 1500, 160, 1800);
+      ctx.fillRect(1550, 2440, 1900, 150);
+      ctx.fillRect(2420, 1100, 160, 600);
+      ctx.fillRect(950, 1750, 800, 100);
+      ctx.fillRect(3250, 1750, 800, 100);
+      ctx.fillRect(950, 3550, 800, 100);
+      ctx.fillRect(3250, 3550, 800, 100);
+
+      // Central courtyard
+      ctx.fillStyle = "#b7ae92";
+      ctx.fillRect(2050, 1950, 900, 950);
+      ctx.fillStyle = "#c7bd9e";
+      ctx.fillRect(2090, 1990, 820, 870);
+      ctx.strokeStyle = "#8d826c";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(2050, 1950, 900, 950);
+
+      // Academy building
+      ctx.fillStyle = "#75618c";
+      ctx.fillRect(2150, 1850, 700, 340);
+      ctx.fillStyle = "#a38ab0";
+      ctx.fillRect(2180, 1880, 640, 280);
+      ctx.fillStyle = "#55466f";
+      ctx.beginPath();
+      ctx.moveTo(2100, 1880);
+      ctx.lineTo(2500, 1620);
+      ctx.lineTo(2900, 1880);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = "#e5cb87";
+      ctx.fillRect(2440, 1990, 120, 190);
+      ctx.fillStyle = "#fff1bb";
+      ctx.fillRect(2250, 1930, 75, 80);
+      ctx.fillRect(2675, 1930, 75, 80);
+      ctx.fillStyle = "#b8e5ed";
+      ctx.fillRect(2258, 1938, 59, 64);
+      ctx.fillRect(2683, 1938, 59, 64);
+
+      ctx.fillStyle = "#f7e6ae";
+      ctx.font = "bold 27px Georgia";
+      ctx.textAlign = "center";
+      ctx.fillText("EVERSTAR", 2500, 1875);
+      ctx.font = "13px Georgia";
+      ctx.fillText("ACADEMY OF MAGIC", 2500, 1900);
+
+      // Region landmarks
+      const labels = [
+        [2500, 1450, "✦ ACADEMY GROUNDS", "#fff1bf"],
+        [3900, 1500, "AIR REGION", "#e5ffff"],
+        [3900, 3300, "FIRE REGION", "#ffe0b0"],
+        [1050, 3300, "WATER REGION", "#e3f7ff"],
+        [1050, 1500, "EARTH REGION", "#f0ffcb"]
+      ];
+      ctx.textAlign = "center";
+      for (const [x, y, text, color] of labels) {
+        ctx.fillStyle = color;
+        ctx.font = "bold 25px Georgia";
+        ctx.fillText(text, x, y);
+      }
+
+      for (let i = 0; i < 20; i++) {
+        drawTree(200 + ((i * 347) % 1450), 150 + ((i * 211) % 4600), .7);
+        drawTree(3300 + ((i * 283) % 1500), 200 + ((i * 317) % 4500), .65);
+      }
+
+      for (const d of game.decorations) {
+        if (d.type === "tree") drawTree(d.x, d.y, d.size);
+        if (d.type === "flower") drawFlower(d.x, d.y, d.size);
+        if (d.type === "bench") drawBench(d.x, d.y);
+        if (d.type === "fountain") drawFountain(d.x, d.y);
+        if (d.type === "unicornStatue") drawStatue(d.x, d.y);
+      }
+
+      for (let i = 0; i < 50; i++) {
+        const x = 1900 + (i * 173) % 1200;
+        const y = 2000 + (i * 113) % 900;
+        if (Math.abs(x - 2500) > 90 || Math.abs(y - 2780) > 65) drawFlower(x, y, .65);
+      }
+
+      ctx.textAlign = "center";
+      ctx.font = "15px Georgia";
+      ctx.fillStyle = "#fff";
+      ctx.fillText("Welcome to the Courtyard", 2500, 2950);
+    }
+
+    function drawPortal(portal) {
+      const pulse = 1 + Math.sin(performance.now() / 350) * .08;
+      ctx.save();
+      ctx.translate(portal.x, portal.y);
+      ctx.scale(pulse, pulse);
+
+      ctx.fillStyle = portal.color + "33";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 48, 58, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = portal.color;
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 28, 43, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#ffffffaa";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 19, 35, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 14px Georgia";
+      ctx.textAlign = "center";
+      ctx.fillText(portal.name.toUpperCase(), 0, 77);
+      ctx.restore();
+    }
+
+    function drawNPC(npc) {
+      ctx.save();
+      ctx.translate(npc.x, npc.y);
+      ctx.fillStyle = "rgba(0,0,0,.2)";
+      ctx.beginPath();
+      ctx.ellipse(0, 27, 16, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = npc.color;
+      ctx.beginPath();
+      ctx.roundRect(-13, -8, 26, 32, 7);
+      ctx.fill();
+
+      ctx.fillStyle = "#edc29b";
+      ctx.beginPath();
+      ctx.arc(0, -20, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#47334b";
+      ctx.beginPath();
+      ctx.arc(0, -24, 12, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "12px Georgia";
+      ctx.textAlign = "center";
+      ctx.fillText(npc.name, 0, -42);
+
+      if (distance(game.player, npc) < 110) {
+        ctx.fillStyle = "#f5d58b";
+        ctx.font = "bold 15px Georgia";
+        ctx.fillText("!", 0, -52);
+      }
+      ctx.restore();
+    }
+
+    function drawAnimal(animal) {
+      const bob = Math.sin(performance.now() / 400 + animal.phase) * 3;
+      ctx.save();
+      ctx.translate(animal.x, animal.y + bob);
+
+      if (animal.type === "unicorn") {
+        ctx.fillStyle = "#e7e2f4";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 23, 13, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#e8d4ec";
+        ctx.beginPath();
+        ctx.arc(18, -12, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#d4b3ef";
+        ctx.beginPath();
+        ctx.moveTo(18, -21);
+        ctx.lineTo(23, -39);
+        ctx.lineTo(27, -19);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = "#f2d58b";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, 8);
+        ctx.lineTo(-2, 25);
+        ctx.moveTo(15, 8);
+        ctx.lineTo(14, 24);
+        ctx.stroke();
+
+        ctx.fillStyle = "#9b7eb4";
+        ctx.fillRect(-16, -7, 7, 5);
+      } else {
+        ctx.fillStyle = "#a84e35";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 24, 14, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(20, -8, 11, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#d66e41";
+        ctx.beginPath();
+        ctx.moveTo(14, -16);
+        ctx.lineTo(12, -29);
+        ctx.lineTo(23, -17);
+        ctx.moveTo(24, -16);
+        ctx.lineTo(30, -28);
+        ctx.lineTo(30, -12);
+        ctx.fill();
+
+        ctx.strokeStyle = "#f3a451";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-18, 6);
+        ctx.quadraticCurveTo(-38, -12, -30, -20);
+        ctx.stroke();
+
+        ctx.fillStyle = "#ffdc70";
+        ctx.beginPath();
+        ctx.arc(23, -9, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (animal.interacted) {
+        ctx.fillStyle = "#f5d58b";
+        ctx.font = "bold 17px Georgia";
+        ctx.textAlign = "center";
+        ctx.fillText("♥", 0, -37);
+      } else {
+        ctx.fillStyle = "#fff";
+        ctx.font = "12px Georgia";
+        ctx.textAlign = "center";
+        ctx.fillText(animal.name, 0, -35);
+      }
+      ctx.restore();
+    }
+
+    function drawPlayer() {
+      const p = game.player;
+      drawCharacter(ctx, p.x, p.y, 1.25);
+      if (p.moving) {
+        ctx.fillStyle = "#fff3bd";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y - 76, 3 + Math.sin(performance.now() / 100) * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawEffects() {
+      for (let i = game.effects.length - 1; i >= 0; i--) {
+        const e = game.effects[i];
+        e.time -= .016;
+        ctx.globalAlpha = Math.max(0, e.time);
+        ctx.strokeStyle = e.color;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, (1 - e.time) * 90, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        if (e.time <= 0) game.effects.splice(i, 1);
+      }
+    }
+
+    function drawWorld() {
+      const w = innerWidth;
+      const h = innerHeight;
+      ctx.clearRect(0, 0, w, h);
+      ctx.save();
+      ctx.translate(-game.camera.x, -game.camera.y);
+
+      drawAcademy();
+
+      for (const portal of game.portals) drawPortal(portal);
+      for (const animal of game.animals) drawAnimal(animal);
+      for (const npc of game.npcs) drawNPC(npc);
+      drawPlayer();
+      drawEffects();
+
+      const target = nearestInteractable();
+      if (target && !game.dialogue) {
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 14px Georgia";
+        ctx.textAlign = "center";
+        ctx.fillText("Press E to interact", game.player.x, game.player.y - 94);
+      }
+
+      ctx.restore();
+    }
+
+    /* ========================================================= HUD ========================================================= */
+    function updateHUD() {
+      $("hudName").textContent = game.character.name;
+      $("hudStar").textContent = game.birthStar;
+      $("hudRegion").textContent = regionAt(game.player.x, game.player.y);
+      $("hudProfession").textContent = game.profession;
+    }
+
+    let notificationTimer = null;
+    function notify(text) {
+      const el = $("message");
+      el.textContent = text;
+      el.classList.add("show");
+      clearTimeout(notificationTimer);
+      notificationTimer = setTimeout(() => el.classList.remove("show"), 2800);
+
+      $("toast").textContent = text;
+      $("toast").classList.add("show");
+      setTimeout(() => $("toast").classList.remove("show"), 1800);
+    }
+
+    /* ========================================================= MENUS ========================================================= */
+    $("menuButton").addEventListener("click", () => {
+      $("menuPanel").classList.toggle("visible");
+    });
+
+    $("closeMenu").addEventListener("click", () => {
+      $("menuPanel").classList.remove("visible");
+    });
+
+    $("journalButton").addEventListener("click", () => {
+      const lines = game.quests.map(q => (q.completed ? "✓ " : "○ ") + q.title + "\n" + q.description);
+      showDialogue("Academy Journal", lines);
+      $("menuPanel").classList.remove("visible");
+    });
+
+    $("statsButton").addEventListener("click", () => {
+      const s = game.scores;
+      showDialogue("Student Records", [
+        "Student: " + game.character.name,
+        "Birth Star: " + game.birthStar,
+        "Profession: " + game.profession,
+        "Animal Score: " + s.animal,
+        "Nature Score: " + s.nature,
+        "Knowledge Score: " + s.knowledge,
+        "Adventure Score: " + s.adventure,
+        "Qualification: " + game.quests.filter(q => q.completed).length + " / " + game.quests.length
+      ]);
+      $("menuPanel").classList.remove("visible");
+    });
+
+    $("helpButton").addEventListener("click", () => {
+      showDialogue("How to Play", [
+        "Move with WASD or the arrow keys on your keyboard.",
+        "On mobile, drag the large joystick to move.",
+        "Press E, SPACE or the TALK button to interact with nearby characters, portals and animals.",
+        "Speak with every professor to learn about the magical world.",
+        "Visit portals and complete your Animal Trial.",
+        "Return to Principal Solara after completing your qualification tasks."
+      ]);
+      $("menuPanel").classList.remove("visible");
+    });
+
+    /* ========================================================= INPUT ========================================================= */
+    window.addEventListener("keydown", e => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
+
+      if (e.code === "Escape") {
+        if (game.dialogue) closeDialogue();
+        else $("menuPanel").classList.remove("visible");
+        return;
+      }
+
+      game.keys[e.code] = true;
+      if ((e.code === "KeyE" || e.code === "Space") && !e.repeat) {
+        if (game.dialogue) advanceDialogue();
+        else interact();
+      }
+    });
+
+    window.addEventListener("keyup", e => {
+      game.keys[e.code] = false;
+    });
+
+    window.addEventListener("blur", () => {
+      game.keys = {};
+      resetJoystick();
+    });
+
+    $("actionButton").addEventListener("click", () => {
+      if (game.dialogue) advanceDialogue();
+      else interact();
+    });
+
+    /* Virtual joystick: independent of the camera and world. */
+    const joystick = $("joystick");
+    const stick = $("stick");
+
+    function resetJoystick() {
+      game.joystick.x = 0;
+      game.joystick.y = 0;
+      game.joystick.active = false;
+      game.joystick.pointer = null;
+      stick.style.left = "50%";
+      stick.style.top = "50%";
+    }
+
+    function updateJoystick(e) {
+      const rect = joystick.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      let dx = e.clientX - cx;
+      let dy = e.clientY - cy;
+      const max = rect.width * .32;
+      const len = Math.hypot(dx, dy);
+
+      if (len > max) {
+        dx = dx / len * max;
+        dy = dy / len * max;
+      }
+
+      game.joystick.x = dx / max;
+      game.joystick.y = dy / max;
+      stick.style.left = `calc(50% + ${dx}px)`;
+      stick.style.top = `calc(50% + ${dy}px)`;
+    }
+
+    joystick.addEventListener("pointerdown", e => {
+      e.preventDefault();
+      game.joystick.active = true;
+      game.joystick.pointer = e.pointerId;
+      joystick.setPointerCapture(e.pointerId);
+      updateJoystick(e);
+    });
+
+    joystick.addEventListener("pointermove", e => {
+      if (game.joystick.active && game.joystick.pointer === e.pointerId) {
+        e.preventDefault();
+        updateJoystick(e);
+      }
+    });
+
+    joystick.addEventListener("pointerup", e => {
+      if (game.joystick.pointer === e.pointerId) resetJoystick();
+    });
+    joystick.addEventListener("pointercancel", resetJoystick);
+    joystick.addEventListener("lostpointercapture", resetJoystick);
+
+    /* ========================================================= START GAME ========================================================= */
+    function startGame() {
+      readCharacter();
+      game.started = true;
+      $("creator").style.display = "none";
+      game.player.x = 2500;
+      game.player.y = 2630;
+      generateWorld();
+      updateHUD();
+      updateQuests();
+      updateProfession();
+      showDialogue("Principal Solara", [
+        "Welcome to Everstar Academy, " + game.character.name + "!",
+        "I am Principal Solara, guardian of this magical school.",
+        "Your Birth Star is " + game.birthStar + ". It will shine beside your name throughout your journey.",
+        "Deep within you sleeps a mysterious elemental gift. Only time will reveal its true nature.",
+        "During Qualification Week, you will meet four professors, explore magical regions and befriend enchanted creatures.",
+        "Your story begins now. May the stars guide you!"
+      ]);
+    }
+    $("beginButton").addEventListener("click", startGame);
+
+    /* ========================================================= GAME LOOP ========================================================= */
+    function update(dt) {
+      if (!game.started) return;
+
+      game.dialogueCooldown = Math.max(0, game.dialogueCooldown - dt);
+      game.portalCooldown = Math.max(0, game.portalCooldown - dt);
+      game.interactionCooldown = Math.max(0, game.interactionCooldown - dt);
+
+      movePlayer(dt);
+      updateCamera();
+      updateHUD();
+    }
+
+    function render() {
+      if (game.started) drawWorld();
+      requestAnimationFrame(render);
+    }
+
+    function loop(timestamp) {
+      const dt = Math.min((timestamp - game.lastTime) / 1000 || 0, .05);
+      game.lastTime = timestamp;
+      if (game.running) update(dt);
+      requestAnimationFrame(loop);
+    }
+
+    updatePreview();
+    generateWorld();
+    requestAnimationFrame(render);
+    requestAnimationFrame(loop);
+
+    /* ========================================================= SAFETY AND STARTUP VALIDATION ========================================================= */
+    function validateDocument() {
+      const ids = new Set();
+      const all = document.querySelectorAll("[id]");
+      for (const element of all) {
+        if (ids.has(element.id)) throw new Error("Duplicate HTML ID: " + element.id);
+        ids.add(element.id);
+      }
+
+      const required = [
+        "world", "preview", "creator", "characterName", "skinColor", "hairColor",
+        "hairStyle", "outfit", "shirtColor", "jacketColor", "dressColor",
+        "pantsColor", "shoeColor", "beginButton", "dialogue", "dialogueClose",
+        "dialogueNext", "dialogueText", "speaker", "joystick", "stick",
+        "actionButton", "questText", "questProgress", "hudName", "hudStar",
+        "hudProfession", "hudRegion", "hudProgress"
+      ];
+
+      for (const id of required) {
+        if (!$(id)) throw new Error("Missing required element: " + id);
+      }
+    }
+
+    validateDocument();
+  </script>
 </body>
 </html>
