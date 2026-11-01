@@ -8,7 +8,7 @@
 name="viewport"
 content="width=device-width,initial-scale=1.0">
 
-<title>Everstar v0.4</title>
+<title>Everstar v0.5</title>
 
 <style>
 
@@ -20,20 +20,30 @@ font-family:Arial,sans-serif;
 }
 
 body{
-overflow:hidden;
+
 background:black;
+
+overflow:hidden;
+
 touch-action:none;
+
+user-select:none;
+
 }
 
-/* =========================
+/* =====================
 WORLD
-========================= */
+===================== */
 
 #viewport{
+
 width:100vw;
 height:100vh;
+
 overflow:hidden;
+
 position:relative;
+
 }
 
 #game{
@@ -52,16 +62,21 @@ linear-gradient(
 
 }
 
-/* =========================
+/* =====================
 CHARACTER CREATOR
-========================= */
+===================== */
 
 #characterScreen{
 
 position:fixed;
+
 inset:0;
 
 overflow:auto;
+
+padding:20px;
+
+color:white;
 
 background:
 linear-gradient(
@@ -71,10 +86,6 @@ linear-gradient(
 );
 
 z-index:99999;
-
-color:white;
-
-padding:20px;
 
 }
 
@@ -96,19 +107,26 @@ rgba(
 0.15
 );
 
+backdrop-filter:
+blur(8px);
+
 }
 
 #creatorPanel h1{
+
 text-align:center;
+
 margin-bottom:15px;
+
 }
 
 .creatorRow{
 
 display:flex;
+
 flex-direction:column;
 
-gap:5px;
+gap:6px;
 
 margin-bottom:12px;
 
@@ -121,8 +139,7 @@ font-size:14px;
 }
 
 .creatorRow input,
-.creatorRow select,
-.creatorRow button{
+.creatorRow select{
 
 padding:10px;
 
@@ -134,17 +151,34 @@ border-radius:10px;
 
 }
 
-/* =========================
+/* =====================
 BUTTONS
-========================= */
+===================== */
 
-#randomButton{
+#randomButton,
+#enterButton{
 
-background:#ffd95e;
+width:100%;
+
+padding:12px;
+
+font-size:16px;
 
 font-weight:bold;
 
+border:none;
+
+border-radius:12px;
+
 cursor:pointer;
+
+}
+
+#randomButton{
+
+background:#ffd75d;
+
+margin-bottom:10px;
 
 }
 
@@ -152,15 +186,11 @@ cursor:pointer;
 
 background:#7cff97;
 
-font-weight:bold;
-
-cursor:pointer;
-
 }
 
-/* =========================
+/* =====================
 CHARACTER PREVIEW
-========================= */
+===================== */
 
 #previewCharacter{
 
@@ -202,9 +232,9 @@ top:20px;
 width:70px;
 height:70px;
 
-background:#f8d8bd;
-
 border-radius:50%;
+
+background:#f8d8bd;
 
 }
 
@@ -224,11 +254,15 @@ top:28px;
 }
 
 .previewEye.left{
+
 left:18px;
+
 }
 
 .previewEye.right{
+
 right:18px;
+
 }
 
 #previewBody{
@@ -241,9 +275,9 @@ top:92px;
 width:46px;
 height:60px;
 
-background:#4d71ff;
-
 border-radius:8px;
+
+background:#4d71ff;
 
 }
 
@@ -314,9 +348,9 @@ border-radius:4px;
 
 }
 
-/* =========================
+/* =====================
 PLAYER
-========================= */
+===================== */
 
 #player{
 
@@ -433,7 +467,7 @@ background:transparent;
 
 clip-path:
 polygon(
-50% 0%,
+50% 0,
 100% 100%,
 0% 100%
 );
@@ -469,9 +503,9 @@ background:black;
 border-radius:4px;
 
 }
-/* =================================
+/* =====================
 UI
-================================= */
+===================== */
 
 #ui{
 
@@ -480,16 +514,22 @@ position:fixed;
 top:10px;
 left:10px;
 
+max-width:220px;
+
 padding:12px;
+
+font-size:14px;
 
 background:
 rgba(255,255,255,.95);
 
 border-radius:12px;
 
-max-width:300px;
-
 z-index:5000;
+
+box-shadow:
+0 3px 12px
+rgba(0,0,0,.15);
 
 }
 
@@ -502,11 +542,11 @@ right:10px;
 
 padding:10px;
 
+font-weight:bold;
+
 background:white;
 
 border-radius:12px;
-
-font-weight:bold;
 
 z-index:5000;
 
@@ -522,47 +562,60 @@ color:#6933d3;
 
 }
 
-/* =================================
-DIALOGUE
-================================= */
+#questTracker{
+
+margin-top:10px;
+
+font-size:13px;
+
+line-height:1.4;
+
+}
+
+/* =====================
+DIALOGUE (UPDATED)
+===================== */
 
 #dialogueBox{
 
 position:fixed;
 
 left:50%;
-bottom:20px;
+top:15px;
 
-transform:
-translateX(-50%);
+transform:translateX(-50%);
 
-width:min(90vw,700px);
+width:min(92vw,700px);
 
-background:
-rgba(25,25,35,.96);
+background:#fffef8;
 
-padding:16px;
+color:#222;
 
-border-radius:16px;
+padding:18px;
 
-border:
-3px solid gold;
+padding-top:55px;
+
+border-radius:18px;
+
+border:4px solid gold;
 
 display:none;
 
 z-index:99999;
 
-color:white;
+box-shadow:
+0 5px 25px
+rgba(0,0,0,.25);
 
 }
 
 #dialogueSpeaker{
 
-font-size:20px;
+font-size:22px;
 
 font-weight:bold;
 
-color:gold;
+color:#5f2dbd;
 
 margin-bottom:10px;
 
@@ -572,37 +625,54 @@ margin-bottom:10px;
 
 line-height:1.5;
 
-margin-bottom:10px;
+font-size:16px;
 
 }
 
 #closeDialogue{
 
-padding:8px 14px;
+position:absolute;
+
+top:10px;
+right:10px;
+
+width:36px;
+height:36px;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
 
 border:none;
 
-border-radius:8px;
+border-radius:50%;
 
-background:gold;
+background:#ff5c5c;
+
+color:white;
+
+font-size:20px;
+
+font-weight:bold;
 
 cursor:pointer;
 
 }
 
-/* =================================
-JOYSTICK
-================================= */
+/* =====================
+MOBILE JOYSTICK
+===================== */
 
 #joystick{
 
 position:fixed;
 
-left:20px;
-bottom:20px;
+left:15px;
+bottom:15px;
 
-width:120px;
-height:120px;
+width:150px;
+height:150px;
 
 border-radius:50%;
 
@@ -611,7 +681,7 @@ rgba(
 255,
 255,
 255,
-0.2
+0.20
 );
 
 border:
@@ -619,17 +689,20 @@ border:
 
 z-index:9000;
 
+backdrop-filter:
+blur(5px);
+
 }
 
 #stick{
 
 position:absolute;
 
-left:30px;
-top:30px;
+left:37px;
+top:37px;
 
-width:60px;
-height:60px;
+width:75px;
+height:75px;
 
 border-radius:50%;
 
@@ -637,9 +710,9 @@ background:white;
 
 }
 
-/* =================================
+/* =====================
 NPCS
-================================= */
+===================== */
 
 .npc{
 
@@ -720,9 +793,9 @@ top:50px;
 width:32px;
 height:38px;
 
-border-radius:8px;
-
 background:#4d71ff;
+
+border-radius:8px;
 
 }
 
@@ -746,6 +819,8 @@ position:absolute;
 
 top:105px;
 
+left:-5px;
+
 font-size:10px;
 
 background:white;
@@ -756,13 +831,11 @@ border-radius:4px;
 
 white-space:nowrap;
 
-left:-5px;
-
 }
 
-/* =================================
-ACADEMY STAR COURTYARD
-================================= */
+/* =====================
+ACADEMY STAR
+===================== */
 
 #academyStar{
 
@@ -815,15 +888,16 @@ justify-content:center;
 align-items:center;
 
 font-size:34px;
+
 font-weight:bold;
 
 z-index:10;
 
 }
 
-/* =================================
+/* =====================
 PORTALS
-================================= */
+===================== */
 
 .portal{
 
@@ -840,6 +914,7 @@ justify-content:center;
 align-items:center;
 
 font-size:24px;
+
 font-weight:bold;
 
 color:white;
@@ -893,10 +968,9 @@ radial-gradient(
 );
 
 }
-
-/* =================================
+/* =====================
 TREES & PLANTS
-================================= */
+===================== */
 
 .tree{
 
@@ -957,8 +1031,6 @@ box-shadow:
 
 }
 
-/* Water Region */
-
 .waterPlant{
 
 position:absolute;
@@ -971,8 +1043,6 @@ background:#5ac7ff;
 border-radius:10px;
 
 }
-
-/* Earth Region */
 
 .earthPlant{
 
@@ -987,8 +1057,6 @@ border-radius:
 0 0 50% 50%;
 
 }
-
-/* Air Region */
 
 .airPlant{
 
@@ -1005,8 +1073,6 @@ box-shadow:
 0 0 10px white;
 
 }
-
-/* Fire Region */
 
 .firePlant{
 
@@ -1026,9 +1092,9 @@ polygon(
 
 }
 
-/* =================================
+/* =====================
 ANIMALS
-================================= */
+===================== */
 
 .animal{
 
@@ -1063,9 +1129,10 @@ border:
 </head>
 
 <body>
-<!-- =========================
+
+<!-- =====================
 CHARACTER CREATOR
-========================= -->
+===================== -->
 
 <div id="characterScreen">
 
@@ -1074,7 +1141,7 @@ CHARACTER CREATOR
 <h1>🌟 Everstar Academy 🌟</h1>
 
 <p style="margin-bottom:15px;">
-Every child in Everstar attends the Academy before taking Qualification Week.
+Every child in Everstar attends the Academy before Qualification Week.
 </p>
 
 <div id="previewCharacter">
@@ -1082,8 +1149,10 @@ Every child in Everstar attends the Academy before taking Qualification Week.
 <div id="previewHair"></div>
 
 <div id="previewHead">
+
 <div class="previewEye left"></div>
 <div class="previewEye right"></div>
+
 </div>
 
 <div id="previewBody"></div>
@@ -1101,166 +1170,224 @@ Every child in Everstar attends the Academy before taking Qualification Week.
 
 <div class="creatorRow">
 <label>Gender</label>
+
 <select id="gender">
+
 <option>Girl</option>
 <option>Boy</option>
+
 </select>
+
 </div>
 
 <div class="creatorRow">
+
 <label>Skin Tone</label>
+
 <select id="skinTone">
+
 <option value="#f8d8bd">Light</option>
 <option value="#e0b190">Tan</option>
 <option value="#c68642">Brown</option>
 <option value="#8d5524">Dark Brown</option>
+
 </select>
+
 </div>
 
 <div class="creatorRow">
+
 <label>Hair Style</label>
+
 <select id="hairStyle">
+
 <option>Short</option>
 <option>Long</option>
 <option>Ponytail</option>
 <option>Braids</option>
 <option>Curly</option>
 <option>Spiky</option>
+
 </select>
+
 </div>
 
 <div class="creatorRow">
+
 <label>Hair Color</label>
+
 <input
 type="color"
 id="hairColor"
 value="#5c3a21">
+
 </div>
 
 <div class="creatorRow">
+
 <label>Outfit</label>
+
 <select id="outfitType">
+
 <option>Shirt</option>
 <option>Jacket</option>
 <option>Dress</option>
+
 </select>
+
 </div>
 
 <div class="creatorRow">
+
 <label>Top Color</label>
+
 <input
 type="color"
 id="topColor"
 value="#4d71ff">
+
 </div>
 
 <div class="creatorRow">
+
 <label>Pants Color</label>
+
 <input
 type="color"
 id="pantsColor"
 value="#333333">
+
 </div>
 
 <div class="creatorRow">
+
 <label>Shoe Color</label>
+
 <input
 type="color"
 id="shoeColor"
 value="#000000">
+
 </div>
 
 <button
 id="randomButton"
 onclick="randomCharacter()">
-🎲 Random Character
-</button>
 
-<br><br>
+🎲 Random Character
+
+</button>
 
 <button
 id="enterButton"
 onclick="startGame()">
+
 Begin Qualification Week
+
 </button>
 
 </div>
 
 </div>
 
-<!-- =========================
+<!-- =====================
 UI
-========================= -->
+===================== -->
 
 <div id="ui">
 
 <b id="playerDisplayName">
+
 Student
+
 </b>
 
 <br><br>
 
 Rank:
+
 <span id="profession">
+
 Student
+
 </span>
 
 <br><br>
 
 Star:
+
 <span id="starName">
+
 Unknown
+
 </span>
 
 <div id="message">
+
 Welcome to Everstar Academy.
+
+</div>
+
+<hr style="margin:10px 0;">
+
+<div id="questTracker">
+
+Quest:
+<br>
+
+Talk to all professors
+
 </div>
 
 </div>
 
 <div id="regionLabel">
+
 Region: Academy Grounds
+
 </div>
 
-<!-- =========================
+<!-- =====================
 DIALOGUE
-========================= -->
+===================== -->
 
 <div id="dialogueBox">
 
+<button id="closeDialogue">
+
+✕
+
+</button>
+
 <div id="dialogueSpeaker">
+
 Speaker
+
 </div>
 
 <div id="dialogueText">
+
 Dialogue
-</div>
-
-<button id="closeDialogue">
-Continue
-</button>
 
 </div>
 
-<!-- =========================
-WORLD
-========================= -->
+</div>
+
+<!-- =====================
+WORLD START
+===================== -->
 
 <div id="viewport">
 
 <div id="game">
 
-<!-- Academy Star Courtyard -->
-
 <div id="academyStar"></div>
 
-<!-- Academy -->
-
 <div id="academy">
-🏫 Academy
-</div>
 
-<!-- AIR PORTAL -->
+🏫 Academy
+
+</div>
 
 <div
 class="portal airPortal"
@@ -1268,10 +1395,10 @@ id="airPortal"
 style="
 left:2440px;
 top:2050px;">
-☁️
-</div>
 
-<!-- FIRE PORTAL -->
+☁️
+
+</div>
 
 <div
 class="portal firePortal"
@@ -1279,10 +1406,10 @@ id="firePortal"
 style="
 left:2730px;
 top:2440px;">
-🔥
-</div>
 
-<!-- WATER PORTAL -->
+🔥
+
+</div>
 
 <div
 class="portal waterPortal"
@@ -1290,10 +1417,10 @@ id="waterPortal"
 style="
 left:2440px;
 top:2730px;">
-🌊
-</div>
 
-<!-- EARTH PORTAL -->
+🌊
+
+</div>
 
 <div
 class="portal earthPortal"
@@ -1301,7 +1428,9 @@ id="earthPortal"
 style="
 left:2150px;
 top:2440px;">
+
 🌿
+
 </div>
 
 <!-- PLAYER -->
@@ -1311,8 +1440,15 @@ top:2440px;">
 <div id="playerHair"></div>
 
 <div id="playerHead">
-<div class="eye" id="leftEye"></div>
-<div class="eye" id="rightEye"></div>
+
+<div
+class="eye"
+id="leftEye"></div>
+
+<div
+class="eye"
+id="rightEye"></div>
+
 </div>
 
 <div id="playerBody"></div>
@@ -1322,8 +1458,9 @@ top:2440px;">
 <div id="playerShoes"></div>
 
 </div>
-
-<!-- PRINCIPAL SOLARA -->
+<!-- =====================
+PRINCIPAL SOLARA
+===================== -->
 
 <div
 class="npc"
@@ -1334,8 +1471,7 @@ top:2480px;">
 
 <div
 class="npc-hair"
-style="
-background:gold;">
+style="background:gold;">
 </div>
 
 <div class="npc-head">
@@ -1347,8 +1483,7 @@ background:gold;">
 
 <div
 class="npc-body"
-style="
-background:#fff29b;">
+style="background:#fff29b;">
 </div>
 
 <div class="npc-legs"></div>
@@ -1359,7 +1494,9 @@ Principal Solara
 
 </div>
 
-<!-- PROFESSOR WILLOW -->
+<!-- =====================
+PROFESSOR WILLOW
+===================== -->
 
 <div
 class="npc"
@@ -1395,7 +1532,9 @@ Prof. Willow
 
 </div>
 
-<!-- PROFESSOR EMBER -->
+<!-- =====================
+PROFESSOR EMBER
+===================== -->
 
 <div
 class="npc"
@@ -1431,7 +1570,9 @@ Prof. Ember
 
 </div>
 
-<!-- PROFESSOR TIDE -->
+<!-- =====================
+PROFESSOR TIDE
+===================== -->
 
 <div
 class="npc"
@@ -1467,7 +1608,9 @@ Prof. Tide
 
 </div>
 
-<!-- PROFESSOR NIMBUS -->
+<!-- =====================
+PROFESSOR NIMBUS
+===================== -->
 
 <div
 class="npc"
@@ -1502,11 +1645,10 @@ Prof. Nimbus
 </div>
 
 </div>
-<!-- =========================
-ACADEMY DECORATIONS
-========================= -->
 
-<!-- Star Fountain -->
+<!-- =====================
+ACADEMY DECORATIONS
+===================== -->
 
 <div
 style="
@@ -1526,8 +1668,6 @@ border:4px solid white;
 z-index:20;">
 </div>
 
-<!-- Unicorn Statue -->
-
 <div
 style="
 position:absolute;
@@ -1537,10 +1677,10 @@ top:2370px;
 font-size:48px;
 
 z-index:20;">
-🦄
-</div>
 
-<!-- Benches -->
+🦄
+
+</div>
 
 <div
 style="
@@ -1574,9 +1714,9 @@ border-radius:4px;
 z-index:15;">
 </div>
 
-<!-- =========================
+<!-- =====================
 ACADEMY TREES
-========================= -->
+===================== -->
 
 <div class="tree"
 style="left:2230px;top:2230px;"></div>
@@ -1596,9 +1736,9 @@ style="left:2420px;top:2050px;"></div>
 <div class="tree"
 style="left:2550px;top:2050px;"></div>
 
-<!-- =========================
+<!-- =====================
 ACADEMY FLOWERS
-========================= -->
+===================== -->
 
 <div class="flower"
 style="left:2280px;top:2460px;"></div>
@@ -1612,9 +1752,9 @@ style="left:2660px;top:2460px;"></div>
 <div class="flower"
 style="left:2590px;top:2520px;"></div>
 
-<!-- =========================
-EARTH PORTAL FOLIAGE
-========================= -->
+<!-- =====================
+EARTH REGION FOLIAGE
+===================== -->
 
 <div class="earthPlant"
 style="left:2090px;top:2410px;"></div>
@@ -1634,9 +1774,9 @@ style="left:1990px;top:2360px;"></div>
 <div class="tree"
 style="left:2000px;top:2530px;"></div>
 
-<!-- =========================
-WATER PORTAL FOLIAGE
-========================= -->
+<!-- =====================
+WATER REGION FOLIAGE
+===================== -->
 
 <div class="waterPlant"
 style="left:2410px;top:2880px;"></div>
@@ -1650,15 +1790,9 @@ style="left:2550px;top:2930px;"></div>
 <div class="waterPlant"
 style="left:2600px;top:2890px;"></div>
 
-<div class="flower"
-style="left:2430px;top:2990px;"></div>
-
-<div class="flower"
-style="left:2570px;top:2980px;"></div>
-
-<!-- =========================
-FIRE PORTAL FOLIAGE
-========================= -->
+<!-- =====================
+FIRE REGION FOLIAGE
+===================== -->
 
 <div class="firePlant"
 style="left:2800px;top:2410px;"></div>
@@ -1675,9 +1809,9 @@ style="left:2820px;top:2570px;"></div>
 <div class="tree"
 style="left:2960px;top:2460px;"></div>
 
-<!-- =========================
-AIR PORTAL FOLIAGE
-========================= -->
+<!-- =====================
+AIR REGION FOLIAGE
+===================== -->
 
 <div class="airPlant"
 style="left:2390px;top:1960px;"></div>
@@ -1691,12 +1825,9 @@ style="left:2540px;top:1940px;"></div>
 <div class="airPlant"
 style="left:2600px;top:1980px;"></div>
 
-<div class="airPlant"
-style="left:2470px;top:1880px;"></div>
-
-<!-- =========================
+<!-- =====================
 REGION LABELS
-========================= -->
+===================== -->
 
 <div
 style="
@@ -1770,11 +1901,9 @@ text-shadow:
 
 </div>
 
-<!-- =========================
+<!-- =====================
 TRIAL ANIMALS
-========================= -->
-
-<!-- Unicorn Test Area -->
+===================== -->
 
 <div
 class="animal unicorn"
@@ -1797,8 +1926,6 @@ left:1250px;
 top:2600px;">
 </div>
 
-<!-- Lava Wolf Test Area -->
-
 <div
 class="animal lavawolf"
 style="
@@ -1813,9 +1940,9 @@ left:4100px;
 top:2550px;">
 </div>
 
-<!-- =========================
+<!-- =====================
 JOYSTICK
-========================= -->
+===================== -->
 
 <div id="joystick">
 
@@ -1825,8 +1952,8 @@ JOYSTICK
 
 </div>
 </div>
-<script>
 
+<script>
 /* =====================
 PLAYER DATA
 ===================== */
@@ -1838,7 +1965,9 @@ let joyX = 0;
 let joyY = 0;
 
 let dragging = false;
+
 let dialogueOpen = false;
+let recentlyClosedDialogue = false;
 
 let hiddenElement = "";
 let birthStar = "";
@@ -1852,8 +1981,12 @@ let profession = "Student";
 
 let qualificationStage = 0;
 
+let talkedTo = {};
+
+let lastTeleport = 0;
+
 /* =====================
-RANDOM NAMES
+RANDOM DATA
 ===================== */
 
 const girlNames = [
@@ -1911,7 +2044,9 @@ UTILITIES
 function showMessage(text){
 
 document
-.getElementById("message")
+.getElementById(
+"message"
+)
 .innerText = text;
 
 }
@@ -1926,17 +2061,22 @@ dialogueOpen = true;
 document
 .getElementById(
 "dialogueSpeaker"
-).innerText = speaker;
+)
+.innerText =
+speaker;
 
 document
 .getElementById(
 "dialogueText"
-).innerText = text;
+)
+.innerText =
+text;
 
 document
 .getElementById(
 "dialogueBox"
-).style.display =
+)
+.style.display =
 "block";
 
 }
@@ -1948,8 +2088,17 @@ dialogueOpen = false;
 document
 .getElementById(
 "dialogueBox"
-).style.display =
+)
+.style.display =
 "none";
+
+recentlyClosedDialogue = true;
+
+setTimeout(()=>{
+
+recentlyClosedDialogue = false;
+
+},1500);
 
 }
 
@@ -1960,6 +2109,23 @@ document
 .addEventListener(
 "click",
 closeDialogue
+);
+
+document
+.addEventListener(
+"keydown",
+e=>{
+
+if(
+e.key==="Escape" &&
+dialogueOpen
+){
+
+closeDialogue();
+
+}
+
+}
 );
 
 /* =====================
@@ -1978,7 +2144,9 @@ Math.random() < 0.5
 document
 .getElementById(
 "gender"
-).value = gender;
+)
+.value =
+gender;
 
 const names =
 gender === "Girl"
@@ -1990,7 +2158,9 @@ boyNames;
 document
 .getElementById(
 "playerName"
-).value =
+)
+.value =
+
 names[
 Math.floor(
 Math.random() *
@@ -2001,6 +2171,7 @@ names.length
 updatePreview();
 
 }
+
 /* =====================
 CHARACTER PREVIEW
 ===================== */
@@ -2037,127 +2208,64 @@ document.getElementById(
 "outfitType"
 ).value;
 
-document
-.getElementById(
+document.getElementById(
 "previewHead"
 ).style.background =
 skin;
 
-document
-.getElementById(
+document.getElementById(
 "previewHair"
 ).style.background =
 hairColor;
 
-document
-.getElementById(
+document.getElementById(
 "previewBody"
 ).style.background =
 topColor;
 
-document
-.getElementById(
+document.getElementById(
 "previewLegs"
 ).style.background =
 pantsColor;
 
-document
-.getElementById(
+document.getElementById(
 "previewShoes"
 ).style.background =
 shoeColor;
 
-document
-.getElementById(
+document.getElementById(
 "previewJacket"
 ).style.background =
 "transparent";
 
-document
-.getElementById(
+document.getElementById(
 "previewDress"
 ).style.background =
 "transparent";
 
-if(outfit==="Jacket"){
+if(
+outfit === "Jacket"
+){
 
 document
 .getElementById(
 "previewJacket"
-).style.background =
+)
+.style.background =
 topColor;
 
 }
 
-if(outfit==="Dress"){
+if(
+outfit === "Dress"
+){
 
 document
 .getElementById(
 "previewDress"
-).style.background =
+)
+.style.background =
 topColor;
-
-}
-
-updateHairStyle();
-
-}
-
-function updateHairStyle(){
-
-const style =
-document
-.getElementById(
-"hairStyle"
-).value;
-
-const hair =
-document
-.getElementById(
-"previewHair"
-);
-
-hair.style.height =
-"20px";
-
-hair.style.borderRadius =
-"15px";
-
-hair.style.clipPath = "";
-
-switch(style){
-
-case "Long":
-hair.style.height =
-"50px";
-break;
-
-case "Ponytail":
-hair.style.height =
-"40px";
-break;
-
-case "Braids":
-hair.style.height =
-"42px";
-break;
-
-case "Curly":
-hair.style.height =
-"28px";
-hair.style.borderRadius =
-"50%";
-break;
-
-case "Spiky":
-
-hair.style.height =
-"30px";
-
-hair.style.clipPath =
-"polygon(0 100%,10% 10%,20% 100%,35% 0%,50% 100%,65% 15%,80% 100%,90% 20%,100% 100%)";
-
-break;
 
 }
 
@@ -2165,7 +2273,7 @@ break;
 
 document
 .querySelectorAll(
-"select,input"
+"input,select"
 )
 .forEach(control=>{
 
@@ -2183,132 +2291,119 @@ START GAME
 function startGame(){
 
 hiddenElement =
+
 elements[
 Math.floor(
-Math.random() *
+Math.random()*
 elements.length
 )
 ];
 
 birthStar =
+
 stars[
 Math.floor(
-Math.random() *
+Math.random()*
 stars.length
 )
 ];
 
+console.log(
+"Hidden Element:",
+hiddenElement
+);
+
 const playerName =
+
 document
 .getElementById(
 "playerName"
-).value ||
+)
+.value ||
+
 "Student";
 
 document
 .getElementById(
 "playerDisplayName"
-).innerText =
+)
+.innerText =
 playerName;
 
 document
 .getElementById(
 "starName"
-).innerText =
+)
+.innerText =
 birthStar;
 
 document
 .getElementById(
 "characterScreen"
-).style.display =
+)
+.style.display =
 "none";
-
-/* Appearance */
 
 document
 .getElementById(
 "playerHead"
-).style.background =
+)
+.style.background =
 document
 .getElementById(
 "skinTone"
-).value;
+)
+.value;
 
 document
 .getElementById(
 "playerHair"
-).style.background =
+)
+.style.background =
 document
 .getElementById(
 "hairColor"
-).value;
+)
+.value;
 
 document
 .getElementById(
 "playerBody"
-).style.background =
+)
+.style.background =
 document
 .getElementById(
 "topColor"
-).value;
+)
+.value;
 
 document
 .getElementById(
 "playerLegs"
-).style.background =
+)
+.style.background =
 document
 .getElementById(
 "pantsColor"
-).value;
+)
+.value;
 
 document
 .getElementById(
 "playerShoes"
-).style.background =
+)
+.style.background =
 document
 .getElementById(
 "shoeColor"
-).value;
-
-const outfit =
-document
-.getElementById(
-"outfitType"
-).value;
-
-if(outfit==="Jacket"){
-
-document
-.getElementById(
-"playerJacket"
-).style.background =
-document
-.getElementById(
-"topColor"
-).value;
-
-}
-
-if(outfit==="Dress"){
-
-document
-.getElementById(
-"playerDress"
-).style.background =
-document
-.getElementById(
-"topColor"
-).value;
-
-}
-
-/* Intro */
+)
+.value;
 
 openDialogue(
 
 "Principal Solara",
 
-"Welcome to Everstar Academy. This week you will take the Qualification Trials. Speak to every professor and discover your future."
+"Welcome to Everstar Academy. Speak with each professor and begin Qualification Week."
 
 );
 
@@ -2321,27 +2416,28 @@ showMessage(
 }
 
 /* =====================
-PROFESSION SYSTEM
+PROFESSIONS
 ===================== */
 
 function assignProfession(){
 
-let highest =
-Math.max(
-animalScore,
-natureScore,
-knowledgeScore,
-adventureScore
-);
+if(
 
-if(highest >= 4){
+animalScore >= 3 &&
+natureScore >= 1 &&
+knowledgeScore >= 1 &&
+adventureScore >= 1
+
+){
 
 profession =
 "Junior Guardian";
 
 }
 else if(
-animalScore === highest
+animalScore >= natureScore &&
+animalScore >= knowledgeScore &&
+animalScore >= adventureScore
 ){
 
 profession =
@@ -2349,7 +2445,7 @@ profession =
 
 }
 else if(
-natureScore === highest
+natureScore >= knowledgeScore
 ){
 
 profession =
@@ -2357,7 +2453,7 @@ profession =
 
 }
 else if(
-knowledgeScore === highest
+knowledgeScore >= adventureScore
 ){
 
 profession =
@@ -2374,14 +2470,23 @@ profession =
 document
 .getElementById(
 "profession"
-).innerText =
+)
+.innerText =
 profession;
+
+document
+.getElementById(
+"questTracker"
+)
+.innerHTML =
+
+"Quest:<br>Graduation Complete";
 
 openDialogue(
 
 "Principal Solara",
 
-"You have completed Qualification Week. Your profession is: " + profession + "."
+"Congratulations. Your assigned profession is " + profession + "."
 
 );
 
@@ -2399,10 +2504,10 @@ const viewportHeight =
 window.innerHeight;
 
 let cameraX =
-x - viewportWidth/2;
+x - viewportWidth / 2;
 
 let cameraY =
-y - viewportHeight/2;
+y - viewportHeight / 2;
 
 cameraX =
 Math.max(
@@ -2439,8 +2544,23 @@ PLAYER
 
 function updatePlayer(){
 
-x = Math.max(0,Math.min(x,4940));
-y = Math.max(0,Math.min(y,4940));
+x =
+Math.max(
+0,
+Math.min(
+x,
+4940
+)
+);
+
+y =
+Math.max(
+0,
+Math.min(
+y,
+4940
+)
+);
 
 const player =
 document.getElementById(
@@ -2476,16 +2596,16 @@ return;
 const speed = 15;
 
 if(e.key==="ArrowUp")
-y-=speed;
+y -= speed;
 
 if(e.key==="ArrowDown")
-y+=speed;
+y += speed;
 
 if(e.key==="ArrowLeft")
-x-=speed;
+x -= speed;
 
 if(e.key==="ArrowRight")
-x+=speed;
+x += speed;
 
 updatePlayer();
 
@@ -2509,7 +2629,7 @@ document.getElementById(
 joystick.addEventListener(
 "touchstart",
 ()=>{
-dragging=true;
+dragging = true;
 }
 );
 
@@ -2528,11 +2648,11 @@ joystick.getBoundingClientRect();
 
 let dx =
 touch.clientX -
-(rect.left+60);
+(rect.left + 75);
 
 let dy =
 touch.clientY -
-(rect.top+60);
+(rect.top + 75);
 
 const dist =
 Math.sqrt(
@@ -2540,24 +2660,24 @@ dx*dx +
 dy*dy
 );
 
-if(dist>40){
+if(dist > 55){
 
-dx=
-dx/dist*40;
+dx =
+dx/dist*55;
 
-dy=
-dy/dist*40;
+dy =
+dy/dist*55;
 
 }
 
-joyX=dx;
-joyY=dy;
+joyX = dx;
+joyY = dy;
 
 stick.style.left =
-(30+dx)+"px";
+(37 + dx) + "px";
 
 stick.style.top =
-(30+dy)+"px";
+(37 + dy) + "px";
 
 },
 {passive:false}
@@ -2567,24 +2687,30 @@ joystick.addEventListener(
 "touchend",
 ()=>{
 
-dragging=false;
+dragging = false;
 
-joyX=0;
-joyY=0;
+joyX = 0;
+joyY = 0;
 
-stick.style.left="30px";
-stick.style.top="30px";
+stick.style.left =
+"37px";
+
+stick.style.top =
+"37px";
 
 }
 );
 
 /* =====================
-NPC DIALOGUE
+NPCS
 ===================== */
 
 function checkNPCs(){
 
-if(dialogueOpen)
+if(
+dialogueOpen ||
+recentlyClosedDialogue
+)
 return;
 
 document
@@ -2605,16 +2731,26 @@ dy*dy
 
 if(dist < 75){
 
+if(talkedTo[npc.id])
+return;
+
+talkedTo[npc.id] = true;
+
+document
+.getElementById(
+"questTracker"
+)
+.innerHTML =
+
+"Quest:<br>Visit a region portal";
+
 switch(npc.id){
 
 case "solara":
 
 openDialogue(
-
 "Principal Solara",
-
-"Welcome to Qualification Week. Speak with every professor and complete your trials."
-
+"Welcome to Qualification Week. Speak with every professor and learn about Everstar."
 );
 
 break;
@@ -2624,11 +2760,8 @@ case "willow":
 natureScore = 1;
 
 openDialogue(
-
 "Professor Willow",
-
-"Nature responds to patience. Visit the Earth Region and study the plants."
-
+"Life grows wherever it is nurtured. Explore the Earth Region and study its plants."
 );
 
 break;
@@ -2638,11 +2771,8 @@ case "ember":
 adventureScore = 1;
 
 openDialogue(
-
 "Professor Ember",
-
-"True courage comes from exploring beyond what is familiar."
-
+"Courage is not fearlessness. Explore the Fire Region and learn from challenge."
 );
 
 break;
@@ -2652,11 +2782,8 @@ case "tide":
 animalScore = 1;
 
 openDialogue(
-
 "Professor Tide",
-
-"Animals are our partners. Visit the fields and learn from them."
-
+"Animals are our friends and partners. Visit the training fields and observe them."
 );
 
 break;
@@ -2666,11 +2793,8 @@ case "nimbus":
 knowledgeScore = 1;
 
 openDialogue(
-
 "Professor Nimbus",
-
-"Stars guide us all. Remember that every child has a star."
-
+"Every student is born beneath a guiding star."
 );
 
 break;
@@ -2736,13 +2860,21 @@ dx*dx +
 dy*dy
 );
 
-if(dist < 60){
+if(
+
+dist < 60 &&
+Date.now() - lastTeleport > 2000
+
+){
+
+lastTeleport =
+Date.now();
 
 x = p.x;
 y = p.y;
 
 showMessage(
-"Traveling..."
+"Travelling..."
 );
 
 }
@@ -2758,7 +2890,9 @@ ANIMAL TRIALS
 function checkAnimals(){
 
 document
-.querySelectorAll(".animal")
+.querySelectorAll(
+".animal"
+)
 .forEach(animal=>{
 
 if(animal.dataset.done)
@@ -2776,7 +2910,7 @@ dx*dx +
 dy*dy
 );
 
-if(dist<60){
+if(dist < 60){
 
 animal.dataset.done =
 "true";
@@ -2791,10 +2925,12 @@ showMessage(
 );
 
 if(
-animalScore >= 4 &&
+
+animalScore >= 3 &&
 natureScore >= 1 &&
 knowledgeScore >= 1 &&
 adventureScore >= 1
+
 ){
 
 assignProfession();
@@ -2837,6 +2973,7 @@ document
 "regionLabel"
 )
 .innerText =
+
 "Region: " +
 region;
 
@@ -2868,9 +3005,12 @@ STARTUP
 ===================== */
 
 updatePreview();
+
 randomCharacter();
 
 updatePlayer();
+
+updateCamera();
 
 loop();
 
