@@ -3,131 +3,114 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta
 name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
-<title>Everstar v0.3</title>
+<title>Everstar v0.4</title>
 
 <style>
 
 *{
+margin:0;
+padding:0;
 box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
 body{
-
-margin:0;
 overflow:hidden;
-
-font-family:
-Arial,
-sans-serif;
-
 background:black;
-
 touch-action:none;
-
 }
 
-#viewport{
+/* =========================
+WORLD
+========================= */
 
+#viewport{
 width:100vw;
 height:100vh;
-
 overflow:hidden;
-
 position:relative;
-
 }
 
 #game{
 
 position:relative;
 
-width:4000px;
-height:4000px;
+width:5000px;
+height:5000px;
 
 background:
 linear-gradient(
-to bottom,
-#8dd9ff,
-#9cf09b
+180deg,
+#8fdfff 0%,
+#8cf58f 100%
 );
 
 }
 
+/* =========================
+CHARACTER CREATOR
+========================= */
+
 #characterScreen{
 
 position:fixed;
-
 inset:0;
 
 overflow:auto;
 
 background:
-
 linear-gradient(
 180deg,
-#1d2248,
-#293a7a
+#17224d,
+#324695
 );
+
+z-index:99999;
 
 color:white;
 
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
 padding:20px;
-
-z-index:99999;
 
 }
 
 #creatorPanel{
 
-width:min(
-95vw,
-450px
-);
+max-width:520px;
+
+margin:auto;
+
+padding:20px;
+
+border-radius:20px;
 
 background:
 rgba(
 255,
 255,
 255,
-0.1
+0.15
 );
-
-padding:20px;
-
-border-radius:16px;
-
-backdrop-filter:
-blur(8px);
 
 }
 
 #creatorPanel h1{
-
 text-align:center;
-
-margin-top:0;
-
+margin-bottom:15px;
 }
 
 .creatorRow{
 
-margin-bottom:12px;
-
 display:flex;
-
 flex-direction:column;
 
-gap:4px;
+gap:5px;
+
+margin-bottom:12px;
 
 }
 
@@ -145,32 +128,46 @@ padding:10px;
 
 font-size:16px;
 
-border-radius:8px;
-
 border:none;
+
+border-radius:10px;
 
 }
 
+/* =========================
+BUTTONS
+========================= */
+
 #randomButton{
 
-background:#ffd84f;
+background:#ffd95e;
+
+font-weight:bold;
+
 cursor:pointer;
 
 }
 
 #enterButton{
 
-background:#78ff8f;
+background:#7cff97;
+
+font-weight:bold;
+
 cursor:pointer;
 
 }
+
+/* =========================
+CHARACTER PREVIEW
+========================= */
 
 #previewCharacter{
 
 position:relative;
 
-width:120px;
-height:220px;
+width:140px;
+height:260px;
 
 margin:20px auto;
 
@@ -180,21 +177,18 @@ margin:20px auto;
 
 position:absolute;
 
-left:30px;
-top:12px;
+left:35px;
+top:10px;
 
-width:60px;
+width:70px;
 height:20px;
 
 background:brown;
 
 border-radius:
-15px
-15px
-5px
-5px;
+15px 15px 5px 5px;
 
-z-index:10;
+z-index:20;
 
 }
 
@@ -202,11 +196,11 @@ z-index:10;
 
 position:absolute;
 
-left:30px;
+left:35px;
 top:20px;
 
-width:60px;
-height:60px;
+width:70px;
+height:70px;
 
 background:#f8d8bd;
 
@@ -225,33 +219,29 @@ background:black;
 
 border-radius:50%;
 
-top:22px;
+top:28px;
 
 }
 
 .previewEye.left{
-
-left:15px;
-
+left:18px;
 }
 
 .previewEye.right{
-
-right:15px;
-
+right:18px;
 }
 
 #previewBody{
 
 position:absolute;
 
-left:40px;
-top:80px;
+left:47px;
+top:92px;
 
-width:40px;
-height:50px;
+width:46px;
+height:60px;
 
-background:#4466ff;
+background:#4d71ff;
 
 border-radius:8px;
 
@@ -261,11 +251,11 @@ border-radius:8px;
 
 position:absolute;
 
-left:35px;
-top:78px;
+left:40px;
+top:88px;
 
-width:50px;
-height:54px;
+width:60px;
+height:64px;
 
 background:transparent;
 
@@ -277,18 +267,17 @@ border-radius:8px;
 
 position:absolute;
 
-left:30px;
-top:120px;
+left:35px;
+top:138px;
 
-width:60px;
-height:55px;
+width:70px;
+height:70px;
 
 background:transparent;
 
 clip-path:
-
 polygon(
-50% 0,
+50% 0%,
 100% 100%,
 0% 100%
 );
@@ -299,11 +288,11 @@ polygon(
 
 position:absolute;
 
-left:45px;
-top:130px;
+left:53px;
+top:155px;
 
-width:30px;
-height:30px;
+width:34px;
+height:35px;
 
 background:#333;
 
@@ -313,11 +302,11 @@ background:#333;
 
 position:absolute;
 
-left:43px;
-top:160px;
+left:50px;
+top:190px;
 
-width:34px;
-height:10px;
+width:40px;
+height:12px;
 
 background:black;
 
@@ -325,60 +314,18 @@ border-radius:4px;
 
 }
 
-#ui{
-
-position:fixed;
-
-left:10px;
-top:10px;
-
-background:white;
-
-padding:12px;
-
-border-radius:12px;
-
-max-width:260px;
-
-z-index:999;
-
-}
-
-#regionLabel{
-
-position:fixed;
-
-top:10px;
-right:10px;
-
-background:white;
-
-padding:10px;
-
-border-radius:10px;
-
-z-index:999;
-
-}
-
-#message{
-
-margin-top:10px;
-
-font-weight:bold;
-
-color:purple;
-
-}
+/* =========================
+PLAYER
+========================= */
 
 #player{
 
 position:absolute;
 
 width:60px;
-height:100px;
+height:110px;
 
-z-index:50;
+z-index:500;
 
 }
 
@@ -386,21 +333,18 @@ z-index:50;
 
 position:absolute;
 
-left:9px;
+left:8px;
 top:0;
 
-width:42px;
-height:20px;
+width:44px;
+height:18px;
 
 background:brown;
 
 border-radius:
-15px
-15px
-6px
-6px;
+15px 15px 5px 5px;
 
-z-index:10;
+z-index:5;
 
 }
 
@@ -414,9 +358,9 @@ top:10px;
 width:40px;
 height:40px;
 
-border-radius:50%;
-
 background:#f8d8bd;
+
+border-radius:50%;
 
 }
 
@@ -436,28 +380,24 @@ top:15px;
 }
 
 #leftEye{
-
 left:10px;
-
 }
 
 #rightEye{
-
 right:10px;
-
 }
 
 #playerBody{
 
 position:absolute;
 
-left:16px;
+left:15px;
 top:50px;
 
-width:28px;
-height:35px;
+width:30px;
+height:40px;
 
-background:blue;
+background:#4d71ff;
 
 border-radius:8px;
 
@@ -471,7 +411,7 @@ left:12px;
 top:48px;
 
 width:36px;
-height:39px;
+height:44px;
 
 background:transparent;
 
@@ -484,7 +424,7 @@ border-radius:8px;
 position:absolute;
 
 left:8px;
-top:70px;
+top:72px;
 
 width:44px;
 height:28px;
@@ -492,9 +432,8 @@ height:28px;
 background:transparent;
 
 clip-path:
-
 polygon(
-50% 0,
+50% 0%,
 100% 100%,
 0% 100%
 );
@@ -505,13 +444,13 @@ polygon(
 
 position:absolute;
 
-left:19px;
-top:85px;
+left:20px;
+top:90px;
 
-width:22px;
+width:20px;
 height:18px;
 
-background:#222;
+background:#333;
 
 }
 
@@ -520,7 +459,7 @@ background:#222;
 position:absolute;
 
 left:17px;
-top:101px;
+top:104px;
 
 width:26px;
 height:8px;
@@ -530,12 +469,137 @@ background:black;
 border-radius:4px;
 
 }
+/* =================================
+UI
+================================= */
+
+#ui{
+
+position:fixed;
+
+top:10px;
+left:10px;
+
+padding:12px;
+
+background:
+rgba(255,255,255,.95);
+
+border-radius:12px;
+
+max-width:300px;
+
+z-index:5000;
+
+}
+
+#regionLabel{
+
+position:fixed;
+
+top:10px;
+right:10px;
+
+padding:10px;
+
+background:white;
+
+border-radius:12px;
+
+font-weight:bold;
+
+z-index:5000;
+
+}
+
+#message{
+
+margin-top:10px;
+
+font-weight:bold;
+
+color:#6933d3;
+
+}
+
+/* =================================
+DIALOGUE
+================================= */
+
+#dialogueBox{
+
+position:fixed;
+
+left:50%;
+bottom:20px;
+
+transform:
+translateX(-50%);
+
+width:min(90vw,700px);
+
+background:
+rgba(25,25,35,.96);
+
+padding:16px;
+
+border-radius:16px;
+
+border:
+3px solid gold;
+
+display:none;
+
+z-index:99999;
+
+color:white;
+
+}
+
+#dialogueSpeaker{
+
+font-size:20px;
+
+font-weight:bold;
+
+color:gold;
+
+margin-bottom:10px;
+
+}
+
+#dialogueText{
+
+line-height:1.5;
+
+margin-bottom:10px;
+
+}
+
+#closeDialogue{
+
+padding:8px 14px;
+
+border:none;
+
+border-radius:8px;
+
+background:gold;
+
+cursor:pointer;
+
+}
+
+/* =================================
+JOYSTICK
+================================= */
+
 #joystick{
 
 position:fixed;
 
-left:25px;
-bottom:25px;
+left:20px;
+bottom:20px;
 
 width:120px;
 height:120px;
@@ -553,7 +617,7 @@ rgba(
 border:
 3px solid white;
 
-z-index:2000;
+z-index:9000;
 
 }
 
@@ -573,59 +637,18 @@ background:white;
 
 }
 
-.region{
-
-position:absolute;
-
-font-size:24px;
-
-font-weight:bold;
-
-color:white;
-
-text-shadow:
-2px 2px 4px black;
-
-}
-
-.animal{
-
-position:absolute;
-
-width:40px;
-height:40px;
-
-border-radius:50%;
-
-}
-
-.unicorn{
-
-background:white;
-
-border:
-2px solid hotpink;
-
-}
-
-.lavawolf{
-
-background:
-orangered;
-
-border:
-2px solid black;
-
-}
+/* =================================
+NPCS
+================================= */
 
 .npc{
 
 position:absolute;
 
-width:65px;
+width:70px;
 height:110px;
 
-z-index:25;
+z-index:100;
 
 }
 
@@ -633,7 +656,7 @@ z-index:25;
 
 position:absolute;
 
-left:10px;
+left:12px;
 top:0;
 
 width:45px;
@@ -642,12 +665,9 @@ height:18px;
 background:brown;
 
 border-radius:
-15px
-15px
-5px
-5px;
+15px 15px 5px 5px;
 
-z-index:5;
+z-index:10;
 
 }
 
@@ -655,7 +675,7 @@ z-index:5;
 
 position:absolute;
 
-left:12px;
+left:14px;
 top:10px;
 
 width:40px;
@@ -683,15 +703,11 @@ top:15px;
 }
 
 .npc-eye.left{
-
 left:10px;
-
 }
 
 .npc-eye.right{
-
 right:10px;
-
 }
 
 .npc-body{
@@ -701,12 +717,12 @@ position:absolute;
 left:18px;
 top:50px;
 
-width:28px;
-height:35px;
-
-background:#4d71ff;
+width:32px;
+height:38px;
 
 border-radius:8px;
+
+background:#4d71ff;
 
 }
 
@@ -714,10 +730,10 @@ border-radius:8px;
 
 position:absolute;
 
-left:20px;
-top:85px;
+left:22px;
+top:88px;
 
-width:24px;
+width:22px;
 height:18px;
 
 background:#333;
@@ -728,19 +744,318 @@ background:#333;
 
 position:absolute;
 
-top:102px;
-
-background:white;
-
-padding:2px;
-
-border-radius:4px;
+top:105px;
 
 font-size:10px;
 
+background:white;
+
+padding:2px 4px;
+
+border-radius:4px;
+
 white-space:nowrap;
 
-left:-10px;
+left:-5px;
+
+}
+
+/* =================================
+ACADEMY STAR COURTYARD
+================================= */
+
+#academyStar{
+
+position:absolute;
+
+left:2150px;
+top:2150px;
+
+width:700px;
+height:700px;
+
+background:#efe1ac;
+
+clip-path:
+polygon(
+50% 0,
+65% 35%,
+100% 50%,
+65% 65%,
+50% 100%,
+35% 65%,
+0 50%,
+35% 35%
+);
+
+z-index:1;
+
+}
+
+#academy{
+
+position:absolute;
+
+left:2350px;
+top:2350px;
+
+width:300px;
+height:200px;
+
+background:#d2aa6c;
+
+border:
+8px solid #7a4d20;
+
+border-radius:20px;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+font-size:34px;
+font-weight:bold;
+
+z-index:10;
+
+}
+
+/* =================================
+PORTALS
+================================= */
+
+.portal{
+
+position:absolute;
+
+width:120px;
+height:120px;
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+font-size:24px;
+font-weight:bold;
+
+color:white;
+
+border:
+5px solid white;
+
+box-shadow:
+0 0 30px white;
+
+z-index:20;
+
+}
+
+.airPortal{
+
+background:
+radial-gradient(
+white,
+#8fdfff
+);
+
+}
+
+.firePortal{
+
+background:
+radial-gradient(
+#ffdd8e,
+#ff6924
+);
+
+}
+
+.waterPortal{
+
+background:
+radial-gradient(
+#d1fcff,
+#33a8ff
+);
+
+}
+
+.earthPortal{
+
+background:
+radial-gradient(
+#caffb5,
+#349f4c
+);
+
+}
+
+/* =================================
+TREES & PLANTS
+================================= */
+
+.tree{
+
+position:absolute;
+
+width:50px;
+height:80px;
+
+}
+
+.tree::before{
+
+content:"";
+
+position:absolute;
+
+left:15px;
+top:35px;
+
+width:20px;
+height:45px;
+
+background:#7a4d20;
+
+}
+
+.tree::after{
+
+content:"";
+
+position:absolute;
+
+width:50px;
+height:50px;
+
+background:#2f9e44;
+
+border-radius:50%;
+
+}
+
+.flower{
+
+position:absolute;
+
+width:10px;
+height:10px;
+
+background:pink;
+
+border-radius:50%;
+
+box-shadow:
+10px 0 pink,
+-10px 0 pink,
+0 10px pink,
+0 -10px pink;
+
+}
+
+/* Water Region */
+
+.waterPlant{
+
+position:absolute;
+
+width:12px;
+height:35px;
+
+background:#5ac7ff;
+
+border-radius:10px;
+
+}
+
+/* Earth Region */
+
+.earthPlant{
+
+position:absolute;
+
+width:20px;
+height:35px;
+
+background:#33b44a;
+
+border-radius:
+0 0 50% 50%;
+
+}
+
+/* Air Region */
+
+.airPlant{
+
+position:absolute;
+
+width:18px;
+height:18px;
+
+background:white;
+
+border-radius:50%;
+
+box-shadow:
+0 0 10px white;
+
+}
+
+/* Fire Region */
+
+.firePlant{
+
+position:absolute;
+
+width:18px;
+height:35px;
+
+background:orange;
+
+clip-path:
+polygon(
+50% 0%,
+100% 100%,
+0% 100%
+);
+
+}
+
+/* =================================
+ANIMALS
+================================= */
+
+.animal{
+
+position:absolute;
+
+width:40px;
+height:40px;
+
+border-radius:50%;
+
+}
+
+.unicorn{
+
+background:white;
+
+border:
+2px solid hotpink;
+
+}
+
+.lavawolf{
+
+background:orangered;
+
+border:
+2px solid black;
 
 }
 
@@ -748,155 +1063,117 @@ left:-10px;
 </head>
 
 <body>
+<!-- =========================
+CHARACTER CREATOR
+========================= -->
 
 <div id="characterScreen">
 
 <div id="creatorPanel">
 
-<h1>🌟 EVERSTAR 🌟</h1>
+<h1>🌟 Everstar Academy 🌟</h1>
+
+<p style="margin-bottom:15px;">
+Every child in Everstar attends the Academy before taking Qualification Week.
+</p>
 
 <div id="previewCharacter">
 
 <div id="previewHair"></div>
 
 <div id="previewHead">
-
-<div
-class="previewEye left">
-</div>
-
-<div
-class="previewEye right">
-</div>
-
+<div class="previewEye left"></div>
+<div class="previewEye right"></div>
 </div>
 
 <div id="previewBody"></div>
-
 <div id="previewJacket"></div>
-
 <div id="previewDress"></div>
-
 <div id="previewLegs"></div>
-
 <div id="previewShoes"></div>
 
 </div>
 
 <div class="creatorRow">
 <label>Name</label>
-<input
-id="playerName"
-placeholder="Player Name">
+<input id="playerName" placeholder="Student Name">
 </div>
 
 <div class="creatorRow">
 <label>Gender</label>
-
 <select id="gender">
-
 <option>Girl</option>
 <option>Boy</option>
-
 </select>
 </div>
 
 <div class="creatorRow">
-
 <label>Skin Tone</label>
-
 <select id="skinTone">
-
 <option value="#f8d8bd">Light</option>
-<option value="#e1b899">Tan</option>
+<option value="#e0b190">Tan</option>
 <option value="#c68642">Brown</option>
 <option value="#8d5524">Dark Brown</option>
-
 </select>
-
 </div>
 
 <div class="creatorRow">
-
 <label>Hair Style</label>
-
 <select id="hairStyle">
-
 <option>Short</option>
 <option>Long</option>
-<option>Spiky</option>
 <option>Ponytail</option>
-<option>Curly</option>
 <option>Braids</option>
-
+<option>Curly</option>
+<option>Spiky</option>
 </select>
-
 </div>
 
 <div class="creatorRow">
-
 <label>Hair Color</label>
-
 <input
 type="color"
 id="hairColor"
 value="#5c3a21">
-
 </div>
 
 <div class="creatorRow">
-
 <label>Outfit</label>
-
 <select id="outfitType">
-
 <option>Shirt</option>
 <option>Jacket</option>
 <option>Dress</option>
-
 </select>
-
 </div>
 
 <div class="creatorRow">
-
 <label>Top Color</label>
-
 <input
 type="color"
 id="topColor"
-value="#4466ff">
-
+value="#4d71ff">
 </div>
 
 <div class="creatorRow">
-
 <label>Pants Color</label>
-
 <input
 type="color"
 id="pantsColor"
 value="#333333">
-
 </div>
 
 <div class="creatorRow">
-
 <label>Shoe Color</label>
-
 <input
 type="color"
 id="shoeColor"
 value="#000000">
-
 </div>
 
 <button
 id="randomButton"
 onclick="randomCharacter()">
-
 🎲 Random Character
-
 </button>
 
 <br><br>
@@ -904,26 +1181,28 @@ onclick="randomCharacter()">
 <button
 id="enterButton"
 onclick="startGame()">
-
-Enter Everstar
-
+Begin Qualification Week
 </button>
 
 </div>
 
 </div>
 
+<!-- =========================
+UI
+========================= -->
+
 <div id="ui">
 
 <b id="playerDisplayName">
-Traveler
+Student
 </b>
 
 <br><br>
 
-Guardian Rank:
-<span id="rank">
-Apprentice
+Rank:
+<span id="profession">
+Student
 </span>
 
 <br><br>
@@ -933,282 +1212,660 @@ Star:
 Unknown
 </span>
 
-<br><br>
-
-Animals:
-<span id="animalsFound">
-0
-</span>
-
 <div id="message">
-
-Welcome to Everstar
-
+Welcome to Everstar Academy.
 </div>
 
 </div>
 
 <div id="regionLabel">
+Region: Academy Grounds
+</div>
 
-Region: Wilderness
+<!-- =========================
+DIALOGUE
+========================= -->
+
+<div id="dialogueBox">
+
+<div id="dialogueSpeaker">
+Speaker
+</div>
+
+<div id="dialogueText">
+Dialogue
+</div>
+
+<button id="closeDialogue">
+Continue
+</button>
 
 </div>
+
+<!-- =========================
+WORLD
+========================= -->
 
 <div id="viewport">
 
 <div id="game">
+
+<!-- Academy Star Courtyard -->
+
+<div id="academyStar"></div>
+
+<!-- Academy -->
+
+<div id="academy">
+🏫 Academy
+</div>
+
+<!-- AIR PORTAL -->
+
+<div
+class="portal airPortal"
+id="airPortal"
+style="
+left:2440px;
+top:2050px;">
+☁️
+</div>
+
+<!-- FIRE PORTAL -->
+
+<div
+class="portal firePortal"
+id="firePortal"
+style="
+left:2730px;
+top:2440px;">
+🔥
+</div>
+
+<!-- WATER PORTAL -->
+
+<div
+class="portal waterPortal"
+id="waterPortal"
+style="
+left:2440px;
+top:2730px;">
+🌊
+</div>
+
+<!-- EARTH PORTAL -->
+
+<div
+class="portal earthPortal"
+id="earthPortal"
+style="
+left:2150px;
+top:2440px;">
+🌿
+</div>
+
+<!-- PLAYER -->
 
 <div id="player">
 
 <div id="playerHair"></div>
 
 <div id="playerHead">
-
-<div
-class="eye"
-id="leftEye">
-</div>
-
-<div
-class="eye"
-id="rightEye">
-</div>
-
+<div class="eye" id="leftEye"></div>
+<div class="eye" id="rightEye"></div>
 </div>
 
 <div id="playerBody"></div>
-
 <div id="playerJacket"></div>
-
 <div id="playerDress"></div>
-
 <div id="playerLegs"></div>
-
 <div id="playerShoes"></div>
 
 </div>
 
-<div
-class="animal unicorn"
-style="left:500px;top:700px;">
-</div>
-
-<div
-class="animal lavawolf"
-style="left:1900px;top:900px;">
-</div>
-
-<div
-class="region"
-style="left:350px;top:650px;">
-
-🦄 Unicorn Falls
-
-</div>
-
-<div
-class="region"
-style="left:1750px;top:800px;">
-
-🌋 Dark Forest of Doom
-
-</div>
-
-<div
-class="region"
-style="left:3000px;top:450px;">
-
-☁️ Air Region
-
-</div>
-
-<div
-class="region"
-style="left:3200px;top:2500px;">
-
-🔥 Fire Region
-
-</div>
-
-<div
-class="region"
-style="left:1100px;top:2900px;">
-
-🌿 Earth Region
-
-</div>
-
-<div
-class="region"
-style="left:500px;top:2500px;">
-
-🌊 Water Region
-
-</div>
-
-<!-- Ancient Sage -->
+<!-- PRINCIPAL SOLARA -->
 
 <div
 class="npc"
-id="sage"
+id="solara"
 style="
-left:2500px;
-top:1200px;">
-
-<div class="npc-hair"></div>
-
-<div class="npc-head">
+left:2480px;
+top:2480px;">
 
 <div
-class="npc-eye left">
-</div>
-
-<div
-class="npc-eye right">
-</div>
-
-</div>
-
-<div
-class="npc-body"
-style="
-background:purple;">
-</div>
-
-<div class="npc-legs"></div>
-
-<div class="npc-name">
-Ancient Sage
-</div>
-
-</div>
-
-<!-- Unicorn Keeper -->
-
-<div
-class="npc"
-id="keeper"
-style="
-left:650px;
-top:650px;">
-
-<div class="npc-hair"
+class="npc-hair"
 style="
 background:gold;">
 </div>
 
 <div class="npc-head">
 
-<div
-class="npc-eye left">
-</div>
-
-<div
-class="npc-eye right">
-</div>
+<div class="npc-eye left"></div>
+<div class="npc-eye right"></div>
 
 </div>
 
 <div
 class="npc-body"
 style="
-background:pink;">
+background:#fff29b;">
 </div>
 
 <div class="npc-legs"></div>
 
 <div class="npc-name">
-Unicorn Keeper
+Principal Solara
 </div>
 
 </div>
 
-<!-- Wolf Ranger -->
+<!-- PROFESSOR WILLOW -->
 
 <div
 class="npc"
-id="ranger"
+id="willow"
 style="
-left:1800px;
-top:1050px;">
+left:2070px;
+top:2450px;">
 
-<div class="npc-hair"
+<div
+class="npc-hair"
 style="
-background:black;">
+background:#725033;">
 </div>
 
 <div class="npc-head">
 
-<div
-class="npc-eye left">
-</div>
-
-<div
-class="npc-eye right">
-</div>
+<div class="npc-eye left"></div>
+<div class="npc-eye right"></div>
 
 </div>
 
 <div
 class="npc-body"
 style="
-background:darkred;">
+background:green;">
 </div>
 
 <div class="npc-legs"></div>
 
 <div class="npc-name">
-Wolf Ranger
+Prof. Willow
 </div>
 
 </div>
 
+<!-- PROFESSOR EMBER -->
+
+<div
+class="npc"
+id="ember"
+style="
+left:2860px;
+top:2450px;">
+
+<div
+class="npc-hair"
+style="
+background:orangered;">
 </div>
+
+<div class="npc-head">
+
+<div class="npc-eye left"></div>
+<div class="npc-eye right"></div>
+
 </div>
+
+<div
+class="npc-body"
+style="
+background:#ff7b2f;">
+</div>
+
+<div class="npc-legs"></div>
+
+<div class="npc-name">
+Prof. Ember
+</div>
+
+</div>
+
+<!-- PROFESSOR TIDE -->
+
+<div
+class="npc"
+id="tide"
+style="
+left:2440px;
+top:2870px;">
+
+<div
+class="npc-hair"
+style="
+background:#33bfff;">
+</div>
+
+<div class="npc-head">
+
+<div class="npc-eye left"></div>
+<div class="npc-eye right"></div>
+
+</div>
+
+<div
+class="npc-body"
+style="
+background:#67c7ff;">
+</div>
+
+<div class="npc-legs"></div>
+
+<div class="npc-name">
+Prof. Tide
+</div>
+
+</div>
+
+<!-- PROFESSOR NIMBUS -->
+
+<div
+class="npc"
+id="nimbus"
+style="
+left:2440px;
+top:1870px;">
+
+<div
+class="npc-hair"
+style="
+background:white;">
+</div>
+
+<div class="npc-head">
+
+<div class="npc-eye left"></div>
+<div class="npc-eye right"></div>
+
+</div>
+
+<div
+class="npc-body"
+style="
+background:#dff7ff;">
+</div>
+
+<div class="npc-legs"></div>
+
+<div class="npc-name">
+Prof. Nimbus
+</div>
+
+</div>
+<!-- =========================
+ACADEMY DECORATIONS
+========================= -->
+
+<!-- Star Fountain -->
+
+<div
+style="
+position:absolute;
+left:2470px;
+top:2280px;
+
+width:60px;
+height:60px;
+
+border-radius:50%;
+
+background:#69dfff;
+
+border:4px solid white;
+
+z-index:20;">
+</div>
+
+<!-- Unicorn Statue -->
+
+<div
+style="
+position:absolute;
+left:2610px;
+top:2370px;
+
+font-size:48px;
+
+z-index:20;">
+🦄
+</div>
+
+<!-- Benches -->
+
+<div
+style="
+position:absolute;
+left:2290px;
+top:2390px;
+
+width:80px;
+height:18px;
+
+background:#7a4d20;
+
+border-radius:4px;
+
+z-index:15;">
+</div>
+
+<div
+style="
+position:absolute;
+left:2620px;
+top:2570px;
+
+width:80px;
+height:18px;
+
+background:#7a4d20;
+
+border-radius:4px;
+
+z-index:15;">
+</div>
+
+<!-- =========================
+ACADEMY TREES
+========================= -->
+
+<div class="tree"
+style="left:2230px;top:2230px;"></div>
+
+<div class="tree"
+style="left:2730px;top:2230px;"></div>
+
+<div class="tree"
+style="left:2230px;top:2730px;"></div>
+
+<div class="tree"
+style="left:2730px;top:2730px;"></div>
+
+<div class="tree"
+style="left:2420px;top:2050px;"></div>
+
+<div class="tree"
+style="left:2550px;top:2050px;"></div>
+
+<!-- =========================
+ACADEMY FLOWERS
+========================= -->
+
+<div class="flower"
+style="left:2280px;top:2460px;"></div>
+
+<div class="flower"
+style="left:2350px;top:2520px;"></div>
+
+<div class="flower"
+style="left:2660px;top:2460px;"></div>
+
+<div class="flower"
+style="left:2590px;top:2520px;"></div>
+
+<!-- =========================
+EARTH PORTAL FOLIAGE
+========================= -->
+
+<div class="earthPlant"
+style="left:2090px;top:2410px;"></div>
+
+<div class="earthPlant"
+style="left:2130px;top:2360px;"></div>
+
+<div class="earthPlant"
+style="left:2140px;top:2510px;"></div>
+
+<div class="earthPlant"
+style="left:2190px;top:2470px;"></div>
+
+<div class="tree"
+style="left:1990px;top:2360px;"></div>
+
+<div class="tree"
+style="left:2000px;top:2530px;"></div>
+
+<!-- =========================
+WATER PORTAL FOLIAGE
+========================= -->
+
+<div class="waterPlant"
+style="left:2410px;top:2880px;"></div>
+
+<div class="waterPlant"
+style="left:2470px;top:2920px;"></div>
+
+<div class="waterPlant"
+style="left:2550px;top:2930px;"></div>
+
+<div class="waterPlant"
+style="left:2600px;top:2890px;"></div>
+
+<div class="flower"
+style="left:2430px;top:2990px;"></div>
+
+<div class="flower"
+style="left:2570px;top:2980px;"></div>
+
+<!-- =========================
+FIRE PORTAL FOLIAGE
+========================= -->
+
+<div class="firePlant"
+style="left:2800px;top:2410px;"></div>
+
+<div class="firePlant"
+style="left:2870px;top:2370px;"></div>
+
+<div class="firePlant"
+style="left:2910px;top:2510px;"></div>
+
+<div class="firePlant"
+style="left:2820px;top:2570px;"></div>
+
+<div class="tree"
+style="left:2960px;top:2460px;"></div>
+
+<!-- =========================
+AIR PORTAL FOLIAGE
+========================= -->
+
+<div class="airPlant"
+style="left:2390px;top:1960px;"></div>
+
+<div class="airPlant"
+style="left:2450px;top:1930px;"></div>
+
+<div class="airPlant"
+style="left:2540px;top:1940px;"></div>
+
+<div class="airPlant"
+style="left:2600px;top:1980px;"></div>
+
+<div class="airPlant"
+style="left:2470px;top:1880px;"></div>
+
+<!-- =========================
+REGION LABELS
+========================= -->
+
+<div
+style="
+position:absolute;
+left:2400px;
+top:1000px;
+
+font-size:42px;
+font-weight:bold;
+
+color:white;
+
+text-shadow:
+3px 3px 6px black;">
+
+☁️ AIR REGION
+
+</div>
+
+<div
+style="
+position:absolute;
+left:3900px;
+top:2450px;
+
+font-size:42px;
+font-weight:bold;
+
+color:white;
+
+text-shadow:
+3px 3px 6px black;">
+
+🔥 FIRE REGION
+
+</div>
+
+<div
+style="
+position:absolute;
+left:2400px;
+top:3950px;
+
+font-size:42px;
+font-weight:bold;
+
+color:white;
+
+text-shadow:
+3px 3px 6px black;">
+
+🌊 WATER REGION
+
+</div>
+
+<div
+style="
+position:absolute;
+left:800px;
+top:2450px;
+
+font-size:42px;
+font-weight:bold;
+
+color:white;
+
+text-shadow:
+3px 3px 6px black;">
+
+🌿 EARTH REGION
+
+</div>
+
+<!-- =========================
+TRIAL ANIMALS
+========================= -->
+
+<!-- Unicorn Test Area -->
+
+<div
+class="animal unicorn"
+style="
+left:1000px;
+top:2500px;">
+</div>
+
+<div
+class="animal unicorn"
+style="
+left:1150px;
+top:2400px;">
+</div>
+
+<div
+class="animal unicorn"
+style="
+left:1250px;
+top:2600px;">
+</div>
+
+<!-- Lava Wolf Test Area -->
+
+<div
+class="animal lavawolf"
+style="
+left:3950px;
+top:2450px;">
+</div>
+
+<div
+class="animal lavawolf"
+style="
+left:4100px;
+top:2550px;">
+</div>
+
+<!-- =========================
+JOYSTICK
+========================= -->
 
 <div id="joystick">
 
 <div id="stick"></div>
 
 </div>
+
+</div>
+</div>
 <script>
 
-let x = 200;
-let y = 200;
+/* =====================
+PLAYER DATA
+===================== */
+
+let x = 2500;
+let y = 2500;
 
 let joyX = 0;
 let joyY = 0;
 
 let dragging = false;
+let dialogueOpen = false;
 
-let animalsFound = 0;
-
-let playerElement = "";
+let hiddenElement = "";
 let birthStar = "";
 
-let pets = [];
+let animalScore = 0;
+let natureScore = 0;
+let knowledgeScore = 0;
+let adventureScore = 0;
 
-const stars = [
-"Aurora",
-"Nova",
-"Celestia",
-"Lunaris",
-"Astrid",
-"Eclipse",
-"Vega",
-"Solara"
-];
+let profession = "Student";
+
+let qualificationStage = 0;
+
+/* =====================
+RANDOM NAMES
+===================== */
 
 const girlNames = [
 "Luna",
 "Aurora",
-"Willow",
 "Nova",
+"Willow",
 "Iris",
 "Ruby",
+"Celeste",
 "Aria",
 "Violet",
-"Celeste",
 "Sophia"
 ];
 
@@ -1217,15 +1874,26 @@ const boyNames = [
 "Atlas",
 "Leo",
 "Finn",
-"Jasper",
-"Ash",
-"Rowan",
-"Elliot",
 "Theo",
-"Felix"
+"Rowan",
+"Ash",
+"Felix",
+"Jasper",
+"Elliot"
 ];
 
-const hiddenElements = [
+const stars = [
+"Aurora",
+"Solara",
+"Vega",
+"Nova",
+"Astrid",
+"Eclipse",
+"Lunaris",
+"Celestia"
+];
+
+const elements = [
 "Fire",
 "Water",
 "Earth",
@@ -1236,14 +1904,67 @@ const hiddenElements = [
 "Death"
 ];
 
-const player =
-document.getElementById("player");
+/* =====================
+UTILITIES
+===================== */
 
-const game =
-document.getElementById("game");
+function showMessage(text){
 
-const message =
-document.getElementById("message");
+document
+.getElementById("message")
+.innerText = text;
+
+}
+
+function openDialogue(
+speaker,
+text
+){
+
+dialogueOpen = true;
+
+document
+.getElementById(
+"dialogueSpeaker"
+).innerText = speaker;
+
+document
+.getElementById(
+"dialogueText"
+).innerText = text;
+
+document
+.getElementById(
+"dialogueBox"
+).style.display =
+"block";
+
+}
+
+function closeDialogue(){
+
+dialogueOpen = false;
+
+document
+.getElementById(
+"dialogueBox"
+).style.display =
+"none";
+
+}
+
+document
+.getElementById(
+"closeDialogue"
+)
+.addEventListener(
+"click",
+closeDialogue
+);
+
+/* =====================
+RANDOM CHARACTER
+===================== */
 
 function randomCharacter(){
 
@@ -1257,9 +1978,7 @@ Math.random() < 0.5
 document
 .getElementById(
 "gender"
-)
-.value =
-gender;
+).value = gender;
 
 const names =
 gender === "Girl"
@@ -1271,8 +1990,7 @@ boyNames;
 document
 .getElementById(
 "playerName"
-)
-.value =
+).value =
 names[
 Math.floor(
 Math.random() *
@@ -1280,35 +1998,108 @@ names.length
 )
 ];
 
-const hairstyles = [
-"Short",
-"Long",
-"Spiky",
-"Ponytail",
-"Curly",
-"Braids"
-];
-
-document
-.getElementById(
-"hairStyle"
-)
-.value =
-hairstyles[
-Math.floor(
-Math.random() *
-hairstyles.length
-)
-];
-
-document
-.getElementById(
-"hairColor"
-)
-.value =
-"#5c3a21";
-
 updatePreview();
+
+}
+/* =====================
+CHARACTER PREVIEW
+===================== */
+
+function updatePreview(){
+
+const skin =
+document.getElementById(
+"skinTone"
+).value;
+
+const hairColor =
+document.getElementById(
+"hairColor"
+).value;
+
+const topColor =
+document.getElementById(
+"topColor"
+).value;
+
+const pantsColor =
+document.getElementById(
+"pantsColor"
+).value;
+
+const shoeColor =
+document.getElementById(
+"shoeColor"
+).value;
+
+const outfit =
+document.getElementById(
+"outfitType"
+).value;
+
+document
+.getElementById(
+"previewHead"
+).style.background =
+skin;
+
+document
+.getElementById(
+"previewHair"
+).style.background =
+hairColor;
+
+document
+.getElementById(
+"previewBody"
+).style.background =
+topColor;
+
+document
+.getElementById(
+"previewLegs"
+).style.background =
+pantsColor;
+
+document
+.getElementById(
+"previewShoes"
+).style.background =
+shoeColor;
+
+document
+.getElementById(
+"previewJacket"
+).style.background =
+"transparent";
+
+document
+.getElementById(
+"previewDress"
+).style.background =
+"transparent";
+
+if(outfit==="Jacket"){
+
+document
+.getElementById(
+"previewJacket"
+).style.background =
+topColor;
+
+}
+
+if(outfit==="Dress"){
+
+document
+.getElementById(
+"previewDress"
+).style.background =
+topColor;
+
+}
+
+updateHairStyle();
 
 }
 
@@ -1318,8 +2109,7 @@ const style =
 document
 .getElementById(
 "hairStyle"
-)
-.value;
+).value;
 
 const hair =
 document
@@ -1339,182 +2129,64 @@ switch(style){
 
 case "Long":
 hair.style.height =
-"45px";
-break;
-
-case "Spiky":
-hair.style.height =
-"30px";
-
-hair.style.clipPath =
-"polygon(0 100%,10% 15%,20% 100%,35% 5%,50% 100%,65% 10%,80% 100%,90% 20%,100% 100%)";
-
+"50px";
 break;
 
 case "Ponytail":
 hair.style.height =
-"35px";
-break;
-
-case "Curly":
-hair.style.height =
-"30px";
-hair.style.borderRadius =
-"50%";
+"40px";
 break;
 
 case "Braids":
 hair.style.height =
-"40px";
+"42px";
 break;
-}
+
+case "Curly":
+hair.style.height =
+"28px";
+hair.style.borderRadius =
+"50%";
+break;
+
+case "Spiky":
+
+hair.style.height =
+"30px";
+
+hair.style.clipPath =
+"polygon(0 100%,10% 10%,20% 100%,35% 0%,50% 100%,65% 15%,80% 100%,90% 20%,100% 100%)";
+
+break;
 
 }
 
-function updatePreview(){
-
-const skin =
-document
-.getElementById(
-"skinTone"
-)
-.value;
-
-const hairColor =
-document
-.getElementById(
-"hairColor"
-)
-.value;
-
-const topColor =
-document
-.getElementById(
-"topColor"
-)
-.value;
-
-const pantsColor =
-document
-.getElementById(
-"pantsColor"
-)
-.value;
-
-const shoeColor =
-document
-.getElementById(
-"shoeColor"
-)
-.value;
-
-const outfit =
-document
-.getElementById(
-"outfitType"
-)
-.value;
-
-document
-.getElementById(
-"previewHead"
-)
-.style.background =
-skin;
-
-document
-.getElementById(
-"previewHair"
-)
-.style.background =
-hairColor;
-
-document
-.getElementById(
-"previewBody"
-)
-.style.background =
-topColor;
-
-document
-.getElementById(
-"previewLegs"
-)
-.style.background =
-pantsColor;
-
-document
-.getElementById(
-"previewShoes"
-)
-.style.background =
-shoeColor;
-
-document
-.getElementById(
-"previewDress"
-)
-.style.background =
-"transparent";
-
-document
-.getElementById(
-"previewJacket"
-)
-.style.background =
-"transparent";
-
-if(
-outfit === "Dress"
-){
-
-document
-.getElementById(
-"previewDress"
-)
-.style.background =
-topColor;
-
 }
 
-if(
-outfit === "Jacket"
-){
-
 document
-.getElementById(
-"previewJacket"
+.querySelectorAll(
+"select,input"
 )
-.style.background =
-topColor;
+.forEach(control=>{
 
-}
+control.addEventListener(
+"input",
+updatePreview
+);
 
-updateHairStyle();
-}
+});
+
+/* =====================
+START GAME
+===================== */
 
 function startGame(){
 
-const name =
-document
-.getElementById(
-"playerName"
-)
-.value ||
-"Traveler";
-
-document
-.getElementById(
-"playerDisplayName"
-)
-.innerText =
-name;
-
-playerElement =
-hiddenElements[
+hiddenElement =
+elements[
 Math.floor(
 Math.random() *
-hiddenElements.length
+elements.length
 )
 ];
 
@@ -1526,382 +2198,253 @@ stars.length
 )
 ];
 
+const playerName =
+document
+.getElementById(
+"playerName"
+).value ||
+"Student";
+
+document
+.getElementById(
+"playerDisplayName"
+).innerText =
+playerName;
+
 document
 .getElementById(
 "starName"
-)
-.innerText =
+).innerText =
 birthStar;
 
 document
 .getElementById(
 "characterScreen"
-)
-.style.display =
+).style.display =
 "none";
 
-document
-.getElementById(
-"playerHair"
-)
-.style.background =
-document
-.getElementById(
-"hairColor"
-)
-.value;
+/* Appearance */
 
 document
 .getElementById(
 "playerHead"
-)
-.style.background =
+).style.background =
 document
 .getElementById(
 "skinTone"
-)
-.value;
+).value;
+
+document
+.getElementById(
+"playerHair"
+).style.background =
+document
+.getElementById(
+"hairColor"
+).value;
 
 document
 .getElementById(
 "playerBody"
-)
-.style.background =
+).style.background =
 document
 .getElementById(
 "topColor"
-)
-.value;
+).value;
 
 document
 .getElementById(
 "playerLegs"
-)
-.style.background =
+).style.background =
 document
 .getElementById(
 "pantsColor"
-)
-.value;
+).value;
 
 document
 .getElementById(
 "playerShoes"
-)
-.style.background =
+).style.background =
 document
 .getElementById(
 "shoeColor"
-)
-.value;
+).value;
 
 const outfit =
 document
 .getElementById(
 "outfitType"
-)
-.value;
-
-if(outfit==="Dress"){
-
-document
-.getElementById(
-"playerDress"
-)
-.style.background =
-document
-.getElementById(
-"topColor"
-)
-.value;
-
-}
+).value;
 
 if(outfit==="Jacket"){
 
 document
 .getElementById(
 "playerJacket"
-)
-.style.background =
+).style.background =
 document
 .getElementById(
 "topColor"
-)
-.value;
+).value;
 
 }
 
+if(outfit==="Dress"){
+
+document
+.getElementById(
+"playerDress"
+).style.background =
+document
+.getElementById(
+"topColor"
+).value;
+
+}
+
+/* Intro */
+
+openDialogue(
+
+"Principal Solara",
+
+"Welcome to Everstar Academy. This week you will take the Qualification Trials. Speak to every professor and discover your future."
+
+);
+
+qualificationStage = 1;
+
 showMessage(
-"Your star is " +
-birthStar +
-"."
+"Talk to the professors."
 );
 
 }
 
-function showMessage(text){
+/* =====================
+PROFESSION SYSTEM
+===================== */
 
-message.innerText =
-text;
+function assignProfession(){
+
+let highest =
+Math.max(
+animalScore,
+natureScore,
+knowledgeScore,
+adventureScore
+);
+
+if(highest >= 4){
+
+profession =
+"Junior Guardian";
 
 }
+else if(
+animalScore === highest
+){
+
+profession =
+"Animal Keeper";
+
+}
+else if(
+natureScore === highest
+){
+
+profession =
+"Botanist";
+
+}
+else if(
+knowledgeScore === highest
+){
+
+profession =
+"Teacher";
+
+}
+else{
+
+profession =
+"Explorer";
+
+}
+
+document
+.getElementById(
+"profession"
+).innerText =
+profession;
+
+openDialogue(
+
+"Principal Solara",
+
+"You have completed Qualification Week. Your profession is: " + profession + "."
+
+);
+
+}
+/* =====================
+CAMERA
+===================== */
 
 function updateCamera(){
 
-const w =
+const viewportWidth =
 window.innerWidth;
 
-const h =
+const viewportHeight =
 window.innerHeight;
 
-let camX =
-x - w/2;
+let cameraX =
+x - viewportWidth/2;
 
-let camY =
-y - h/2;
+let cameraY =
+y - viewportHeight/2;
 
-camX =
+cameraX =
 Math.max(
 0,
 Math.min(
-camX,
-4000-w
+cameraX,
+5000 - viewportWidth
 )
 );
 
-camY =
+cameraY =
 Math.max(
 0,
 Math.min(
-camY,
-4000-h
+cameraY,
+5000 - viewportHeight
 )
 );
-
-game.style.transform =
-`translate(${-camX}px,${-camY}px)`;
-
-}
-
-function checkAnimals(){
 
 document
-.querySelectorAll(
-".animal"
-)
-.forEach(animal=>{
+.getElementById("game")
+.style.transform =
 
-if(
-animal.dataset.found
-)
-return;
-
-const dx =
-x -
-animal.offsetLeft;
-
-const dy =
-y -
-animal.offsetTop;
-
-const dist =
-Math.sqrt(
-dx*dx +
-dy*dy
-);
-
-if(dist < 80){
-
-animal.dataset.found =
-true;
-
-animal.style.display =
-"none";
-
-animalsFound++;
-
-document
-.getElementById(
-"animalsFound"
-)
-.innerText =
-animalsFound;
-
-if(
-animal.classList
-.contains(
-"unicorn"
-)
-){
-pets.push(
-"Unicorn"
-);
-
-showMessage(
-"🦄 Unicorn joined your team!"
-);
-}
-
-if(
-animal.classList
-.contains(
-"lavawolf"
-)
-){
-pets.push(
-"Lava Wolf"
-);
-
-showMessage(
-"🐺 Lava Wolf joined your team!"
-);
-}
-
-if(
-animalsFound >= 2
-){
-
-document
-.getElementById(
-"rank"
-)
-.innerText =
-"Junior Guardian";
-
-showMessage(
-"👑 You became a Junior Guardian!"
-);
+`translate(
+${-cameraX}px,
+${-cameraY}px
+)`;
 
 }
 
-}
-
-});
-
-}
-
-function checkNPCs(){
-
-document
-.querySelectorAll(
-".npc"
-)
-.forEach(npc=>{
-
-const dx =
-x -
-npc.offsetLeft;
-
-const dy =
-y -
-npc.offsetTop;
-
-const dist =
-Math.sqrt(
-dx*dx +
-dy*dy
-);
-
-if(dist < 100){
-
-if(
-npc.id === "sage"
-){
-
-showMessage(
-"The Bronze Phoenix still lives..."
-);
-
-}
-
-if(
-npc.id === "keeper"
-){
-
-showMessage(
-"The unicorns know secrets."
-);
-
-}
-
-if(
-npc.id === "ranger"
-){
-
-showMessage(
-"Something lurks in the forest."
-);
-
-}
-
-}
-
-});
-
-}
-
-function updateRegion(){
-
-let region =
-"Wilderness";
-
-if(x < 1200 && y < 1200)
-region =
-"Unicorn Falls";
-
-if(x > 1500 && x < 2600)
-region =
-"Dark Forest of Doom";
-
-if(x > 2600 && y < 1200)
-region =
-"Air Region";
-
-if(x > 2800 && y > 1800)
-region =
-"Fire Region";
-
-if(x < 1000 && y > 2200)
-region =
-"Water Region";
-
-if(
-x > 800 &&
-x < 2000 &&
-y > 2500
-)
-region =
-"Earth Region";
-
-document
-.getElementById(
-"regionLabel"
-)
-.innerText =
-"Region: " +
-region;
-
-}
+/* =====================
+PLAYER
+===================== */
 
 function updatePlayer(){
 
-x =
-Math.max(
-0,
-Math.min(
-x,
-3940
-)
-);
+x = Math.max(0,Math.min(x,4940));
+y = Math.max(0,Math.min(y,4940));
 
-y =
-Math.max(
-0,
-Math.min(
-y,
-3940
-)
+const player =
+document.getElementById(
+"player"
 );
 
 player.style.left =
@@ -1912,20 +2455,25 @@ y + "px";
 
 updateCamera();
 
-checkAnimals();
-
 checkNPCs();
-
+checkPortals();
+checkAnimals();
 updateRegion();
 
 }
 
-document
-.addEventListener(
+/* =====================
+KEYBOARD
+===================== */
+
+document.addEventListener(
 "keydown",
 e=>{
 
-const speed = 12;
+if(dialogueOpen)
+return;
+
+const speed = 15;
 
 if(e.key==="ArrowUp")
 y-=speed;
@@ -1944,6 +2492,10 @@ updatePlayer();
 }
 );
 
+/* =====================
+JOYSTICK
+===================== */
+
 const joystick =
 document.getElementById(
 "joystick"
@@ -1954,16 +2506,14 @@ document.getElementById(
 "stick"
 );
 
-joystick
-.addEventListener(
+joystick.addEventListener(
 "touchstart",
 ()=>{
-dragging = true;
+dragging=true;
 }
 );
 
-joystick
-.addEventListener(
+joystick.addEventListener(
 "touchmove",
 e=>{
 
@@ -1990,18 +2540,18 @@ dx*dx +
 dy*dy
 );
 
-if(dist > 40){
+if(dist>40){
 
-dx =
+dx=
 dx/dist*40;
 
-dy =
+dy=
 dy/dist*40;
 
 }
 
-joyX = dx;
-joyY = dy;
+joyX=dx;
+joyY=dy;
 
 stick.style.left =
 (30+dx)+"px";
@@ -2010,62 +2560,319 @@ stick.style.top =
 (30+dy)+"px";
 
 },
-{
-passive:false
-}
+{passive:false}
 );
 
-joystick
-.addEventListener(
+joystick.addEventListener(
 "touchend",
 ()=>{
 
-dragging = false;
+dragging=false;
 
-joyX = 0;
-joyY = 0;
+joyX=0;
+joyY=0;
 
-stick.style.left =
-"30px";
-
-stick.style.top =
-"30px";
+stick.style.left="30px";
+stick.style.top="30px";
 
 }
 );
 
-function gameLoop(){
+/* =====================
+NPC DIALOGUE
+===================== */
 
-x += joyX * 0.12;
-y += joyY * 0.12;
+function checkNPCs(){
 
-updatePlayer();
-
-requestAnimationFrame(
-gameLoop
-);
-
-}
+if(dialogueOpen)
+return;
 
 document
-.querySelectorAll(
-"select,input"
-)
-.forEach(control=>{
+.querySelectorAll(".npc")
+.forEach(npc=>{
 
-control
-.addEventListener(
-"input",
-updatePreview
+const dx =
+x - npc.offsetLeft;
+
+const dy =
+y - npc.offsetTop;
+
+const dist =
+Math.sqrt(
+dx*dx +
+dy*dy
 );
+
+if(dist < 75){
+
+switch(npc.id){
+
+case "solara":
+
+openDialogue(
+
+"Principal Solara",
+
+"Welcome to Qualification Week. Speak with every professor and complete your trials."
+
+);
+
+break;
+
+case "willow":
+
+natureScore = 1;
+
+openDialogue(
+
+"Professor Willow",
+
+"Nature responds to patience. Visit the Earth Region and study the plants."
+
+);
+
+break;
+
+case "ember":
+
+adventureScore = 1;
+
+openDialogue(
+
+"Professor Ember",
+
+"True courage comes from exploring beyond what is familiar."
+
+);
+
+break;
+
+case "tide":
+
+animalScore = 1;
+
+openDialogue(
+
+"Professor Tide",
+
+"Animals are our partners. Visit the fields and learn from them."
+
+);
+
+break;
+
+case "nimbus":
+
+knowledgeScore = 1;
+
+openDialogue(
+
+"Professor Nimbus",
+
+"Stars guide us all. Remember that every child has a star."
+
+);
+
+break;
+
+}
+
+}
 
 });
 
-randomCharacter();
+}
+
+/* =====================
+PORTALS
+===================== */
+
+function checkPortals(){
+
+const portals = [
+
+{
+id:"airPortal",
+x:2500,
+y:1200
+},
+
+{
+id:"firePortal",
+x:3900,
+y:2500
+},
+
+{
+id:"waterPortal",
+x:2500,
+y:3900
+},
+
+{
+id:"earthPortal",
+x:1200,
+y:2500
+}
+
+];
+
+portals.forEach(p=>{
+
+const portal =
+document.getElementById(
+p.id
+);
+
+const dx =
+x - portal.offsetLeft;
+
+const dy =
+y - portal.offsetTop;
+
+const dist =
+Math.sqrt(
+dx*dx +
+dy*dy
+);
+
+if(dist < 60){
+
+x = p.x;
+y = p.y;
+
+showMessage(
+"Traveling..."
+);
+
+}
+
+});
+
+}
+
+/* =====================
+ANIMAL TRIALS
+===================== */
+
+function checkAnimals(){
+
+document
+.querySelectorAll(".animal")
+.forEach(animal=>{
+
+if(animal.dataset.done)
+return;
+
+const dx =
+x - animal.offsetLeft;
+
+const dy =
+y - animal.offsetTop;
+
+const dist =
+Math.sqrt(
+dx*dx +
+dy*dy
+);
+
+if(dist<60){
+
+animal.dataset.done =
+"true";
+
+animal.style.opacity =
+"0.4";
+
+animalScore++;
+
+showMessage(
+"Animal Care +1"
+);
+
+if(
+animalScore >= 4 &&
+natureScore >= 1 &&
+knowledgeScore >= 1 &&
+adventureScore >= 1
+){
+
+assignProfession();
+
+}
+
+}
+
+});
+
+}
+
+/* =====================
+REGIONS
+===================== */
+
+function updateRegion(){
+
+let region =
+"Academy Grounds";
+
+if(y < 1700)
+region =
+"Air Region";
+
+if(x > 3300)
+region =
+"Fire Region";
+
+if(y > 3300)
+region =
+"Water Region";
+
+if(x < 1700)
+region =
+"Earth Region";
+
+document
+.getElementById(
+"regionLabel"
+)
+.innerText =
+"Region: " +
+region;
+
+}
+
+/* =====================
+MAIN LOOP
+===================== */
+
+function loop(){
+
+if(!dialogueOpen){
+
+x += joyX * 0.10;
+y += joyY * 0.10;
+
+updatePlayer();
+
+}
+
+requestAnimationFrame(
+loop
+);
+
+}
+
+/* =====================
+STARTUP
+===================== */
 
 updatePreview();
+randomCharacter();
 
-gameLoop();
+updatePlayer();
+
+loop();
 
 </script>
 
