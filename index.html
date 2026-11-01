@@ -41,7 +41,6 @@
       padding: 10px 15px;
       transition: filter .15s ease, transform .15s ease;
     }
-
     button:hover { filter: brightness(1.2); }
     button:active { transform: translateY(1px); }
     button:disabled { opacity: .4; cursor: default; }
@@ -311,11 +310,7 @@
     }
 
     #preview { width: 200px; height: 250px; }
-
-    .previewLabel {
-      color: var(--gold);
-      margin-top: 5px;
-    }
+    .previewLabel { color: var(--gold); margin-top: 5px; }
 
     .formArea {
       display: grid;
@@ -332,11 +327,7 @@
     }
 
     .field.full { grid-column: 1 / -1; }
-
-    .field label {
-      font-size: 12px;
-      color: #e4d7f2;
-    }
+    .field label { font-size: 12px; color: #e4d7f2; }
 
     .field input,
     .field select {
@@ -354,11 +345,7 @@
       padding: 3px;
     }
 
-    .genderChoices {
-      display: flex;
-      gap: 7px;
-    }
-
+    .genderChoices { display: flex; gap: 7px; }
     .genderChoices button { flex: 1; }
     .genderChoices button.selected { background: #a27a49; }
 
@@ -392,6 +379,27 @@
 
     #toast.show { display: block; }
 
+    #mapPanel {
+      position: absolute;
+      right: 16px;
+      bottom: 170px;
+      width: 170px;
+      height: 170px;
+      background: rgba(20,18,37,.78);
+      border: 1px solid rgba(245,213,139,.65);
+      border-radius: 12px;
+      padding: 8px;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    #minimap {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 8px;
+    }
+
     #mapLabel {
       position: absolute;
       bottom: 12px;
@@ -421,9 +429,7 @@
       }
 
       .formArea { gap: 8px; }
-
       .field label { font-size: 11px; }
-
       .field input,
       .field select {
         padding: 8px;
@@ -459,6 +465,12 @@
       }
 
       #dialogueText { font-size: 14px; }
+
+      #mapPanel {
+        width: 130px;
+        height: 130px;
+        bottom: 140px;
+      }
     }
   </style>
 </head>
@@ -488,6 +500,10 @@
         <div id="speaker">Speaker</div>
         <div id="dialogueText"></div>
         <button id="dialogueNext">Continue ▸</button>
+      </div>
+
+      <div id="mapPanel" class="panel">
+        <canvas id="minimap" width="160" height="160"></canvas>
       </div>
 
       <div id="joystick" aria-label="Movement joystick">
@@ -626,6 +642,8 @@
     const ctx = canvas.getContext("2d");
     const previewCanvas = $("preview");
     const pctx = previewCanvas.getContext("2d");
+    const minimap = $("minimap");
+    const mctx = minimap.getContext("2d");
 
     const game = {
       started: false,
@@ -660,6 +678,7 @@
       visitedPortals: [],
       talkedTo: [],
       completedTrials: [],
+      forestOfDoomCleared: false,
       graduation: false,
       profession: "Undecided",
       quests: [],
@@ -672,31 +691,13 @@
     };
 
     const questDefinitions = [
-      {
-        title: "Welcome to Everstar",
-        description: "Meet Principal Solara in the Academy Courtyard.",
-        done: () => game.talkedTo.includes("Principal Solara")
-      },
-      {
-        title: "Meet Your Professors",
-        description: "Speak with Professor Willow, Professor Tide, Professor Ember and Professor Nimbus.",
-        done: () => ["Professor Willow", "Professor Tide", "Professor Ember", "Professor Nimbus"].every(name => game.talkedTo.includes(name))
-      },
-      {
-        title: "Explore the Regions",
-        description: "Visit at least one magical elemental portal.",
-        done: () => game.visitedPortals.length >= 1
-      },
-      {
-        title: "The Animal Trial",
-        description: "Make friends with three magical creatures.",
-        done: () => game.completedTrials.length >= 3
-      },
-      {
-        title: "Graduation Day",
-        description: "Return to Principal Solara and complete Qualification Week.",
-        done: () => game.graduation
-      }
+      { title: "Welcome to Everstar", description: "Meet Principal Solara in the Academy Courtyard.", done: () => game.talkedTo.includes("Principal Solara") },
+      { title: "Meet the Professors", description: "Speak with the four professors of the academy.", done: () => ["Professor Willow", "Professor Tide", "Professor Ember", "Professor Nimbus"].every(n => game.talkedTo.includes(n)) },
+      { title: "Trace the Portals", description: "Visit all four elemental portals.", done: () => game.visitedPortals.length >= 4 },
+      { title: "Region Watchers", description: "Speak with the wardens of Earth, Water, Fire, and Air.", done: () => ["Elder Rowan", "Mira Tidebrand", "Rook Emberfane", "Luma Skyveil"].every(n => game.talkedTo.includes(n)) },
+      { title: "Creature Bonds", description: "Befriend three magical creatures.", done: () => game.completedTrials.length >= 3 },
+      { title: "Forest of Doom", description: "Courage through the Deep Dark Forest of Doom in the Fire Region.", done: () => game.forestOfDoomCleared },
+      { title: "Graduation Day", description: "Return to Principal Solara and complete Qualification Week.", done: () => game.graduation }
     ];
 
     game.quests = questDefinitions.map(q => ({ ...q, completed: false }));
@@ -937,7 +938,7 @@
     }
 
     function addPortal(name, x, y, color, region) {
-      game.portals.push({ name, x, y, color, region });
+      game.portals.push({ name, x, y, color, region, radius: 30 });
     }
 
     function addAnimal(name, x, y, type) {
@@ -955,43 +956,50 @@
       game.decorations = [];
 
       addNPC("Principal Solara", 2500, 2440, "Academy Courtyard", "#e8b65f", "Welcome, young star! I am Principal Solara. Everstar Academy is a place where every heart has the power to shine. Your Qualification Week begins with courage, curiosity, and care.");
-      addNPC("Professor Willow", 1500, 2000, "Earth Region", "#7fbd80", "Nature remembers everything, little one. I teach the ancient art of growth and harmony. Earth is where courage takes root.");
-      addNPC("Professor Tide", 1500, 3400, "Water Region", "#65bad2", "The waters of Everstar hold stories older than the stars. Listen closely, and they may tell you yours. The Water Region is full of secrets.");
-      addNPC("Professor Ember", 3500, 3400, "Fire Region", "#e78362", "A spark is not a flame, and a flame is not a destiny. True courage comes from knowing when to shine bravely. The Fire Region teaches resilience.");
-      addNPC("Professor Nimbus", 3500, 2000, "Air Region", "#b5a8e8", "The skies are endless, and so are the possibilities of a curious mind. Knowledge gives wings to every dream. Explore the Air Region and learn.");
+      addNPC("Professor Willow", 2300, 1600, "Earth Region", "#7fbd80", "Nature remembers everything, little one. Earth is where courage takes root and dreams grow strong.");
+      addNPC("Professor Tide", 1500, 2350, "Water Region", "#65bad2", "The waters hold tales older than the stars. Listen closely, and they may tell you yours.");
+      addNPC("Professor Ember", 3500, 2350, "Fire Region", "#e78362", "A spark is not a flame, and a flame is not a destiny. The Fire Region teaches resilience.");
+      addNPC("Professor Nimbus", 2500, 3500, "Air Region", "#b5a8e8", "The sky is endless. Knowledge gives wings to every dream and courage to every step.");
 
-      addPortal("Air", 3650, 1800, "#a9e9ef", "Air Region");
-      addPortal("Fire", 3650, 3650, "#ff8956", "Fire Region");
-      addPortal("Water", 1300, 3650, "#60c8f1", "Water Region");
-      addPortal("Earth", 1300, 1800, "#8bd47e", "Earth Region");
+      addNPC("Elder Rowan", 2550, 1200, "Earth Region", "#8ed29d", "The old grove bends toward brave hearts. Seek the roots of the world for wisdom.");
+      addNPC("Mira Tidebrand", 900, 2450, "Water Region", "#96d9ff", "The tide will test your patience. Learn to flow with the currents and not against them.");
+      addNPC("Rook Emberfane", 3950, 2500, "Fire Region", "#ff9d62", "The fire is not your enemy. It is the forge that shapes the daring.");
+      addNPC("Luma Skyveil", 2500, 4100, "Air Region", "#d5dfff", "Every cloud carries a hidden path. The sky rewards those who watch carefully.");
 
-      for (let i = 0; i < 5; i++) {
-        addAnimal("Moon Unicorn", random([900,1150,1400]), random([800,1000,1200]), "unicorn");
-        addAnimal("Lava Wolf", random([3900,4100,4300]), random([3900,4100,4300]), "wolf");
+      addPortal("Earth", 2500, 1300, "#8bd47e", "Earth Region");
+      addPortal("Water", 1300, 2500, "#60c8f1", "Water Region");
+      addPortal("Fire", 3700, 2500, "#ff8956", "Fire Region");
+      addPortal("Air", 2500, 3700, "#a9e9ef", "Air Region");
+
+      addAnimal("Moon Unicorn", 900, 1100, "unicorn");
+      addAnimal("Silver Fawn", 2100, 1200, "unicorn");
+      addAnimal("Lava Wolf", 3950, 3500, "wolf");
+      addAnimal("Storm Hare", 2500, 4200, "unicorn");
+      addAnimal("Mist Lynx", 1100, 3500, "wolf");
+
+      for (let i = 0; i < 14; i++) {
+        addDecoration("tree", 1650 + Math.random() * 1600, 1500 + Math.random() * 1200, .8 + Math.random() * .7);
       }
-
-      for (let i = 0; i < 12; i++) {
-        addDecoration("tree", 1800 + Math.random() * 1400, 1900 + Math.random() * 1200, .8 + Math.random() * .7);
+      for (let i = 0; i < 18; i++) {
+        addDecoration("flower", 1800 + Math.random() * 1700, 2100 + Math.random() * 1200, .6 + Math.random() * .7);
       }
-
-      for (let i = 0; i < 15; i++) {
-        addDecoration("flower", 1900 + Math.random() * 1200, 2050 + Math.random() * 1000, .6 + Math.random() * .7);
-      }
-
       for (let i = 0; i < 5; i++) {
         addDecoration("bench", 2350 + i * 150, 2730 + (i % 2) * 75, 1);
       }
-
       addDecoration("fountain", 2500, 2780, 1.5);
       addDecoration("unicornStatue", 2500, 2300, 1.5);
+
+      for (let i = 0; i < 26; i++) {
+        addDecoration("tree", 3320 + (i % 6) * 110, 2900 + Math.floor(i / 6) * 120, .75 + Math.random() * .7);
+      }
     }
 
     function regionAt(x, y) {
-      if (x > 3200 && y < 2500) return "Air Region";
-      if (x > 3200 && y >= 2500) return "Fire Region";
-      if (x < 1800 && y >= 2500) return "Water Region";
-      if (x < 1800 && y < 2500) return "Earth Region";
-      if (x > 2100 && x < 2900 && y > 2100 && y < 2700) return "Academy Courtyard";
+      if (y < 1800) return "Earth Region";
+      if (x > 3200) return "Fire Region";
+      if (x < 1800) return "Water Region";
+      if (y > 3200) return "Air Region";
+      if (x > 2100 && x < 2900 && y > 2100 && y < 2900) return "Academy Courtyard";
       if (x > 2100 && x < 2900 && y > 1800 && y < 2800) return "Academy Building";
       return "Everstar Grounds";
     }
@@ -1014,8 +1022,7 @@
 
     function showDialogue(name, lines, onFinish = null) {
       if (game.dialogueCooldown > 0 || game.dialogue) return false;
-
-      game.dialogue = { name, lines: Array.isArray(lines) ? lines : [lines], onFinish };
+      game.dialogue = { name, lines: Array.isArray(lines) ? lines : [lines], onFinish, closed: false };
       game.dialogueIndex = 0;
       $("speaker").textContent = name;
       $("dialogueText").textContent = game.dialogue.lines[0];
@@ -1049,27 +1056,20 @@
 
     function talkToNPC(npc) {
       if (!game.started || !npc) return;
-
       const alreadyTalked = game.talkedTo.includes(npc.name);
-
       showDialogue(npc.name, [npc.description], () => {
         if (alreadyTalked) return;
-
         game.talkedTo.push(npc.name);
 
-        if (npc.name === "Principal Solara") game.scores.knowledge += 1;
-        else if (npc.name === "Professor Willow") {
-          game.scores.nature += 1;
-          game.scores.knowledge += 1;
-        } else if (npc.name === "Professor Tide") {
-          game.scores.knowledge += 1;
-        } else if (npc.name === "Professor Ember") {
-          game.scores.adventure += 1;
-          game.scores.knowledge += 1;
-        } else if (npc.name === "Professor Nimbus") {
-          game.scores.adventure += 1;
-          game.scores.knowledge += 1;
-        }
+        if (npc.name === "Professor Willow") { game.scores.nature += 1; game.scores.knowledge += 1; }
+        else if (npc.name === "Professor Tide") { game.scores.knowledge += 1; }
+        else if (npc.name === "Professor Ember") { game.scores.adventure += 1; game.scores.knowledge += 1; }
+        else if (npc.name === "Professor Nimbus") { game.scores.adventure += 1; game.scores.knowledge += 1; }
+        else if (npc.name === "Elder Rowan") { game.scores.nature += 1; }
+        else if (npc.name === "Mira Tidebrand") { game.scores.knowledge += 1; }
+        else if (npc.name === "Rook Emberfane") { game.scores.adventure += 1; }
+        else if (npc.name === "Luma Skyveil") { game.scores.knowledge += 1; }
+        else if (npc.name === "Principal Solara") { game.scores.knowledge += 1; }
 
         updateQuests();
         updateProfession();
@@ -1103,7 +1103,6 @@
 
     function updateProfession() {
       const s = game.scores;
-
       if (s.animal >= 3 && s.nature >= 1 && s.knowledge >= 1 && s.adventure >= 1) {
         game.profession = "Junior Guardian";
       } else if (s.animal >= 3) {
@@ -1117,7 +1116,6 @@
       } else {
         game.profession = "Undecided";
       }
-
       $("hudProfession").textContent = game.profession;
     }
 
@@ -1126,7 +1124,6 @@
       game.graduation = true;
       updateProfession();
       updateQuests();
-
       showDialogue("Principal Solara", [
         "You have completed Qualification Week!",
         "The Academy sees your growth, courage, and heart.",
@@ -1153,7 +1150,6 @@
       updateHUD();
       updateQuests();
       updateProfession();
-
       $("creator").style.display = "none";
       showMessage("Qualification Week begins!", 1800);
       showToast("Welcome to Everstar Academy!");
@@ -1227,11 +1223,8 @@
         game.player.x = clamp(game.player.x + moveX, 0, WORLD_SIZE);
         game.player.y = clamp(game.player.y + moveY, 0, WORLD_SIZE);
 
-        if (Math.abs(moveX) > Math.abs(moveY)) {
-          game.player.direction = moveX >= 0 ? "right" : "left";
-        } else {
-          game.player.direction = moveY >= 0 ? "down" : "up";
-        }
+        if (Math.abs(moveX) > Math.abs(moveY)) game.player.direction = moveX >= 0 ? "right" : "left";
+        else game.player.direction = moveY >= 0 ? "down" : "up";
 
         game.player.moving = true;
       } else {
@@ -1254,22 +1247,6 @@
           nearestDist = dist;
         }
       }
-
-      return nearest;
-    }
-
-    function findNearestPortal() {
-      let nearest = null;
-      let nearestDist = Infinity;
-
-      for (const portal of game.portals) {
-        const dist = Math.hypot(game.player.x - portal.x, game.player.y - portal.y);
-        if (dist < 120 && dist < nearestDist) {
-          nearest = portal;
-          nearestDist = dist;
-        }
-      }
-
       return nearest;
     }
 
@@ -1284,44 +1261,11 @@
           nearestDist = dist;
         }
       }
-
       return nearest;
-    }
-
-    function activatePortal(portal) {
-      if (!portal) return;
-      if (game.portalCooldown > 0) {
-        showMessage("Portal is recharging...", 900);
-        return;
-      }
-
-      const targets = {
-        Air: { x: 3650, y: 1800 },
-        Fire: { x: 3650, y: 3650 },
-        Water: { x: 1300, y: 3650 },
-        Earth: { x: 1300, y: 1800 }
-      };
-
-      game.portalCooldown = 2;
-      if (!game.visitedPortals.includes(portal.name)) {
-        game.visitedPortals.push(portal.name);
-      }
-
-      const to = targets[portal.name] || { x: 2500, y: 2500 };
-      game.player.x = to.x;
-      game.player.y = to.y;
-
-      game.scores.adventure += 1;
-      updateProfession();
-      updateQuests();
-      showMessage("You step through the " + portal.name + " portal!", 1500);
-      showToast("Portal entry: " + portal.name + " Region");
-      updateCamera();
     }
 
     function interactAnimal(animal) {
       if (!animal || animal.interacted) return;
-
       animal.interacted = true;
       game.completedTrials.push(animal.name);
       game.scores.animal += 1;
@@ -1342,13 +1286,6 @@
         return;
       }
 
-      const portal = findNearestPortal();
-      if (portal) {
-        game.interactionCooldown = 0.35;
-        activatePortal(portal);
-        return;
-      }
-
       const animal = findNearestAnimal();
       if (animal) {
         game.interactionCooldown = 0.35;
@@ -1359,6 +1296,60 @@
       const region = regionAt(game.player.x, game.player.y);
       showMessage("Nothing here to interact with in the " + region + ".", 1200);
       game.interactionCooldown = 0.35;
+    }
+
+    function activatePortal(portal) {
+      if (!portal) return;
+      if (game.portalCooldown > 0) {
+        showMessage("Portal is recharging...", 900);
+        return;
+      }
+
+      const destinations = {
+        Earth: { x: 2500, y: 1300 },
+        Water: { x: 1300, y: 2500 },
+        Fire: { x: 3700, y: 2500 },
+        Air: { x: 2500, y: 3700 }
+      };
+
+      game.portalCooldown = 2;
+      if (!game.visitedPortals.includes(portal.name)) game.visitedPortals.push(portal.name);
+
+      const target = destinations[portal.name] || { x: 2500, y: 2500 };
+      game.player.x = target.x;
+      game.player.y = target.y;
+      game.scores.adventure += 1;
+      updateProfession();
+      updateQuests();
+      showMessage("You step through the " + portal.name + " portal!", 1500);
+      showToast("Portal entry: " + portal.name + " Region");
+      updateCamera();
+    }
+
+    function updatePortalProximity() {
+      if (!game.started) return;
+      for (const portal of game.portals) {
+        const dist = Math.hypot(game.player.x - portal.x, game.player.y - portal.y);
+        if (dist < portal.radius + 18) {
+          activatePortal(portal);
+          return;
+        }
+      }
+    }
+
+    function triggerForestOfDoom() {
+      if (game.forestOfDoomCleared) return;
+      const inFire = regionAt(game.player.x, game.player.y) === "Fire Region";
+      if (!inFire) return;
+      const distToForest = Math.hypot(game.player.x - 4200, game.player.y - 4200);
+      if (distToForest < 200) {
+        game.forestOfDoomCleared = true;
+        game.scores.adventure += 1;
+        updateProfession();
+        updateQuests();
+        showMessage("You survived the Deep Dark Forest of Doom!", 2000);
+        showToast("Forest cleared: Deep Dark Forest of Doom");
+      }
     }
 
     document.addEventListener("keydown", (event) => {
@@ -1398,10 +1389,7 @@
 
     $("actionButton").addEventListener("click", attemptInteraction);
 
-    $("menuButton").addEventListener("click", () => {
-      $("menuPanel").classList.toggle("visible");
-    });
-
+    $("menuButton").addEventListener("click", () => $("menuPanel").classList.toggle("visible"));
     $("closeMenu").addEventListener("click", () => $("menuPanel").classList.remove("visible"));
 
     $("journalButton").addEventListener("click", () => {
@@ -1436,7 +1424,7 @@
         "Move: WASD or Arrow Keys",
         "Interact: E or Space",
         "Close Dialogue: ESC or X",
-        "Menus: Tap the Menu button on mobile"
+        "Menu: tap the Menu button on mobile"
       ]);
       $("menuPanel").classList.remove("visible");
     });
@@ -1445,107 +1433,69 @@
       if (document.hidden && game.dialogue) closeDialogue();
     });
 
-    function drawAirRegion() {
-      ctx.fillStyle = "#c9e8ff";
-      ctx.fillRect(3200, 0, 1800, 2500);
+    function drawEarthRegion() {
+      ctx.fillStyle = "#92cf7d";
+      ctx.fillRect(0, 0, 5000, 1800);
 
-      for (let i = 0; i < 15; i++) {
-        const x = 3300 + i * 110 + Math.sin(i * 1.7) * 20;
-        const y = 120 + (i % 4) * 180 + Math.cos(i * 2.1) * 25;
-        ctx.fillStyle = "rgba(255,255,255,.82)";
+      for (let i = 0; i < 24; i++) {
+        const x = 100 + i * 180;
+        const y = 250 + (i % 5) * 120;
+        ctx.fillStyle = "#6d8a45";
+        ctx.fillRect(x, y + 30, 18, 60);
+        ctx.fillStyle = "#89b96b";
         ctx.beginPath();
-        ctx.arc(x, y, 30 + (i % 3) * 8, 0, Math.PI * 2);
-        ctx.arc(x + 26, y + 10, 24 + (i % 2) * 7, 0, Math.PI * 2);
-        ctx.arc(x - 22, y + 8, 20 + (i % 2) * 6, 0, Math.PI * 2);
+        ctx.arc(x + 10, y, 30, 0, Math.PI * 2);
         ctx.fill();
       }
-
-      for (let i = 0; i < 16; i++) {
-        const x = 3300 + i * 100;
-        const y = 2000 + (i % 4) * 120;
-        ctx.strokeStyle = "rgba(255,255,255,.5)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.quadraticCurveTo(x + 30, y - 45, x + 60, y);
-        ctx.stroke();
-      }
-
-      for (let i = 0; i < 8; i++) {
-        const x = 3420 + i * 140;
-        const y = 600 + (i % 3) * 140;
-        ctx.fillStyle = "#c0d8ff";
-        ctx.fillRect(x, y + 30, 8, 75);
-        ctx.beginPath();
-        ctx.moveTo(x - 18, y + 30);
-        ctx.lineTo(x + 14, y - 10);
-        ctx.lineTo(x + 44, y + 30);
-        ctx.closePath();
-        ctx.fill();
-      }
-    }
-
-    function drawFireRegion() {
-      ctx.fillStyle = "#ffb07a";
-      ctx.fillRect(3200, 2500, 1800, 2500);
 
       for (let i = 0; i < 18; i++) {
-        const x = 3300 + (i * 90) + (i % 2) * 20;
-        const y = 2600 + (i % 5) * 140 + Math.sin(i) * 18;
-        ctx.fillStyle = "#7d2d20";
+        const x = 200 + i * 180;
+        const y = 1000 + (i % 4) * 150;
+        ctx.fillStyle = "#d6b88a";
         ctx.beginPath();
-        ctx.moveTo(x, y + 50);
-        ctx.lineTo(x + 18, y - 18);
-        ctx.lineTo(x + 36, y + 50);
+        ctx.moveTo(x, y + 28);
+        ctx.lineTo(x + 20, y - 18);
+        ctx.lineTo(x + 44, y + 28);
         ctx.closePath();
         ctx.fill();
       }
 
-      for (let i = 0; i < 22; i++) {
-        const x = 3320 + (i * 75) % 700;
-        const y = 2750 + Math.floor(i / 7) * 220 + (i % 3) * 15;
-        ctx.fillStyle = "rgba(255, 120, 40, .8)";
+      for (let i = 0; i < 24; i++) {
+        const x = 150 + i * 170;
+        const y = 1300 + (i % 6) * 80;
+        ctx.fillStyle = "#f5d690";
         ctx.beginPath();
-        ctx.arc(x, y, 18 + (i % 2) * 7, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (let i = 0; i < 11; i++) {
-        const x = 3380 + i * 120;
-        const y = 3000 + (i % 3) * 180;
-        ctx.fillStyle = "rgba(255,180,80,.25)";
-        ctx.beginPath();
-        ctx.arc(x, y, 60, 0, Math.PI * 2);
+        ctx.arc(x, y, 10, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
     function drawWaterRegion() {
       ctx.fillStyle = "#8ecbf0";
-      ctx.fillRect(0, 2500, 1800, 2500);
+      ctx.fillRect(0, 1800, 1800, 3200);
 
       ctx.fillStyle = "rgba(120, 205, 255, .7)";
       ctx.beginPath();
-      ctx.arc(900, 3500, 420, 0, Math.PI * 2);
+      ctx.arc(900, 3150, 420, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "rgba(38, 130, 179, .4)";
+      ctx.fillStyle = "rgba(38, 130, 179, .35)";
       ctx.beginPath();
-      ctx.arc(900, 3500, 260, 0, Math.PI * 2);
+      ctx.arc(900, 3150, 260, 0, Math.PI * 2);
       ctx.fill();
 
       for (let i = 0; i < 18; i++) {
-        const x = 150 + i * 85;
-        const y = 2800 + (i % 4) * 100;
+        const x = 150 + i * 90;
+        const y = 2100 + (i % 5) * 110;
         ctx.fillStyle = "#96d7a2";
         ctx.beginPath();
         ctx.ellipse(x, y, 28, 12, 0, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 20; i++) {
         const x = 180 + i * 90;
-        const y = 3100 + (i % 5) * 130;
+        const y = 2850 + (i % 5) * 130;
         ctx.strokeStyle = "rgba(255,255,255,.8)";
         ctx.lineWidth = 3;
         ctx.beginPath();
@@ -1555,40 +1505,80 @@
       }
     }
 
-    function drawEarthRegion() {
-      ctx.fillStyle = "#92cf7d";
-      ctx.fillRect(0, 0, 1800, 2500);
+    function drawFireRegion() {
+      ctx.fillStyle = "#ffb07a";
+      ctx.fillRect(3200, 1800, 1800, 3200);
 
-      for (let i = 0; i < 20; i++) {
-        const x = 150 + i * 75;
-        const y = 200 + (i % 5) * 130;
-        ctx.fillStyle = "#6d8a45";
-        ctx.fillRect(x, y + 30, 18, 50);
-        ctx.fillStyle = "#89b96b";
-        ctx.beginPath();
-        ctx.arc(x + 10, y, 28, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      ctx.fillStyle = "#3a1b1b";
+      ctx.fillRect(3350, 3300, 1350, 1250);
+      ctx.fillStyle = "#1b0b10";
+      ctx.fillRect(3520, 3520, 1000, 900);
 
-      for (let i = 0; i < 12; i++) {
-        const x = 200 + i * 120;
-        const y = 1000 + (i % 3) * 200;
-        ctx.fillStyle = "#a8a08d";
+      for (let i = 0; i < 24; i++) {
+        const x = 3350 + (i * 78) % 1200;
+        const y = 2900 + Math.floor(i / 6) * 200 + (i % 3) * 30;
+        ctx.fillStyle = "#7d2d20";
         ctx.beginPath();
-        ctx.moveTo(x, y + 30);
-        ctx.lineTo(x + 25, y - 20);
-        ctx.lineTo(x + 52, y + 30);
+        ctx.moveTo(x, y + 50);
+        ctx.lineTo(x + 18, y - 18);
+        ctx.lineTo(x + 36, y + 50);
         ctx.closePath();
         ctx.fill();
       }
 
-      for (let i = 0; i < 18; i++) {
-        const x = 90 + i * 80;
-        const y = 1500 + (i % 6) * 90;
-        ctx.fillStyle = "#f5d690";
+      for (let i = 0; i < 28; i++) {
+        const x = 3400 + (i * 67) % 1100;
+        const y = 2140 + Math.floor(i / 7) * 170;
+        ctx.fillStyle = "rgba(255, 120, 40, .8)";
         ctx.beginPath();
-        ctx.arc(x, y, 12, 0, Math.PI * 2);
+        ctx.arc(x, y, 18 + (i % 2) * 7, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      const forestX = 4200;
+      const forestY = 4200;
+      ctx.fillStyle = "#120c16";
+      ctx.fillRect(forestX - 220, forestY - 220, 440, 440);
+      for (let i = 0; i < 25; i++) {
+        const xx = forestX - 170 + (i % 5) * 80;
+        const yy = forestY - 150 + Math.floor(i / 5) * 80;
+        ctx.fillStyle = "#2a1b2d";
+        ctx.fillRect(xx, yy, 18, 80);
+        ctx.fillStyle = "#111";
+        ctx.beginPath();
+        ctx.arc(xx + 10, yy - 10, 30, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "#d7b0ff";
+      ctx.font = "bold 18px Georgia";
+      ctx.textAlign = "center";
+      ctx.fillText("Deep Dark Forest of Doom", forestX, forestY - 260);
+    }
+
+    function drawAirRegion() {
+      ctx.fillStyle = "#c9e8ff";
+      ctx.fillRect(0, 3200, 5000, 1800);
+
+      for (let i = 0; i < 24; i++) {
+        const x = 200 + i * 200 + Math.sin(i * 1.7) * 20;
+        const y = 3500 + (i % 4) * 180 + Math.cos(i * 2.1) * 25;
+        ctx.fillStyle = "rgba(255,255,255,.82)";
+        ctx.beginPath();
+        ctx.arc(x, y, 30 + (i % 3) * 8, 0, Math.PI * 2);
+        ctx.arc(x + 26, y + 10, 24 + (i % 2) * 7, 0, Math.PI * 2);
+        ctx.arc(x - 22, y + 8, 20 + (i % 2) * 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 16; i++) {
+        const x = 250 + i * 260;
+        const y = 4550 + (i % 4) * 120;
+        ctx.strokeStyle = "rgba(255,255,255,.55)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + 30, y - 45, x + 60, y);
+        ctx.stroke();
       }
     }
 
@@ -1628,20 +1618,9 @@
       }
     }
 
-    function drawGround() {
-      drawAirRegion();
-      drawFireRegion();
-      drawWaterRegion();
-      drawEarthRegion();
-      drawCourtyard();
-      drawAcademyStar();
-      drawAcademyBuilding();
-    }
-
     function drawAcademyStar() {
       ctx.save();
       ctx.translate(2500, 2500);
-
       ctx.beginPath();
       for (let i = 0; i < 8; i++) {
         const angle = -Math.PI / 2 + i * (Math.PI / 4);
@@ -1662,20 +1641,16 @@
       ctx.arc(0, 0, 38, 0, Math.PI * 2);
       ctx.fillStyle = "#8a6a3a";
       ctx.fill();
-
       ctx.restore();
     }
 
     function drawAcademyBuilding() {
       ctx.fillStyle = "#d9c7a1";
       ctx.fillRect(2250, 2300, 500, 350);
-
       ctx.fillStyle = "#c0a06e";
       ctx.fillRect(2260, 2250, 480, 70);
-
       ctx.fillStyle = "#8d6d47";
       ctx.fillRect(2425, 2550, 150, 200);
-
       ctx.strokeStyle = "#5a4635";
       ctx.lineWidth = 5;
       ctx.strokeRect(2250, 2300, 500, 350);
@@ -1690,62 +1665,66 @@
       ctx.fillRect(2610, 2450, 70, 120);
     }
 
-    function drawPortal(portal) {
-      const pulse = 1 + Math.sin((Date.now() * 0.006) + portal.x * 0.1) * 0.1;
+    function drawGround() {
+      drawEarthRegion();
+      drawWaterRegion();
+      drawFireRegion();
+      drawAirRegion();
+      drawCourtyard();
+      drawAcademyStar();
+      drawAcademyBuilding();
+    }
 
+    function drawPortal(portal) {
+      const pulse = 1 + Math.sin((Date.now() * 0.006) + portal.x * 0.1) * 0.12;
       ctx.save();
       ctx.translate(portal.x, portal.y);
       ctx.scale(pulse, pulse);
 
       ctx.fillStyle = "rgba(255,255,255,.14)";
       ctx.beginPath();
-      ctx.arc(0, 0, 70, 0, Math.PI * 2);
+      ctx.arc(0, 0, 45, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = portal.color;
       ctx.beginPath();
-      ctx.arc(0, 0, 38, 0, Math.PI * 2);
+      ctx.arc(0, 0, 20, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.strokeStyle = "#f8f0d1";
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(0, 0, 48, 0, Math.PI * 2);
+      ctx.arc(0, 0, 28, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.fillStyle = "#fff";
-      ctx.font = "bold 18px Georgia";
+      ctx.font = "bold 15px Georgia";
       ctx.textAlign = "center";
-      ctx.fillText(portal.name, 0, 95);
-
+      ctx.fillText(portal.name, 0, 50);
       ctx.restore();
     }
 
     function drawNPC(npc) {
       ctx.save();
       ctx.translate(npc.x, npc.y);
-
       ctx.fillStyle = npc.color;
       ctx.beginPath();
       ctx.arc(0, 0, 18, 0, Math.PI * 2);
       ctx.fill();
-
       ctx.fillStyle = "#f0e2bb";
       ctx.beginPath();
       ctx.arc(0, -22, 12, 0, Math.PI * 2);
       ctx.fill();
-
       ctx.restore();
 
       ctx.fillStyle = "#fff";
       ctx.font = "12px Georgia";
       ctx.textAlign = "center";
-      ctx.fillText(npc.name, npc.x, npc.y - 40);
+      ctx.fillText(npc.name, npc.x, npc.y - 38);
     }
 
     function drawAnimal(animal) {
       if (animal.interacted) return;
-
       ctx.save();
       ctx.translate(animal.x, animal.y);
       ctx.scale(1 + Math.sin(Date.now() * 0.005 + animal.phase) * 0.08, 1 + Math.sin(Date.now() * 0.005 + animal.phase) * 0.08);
@@ -1755,19 +1734,12 @@
         ctx.beginPath();
         ctx.ellipse(0, 0, 28, 18, 0, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.fillStyle = "#d9b8ff";
         ctx.beginPath();
         ctx.moveTo(0, -25);
         ctx.lineTo(7, -48);
         ctx.lineTo(14, -25);
         ctx.closePath();
-        ctx.fill();
-
-        ctx.fillStyle = "#c4a8ff";
-        ctx.beginPath();
-        ctx.arc(-5, 0, 5, 0, Math.PI * 2);
-        ctx.arc(5, 0, 5, 0, Math.PI * 2);
         ctx.fill();
       } else {
         ctx.fillStyle = "#c76b38";
@@ -1781,18 +1753,7 @@
         ctx.lineTo(20, 10);
         ctx.closePath();
         ctx.fill();
-
-        ctx.fillStyle = "#8d4d2e";
-        ctx.fillRect(-12, 18, 8, 18);
-        ctx.fillRect(4, 18, 8, 18);
-
-        ctx.fillStyle = "#1c1a20";
-        ctx.beginPath();
-        ctx.arc(-6, -5, 3, 0, Math.PI * 2);
-        ctx.arc(6, -5, 3, 0, Math.PI * 2);
-        ctx.fill();
       }
-
       ctx.restore();
 
       ctx.fillStyle = "#fff";
@@ -1803,7 +1764,6 @@
 
     function drawDecoration(decoration) {
       const { type, x, y, size } = decoration;
-
       ctx.save();
       ctx.translate(x, y);
       ctx.scale(size, size);
@@ -1811,7 +1771,6 @@
       if (type === "tree") {
         ctx.fillStyle = "#7f563b";
         ctx.fillRect(-6, 6, 12, 30);
-
         ctx.fillStyle = "#4e7d43";
         ctx.beginPath();
         ctx.arc(0, -10, 22, 0, Math.PI * 2);
@@ -1824,7 +1783,6 @@
         ctx.arc(0, -8, 5, 0, Math.PI * 2);
         ctx.arc(0, 8, 5, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.fillStyle = "#7ab96e";
         ctx.fillRect(-2, 0, 4, 16);
       } else if (type === "bench") {
@@ -1837,13 +1795,11 @@
         ctx.beginPath();
         ctx.arc(0, 0, 34, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.fillStyle = "#b0c3d1";
         ctx.fillRect(-18, 30, 36, 18);
       } else if (type === "unicornStatue") {
         ctx.fillStyle = "#e1d7d8";
         ctx.fillRect(-18, 0, 36, 38);
-
         ctx.fillStyle = "#d7b6d3";
         ctx.beginPath();
         ctx.moveTo(0, -22);
@@ -1852,13 +1808,45 @@
         ctx.closePath();
         ctx.fill();
       }
-
       ctx.restore();
     }
 
     function drawPlayer() {
-      const facing = game.player.direction === "left" ? -1 : 1;
-      drawCharacter(ctx, game.player.x + facing * 2, game.player.y, 1.3);
+      drawCharacter(ctx, game.player.x, game.player.y, 1.3);
+    }
+
+    function drawMiniMap() {
+      const ctxMap = mctx;
+      ctxMap.clearRect(0, 0, 160, 160);
+      ctxMap.fillStyle = "#120f22";
+      ctxMap.fillRect(0, 0, 160, 160);
+
+      const worldW = 5000;
+      const scale = 160 / 5000;
+      const drawRect = (x, y, w, h, color, label) => {
+        const px = x * scale;
+        const py = y * scale;
+        const pw = w * scale;
+        const ph = h * scale;
+        ctxMap.fillStyle = color;
+        ctxMap.fillRect(px, py, pw, ph);
+        ctxMap.fillStyle = "#fff";
+        ctxMap.font = "8px Georgia";
+        ctxMap.fillText(label, px + 6, py + 10);
+      };
+
+      drawRect(0, 0, 5000, 1800, "#92cf7d", "Earth");
+      drawRect(0, 1800, 1800, 3200, "#8ecbf0", "Water");
+      drawRect(3200, 1800, 1800, 3200, "#ffb07a", "Fire");
+      drawRect(0, 3200, 5000, 1800, "#c9e8ff", "Air");
+      drawRect(2000, 2000, 1000, 1000, "#d7c98f", "Academy");
+
+      const px = (game.player.x * scale);
+      const py = (game.player.y * scale);
+      ctxMap.fillStyle = "#fff";
+      ctxMap.beginPath();
+      ctxMap.arc(px, py, 4, 0, Math.PI * 2);
+      ctxMap.fill();
     }
 
     function render() {
@@ -1872,10 +1860,10 @@
       for (const decoration of game.decorations) drawDecoration(decoration);
       for (const npc of game.npcs) drawNPC(npc);
       for (const animal of game.animals) drawAnimal(animal);
-
       if (game.started) drawPlayer();
 
       ctx.restore();
+      drawMiniMap();
     }
 
     function update(dt) {
@@ -1885,6 +1873,8 @@
 
       updateMovement(dt);
       updateHUD();
+      updatePortalProximity();
+      triggerForestOfDoom();
 
       if (game.started) {
         $("mapLabel").textContent = regionAt(game.player.x, game.player.y) + " · WASD / Arrow Keys to move · E / SPACE to interact";
